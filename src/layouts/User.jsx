@@ -13,7 +13,7 @@ const Admin = ({children}) => {
                 <Sidebar>
                     <SidebarItem icon={<IoIosHome size={20}/>} text="Home"/>
                     <SidebarItem icon={<LuLayoutDashboard size={20}/>} text="Dashboard"/>
-                    <SidebarItem icon={<CgShutterstock size={20}/>} text="Post" alert/>
+                    <SidebarItem icon={<CgShutterstock size={20}/>} text="Management Post" alert/>
                     <SidebarItem icon={<FaStoreAlt size={20}/>} text="Aution History"/>
                     <hr className="my-3"/>
                     <SidebarItem icon={<IoSettingsSharp size={20}/>} text="Settings"/>
