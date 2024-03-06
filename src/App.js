@@ -1,8 +1,9 @@
-import {Routes, Route} from "react-router-dom";
-import {router} from "./routes/index";
-import {Default} from "./layouts/index";
-import React, {Fragment} from "react";
-import {NotFound} from "./pages/index"
+import { Routes, Route } from "react-router-dom";
+import { router } from "./routes/index";
+import { Default } from "./layouts/index";
+import React, { Fragment } from "react";
+import { NotFound } from "./pages/index"
+import "./App.css"
 
 function App() {
     return (
@@ -20,13 +21,13 @@ function App() {
                         path={route.path}
                         element={
                             <LayoutDynamic>
-                                <Page/>
+                                <Page />
                             </LayoutDynamic>
                         }
                     />
                 );
             })}
-            <Route path="*" element={<NotFound/>}/>
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
