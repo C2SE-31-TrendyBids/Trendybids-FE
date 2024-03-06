@@ -3,7 +3,7 @@ import * as request from '../ultils/request'
 const getCurrentUser = async (accessToken) => {
     console.log(accessToken);
     try {
-        const getDataUser = await request.get(`/user/get-current-user`, {
+        const getDataUser = await request.get(`/user/me`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
