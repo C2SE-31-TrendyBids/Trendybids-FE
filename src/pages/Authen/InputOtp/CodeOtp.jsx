@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import logo from "../../../public/images/logoTrendy.jpg"
-import { Button, Link } from '@mui/material'
+import { Button, CircularProgress, Link } from '@mui/material'
 import * as authApi from '../../../services/auth'
-
-const CodeOtp = ({ closeModal, email }) => {
-
+import { useNavigate } from "react-router-dom";
+const CodeOtp = ({ closeModal, email, password, index }) => {
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const [numberOne, setNumberOne] = useState("")
     const [numberTwo, setNumberTwo] = useState("")
     const [numberThree, setNumberThree] = useState("")
@@ -19,11 +20,36 @@ const CodeOtp = ({ closeModal, email }) => {
         return true;
     }
     const handleSubmit = async () => {
+        setLoading(true)
         if (validationOTP) {
             const otpString = numberOne + numberTwo + numberThree + numberFour + numberFive + numberSix
-            const verifyOtp = await authApi.verifyEmail(email, otpString)
-            if (verifyOtp?.statusCode === 200) {
-                console.log('Đăng kí thành công');
+            if (index === 'register') {
+                const verifyOtp = await authApi.verifyEmail(email, otpString)
+                if (verifyOtp?.statusCode === 200) {
+                    console.log('Đăng kí thành công');
+                    navigate('/login');
+                    closeModal(false)
+                    setLoading(false)
+                }
+                else {
+                    console.log('otp sai ....');
+                    setLoading(false)
+
+                }
+            }
+            else if (index === 'reset') {
+                const resetPasRe = await authApi.resetPassword(email, password, otpString)
+                if (resetPasRe?.statusCode === 200) {
+                    console.log('Đặt lại mật khẩu thành công');
+                    navigate('/login');
+                    closeModal(false)
+                    setLoading(false)
+
+                }
+                else {
+                    console.log('otp sai ....');
+                    setLoading(false)
+                }
             }
         }
     }
@@ -108,9 +134,14 @@ const CodeOtp = ({ closeModal, email }) => {
                                 </div>
                             </div>
                             <div className='flex items-center justify-center mt-4'>
-                                <Button variant="contained" color="success" onClick={(e) => { handleSubmit() }}>
-                                    Submit
-                                </Button>
+                                {loading ? (
+                                    <CircularProgress />
+                                ) : (
+
+                                    <Button variant="contained" color="success" onClick={(e) => { handleSubmit() }}>
+                                        Submit
+                                    </Button>
+                                )}
                                 <Button variant="outlined" color="error" sx={{ ml: 4 }} onClick={() => closeModal(false)}>
                                     Cance
                                 </Button>

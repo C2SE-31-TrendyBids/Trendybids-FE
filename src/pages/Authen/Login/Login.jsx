@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
-import { Checkbox, TextField, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Checkbox, TextField, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, CircularProgress } from '@mui/material';
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
@@ -18,6 +18,10 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [emailError, setEmailError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+
+
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,13 +37,14 @@ const Login = () => {
     const handleNavigate = (role) => {
 
         if (role === "Admin")
-            navigate('/');
+            navigate('/admin');
         // navigate('/admin/dashboard')
         else
             navigate('/');
 
     }
     const handleLogin = async (e) => {
+        setLoading(true)
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
             return;
@@ -60,6 +65,7 @@ const Login = () => {
                 localStorage.setItem("refresh-token", JSON.stringify({ refreshToken }))
                 handleNavigate(role)
                 console.log('đăng nhập thành công ');
+                setLoading(false)
             }
         } else {
             console.log(loginResponse);
@@ -67,6 +73,7 @@ const Login = () => {
                 console.log(loginResponse?.error?.response?.data?.message);
             else
                 console.log(loginResponse?.error?.response?.data?.message);
+            setLoading(false)
         }
     }
 
@@ -144,9 +151,14 @@ const Login = () => {
                             </div>
                         </div>
                         <div className='flex items-center justify-center m-4'>
-                            <Button variant="contained" size="large" onClick={(e) => { handleLogin(e) }} >
-                                LOGIN
-                            </Button>
+                            {loading ? (
+                                <CircularProgress />
+                            ) : (
+                                <Button variant="contained" size="large" onClick={(e) => { handleLogin(e) }} >
+                                    LOGIN
+                                </Button>
+                            )}
+
                         </div>
                     </div>
                 </div>

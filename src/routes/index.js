@@ -14,7 +14,7 @@ const router = [
     { path: '/login', layout: NoHeaderAndFooter, component: Login },
     { path: '/register', layout: NoHeaderAndFooter, component: Register },
     { path: '/forgot-password', layout: NoHeaderAndFooter, component: ForgotPassword },
-    { path: '/reset-password', layout: NoHeaderAndFooter, component: ResetPassword },
+    { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/profile', layout: User, component: Profile },
     { path: '/admin', layout: Admin, component: AdminPage },
 

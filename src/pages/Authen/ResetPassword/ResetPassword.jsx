@@ -2,15 +2,20 @@ import React, { useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
-import { Button, TextField } from '@mui/material';
+import { Button, CircularProgress, TextField } from '@mui/material';
 import { CiLock } from "react-icons/ci";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
-
+import CodeOtp from '../InputOtp/CodeOtp';
+import { useParams } from 'react-router-dom';
 
 const ResetPassword = () => {
-    
+    const [loading, setLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const [password, setPassword] = useState('')
+    const { email } = useParams();
+    const [passError, setPassError] = useState('')
+
     const [conFirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(true);
     const [showConfirmPassword, setShowConfirmPassword] = useState(true)
@@ -23,8 +28,14 @@ const ResetPassword = () => {
 
 
     const handleLogin = (e) => {
-        e.preventDefault();
-
+        setLoading(true)
+        if (password !== conFirmPassword) {
+            setPassError("Passwords do not match");
+            setLoading(false)
+            return
+        }
+        setLoading(false)
+        setModalOpen(true)
     };
 
     return (
@@ -54,6 +65,8 @@ const ResetPassword = () => {
                                 type={showPassword ? 'password' : 'text'}
                                 autoComplete="current-password"
                                 variant="standard"
+                                error={Boolean(passError)}
+                                helperText={passError}
                                 onChange={(e) => { setPassword(e.target.value) }}
                                 sx={{ width: '80%' }}
                             />
@@ -82,6 +95,8 @@ const ResetPassword = () => {
                                 type={showConfirmPassword ? 'password' : 'text'}
                                 onChange={(e) => { setConfirmPassword(e.target.value) }}
                                 autoComplete="current-password"
+                                error={Boolean(passError)}
+                                helperText={passError}
                                 variant="standard"
                                 sx={{ width: '80%' }}
                             />
@@ -103,9 +118,17 @@ const ResetPassword = () => {
                         </div>
 
                         <div className='flex items-center justify-center mt-10'>
-                            <Button variant="contained" sx={{ px: 7, py: 1 }} onClick={(e) => { handleLogin(e) }} >
-                                SEND
-                            </Button>
+                            {loading ? (
+                                <CircularProgress />
+                            ) : (
+
+                                <Button variant="contained" sx={{ px: 7, py: 1 }} onClick={(e) => { handleLogin(e) }} >
+                                    SEND
+                                </Button>
+                            )}
+                            {
+                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={password} index={"reset"} />
+                            }
                         </div>
                     </div>
                 </div>

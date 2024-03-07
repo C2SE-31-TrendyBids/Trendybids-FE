@@ -2,27 +2,37 @@ import React, { useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
-import { TextField, Button } from '@mui/material';
-import CodeOtp from '../InputOtp/CodeOtp';
-
+import { TextField, Button, CircularProgress } from '@mui/material';
+import * as authApi from '../../../services/auth'
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
-
-    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
+        setLoading(true)
         e.preventDefault();
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
+            setLoading(false)
             return;
         }
-        setModalOpen(true)
+        const fogotReq = await authApi.forgotPassword(email)
+        if (fogotReq?.statusCode === 200) {
+            console.log("đã gửi otp");
+            navigate(`/reset-password/${email}`)
+            setLoading(false)
+        }
+        setLoading(false)
 
     };
 
@@ -58,12 +68,15 @@ const ForgotPassword = () => {
                             />
                         </div>
                         <div className='flex items-center justify-center m-4'>
-                            <Button variant="contained" sx={{ px: 5, py: 1 }} onClick={(e) => { handleLogin(e) }} >
-                                SEND
-                            </Button>
-                            {
-                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} />
-                            }
+                            {loading ? (
+                                <CircularProgress />
+                            ) : (
+
+                                <Button variant="contained" sx={{ px: 5, py: 1 }} onClick={(e) => { handleLogin(e) }} >
+                                    SEND
+                                </Button>
+                            )}
+
 
                         </div>
                     </div>
