@@ -12,7 +12,7 @@ import * as userApi from '../../../services/user'
 import AuthContext from "../../../context/authProvider";
 
 const Login = () => {
-    const { setAuth, auth } = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('')
@@ -56,10 +56,9 @@ const Login = () => {
             const refreshToken = loginResponse?.response?.refreshToken;
             const getUser = await userApi.getCurrentUser(accessToken);
             if (getUser?.statusCode === 200) {
-                const auth = getUser?.response?.user
-                const role = loginResponse?.response?.role?.name
+                const auth = getUser?.response
+                const role = getUser?.response?.role?.name
                 setAuth(auth)
-                console.log(role);
                 localStorage.setItem('auth', JSON.stringify({ ...auth }));
                 localStorage.setItem("access-token", JSON.stringify({ accessToken }))
                 localStorage.setItem("refresh-token", JSON.stringify({ refreshToken }))
