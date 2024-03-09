@@ -7,6 +7,7 @@ import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
 import CodeOtp from '../InputOtp/CodeOtp';
+import {toast} from "sonner";
 
 const Register = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -47,7 +48,7 @@ const Register = () => {
             setModalOpen(true)
             setLoading(false)
         }
-        else console.log('đăng kí k thành công');
+        else toast.error('Register unsuccessful');
         setLoading(false)
     }
     return (

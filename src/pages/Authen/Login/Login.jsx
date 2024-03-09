@@ -20,15 +20,17 @@ const Login = () => {
     const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
 
-
-
-
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     };
     const loginWithGoogle = async () => {
-        console.log();
+        const googleLoginURL = 'http://localhost:5000/api/auth/google';
+        const width = 500;
+        const height = 600;
+        const left = window.innerWidth / 2 - width / 2;
+        const top = window.innerHeight / 2 - height / 2;
+        window.open(googleLoginURL, "_blank", `width=${width}, height=${height}, left=${left}, top=${top}`);
     }
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
