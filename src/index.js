@@ -3,15 +3,25 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './context/authProvider';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {AuthProvider} from './context/authProvider';
+import {Toaster} from "sonner";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Router>
             <AuthProvider>
-                <App />
+                <Toaster
+                    richColors
+                    position="top-right"
+                    closeButton
+                    duration="2000"
+                    toastOptions={{
+                        style: {fontSize: '15px', width: 'fit-content', right: 0}
+                    }}
+                />
+                <App/>
             </AuthProvider>
         </Router>
     </React.StrictMode>
