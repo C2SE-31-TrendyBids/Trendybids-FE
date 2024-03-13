@@ -31,7 +31,30 @@ const registerCensor = async (name, phoneNumber, founding, address, companyTaxCo
         };
     }
 }
+const getProductAuction = async (param) => {
+    try {
+        const requestAuction = await request.get('/censor/get-auction-session', {
+            params: param,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return {
+            data: requestAuction.data.productAuctions,
+            message: requestAuction.data.message,
+            totalItem: requestAuction.data.totalItem,
+            totalPages: requestAuction.data.totalPages,
+            statusCode: requestAuction.status,
+        }
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
 
 export {
-    registerCensor
+    registerCensor,
+    getProductAuction
 };
