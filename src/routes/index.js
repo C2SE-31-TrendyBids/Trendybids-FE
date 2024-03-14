@@ -1,5 +1,5 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, RegisterCensor, Profile, Admin as AdminPage, ProductAuction
+    Home, Login, Register, ForgotPassword, ResetPassword, RegisterCensor, Profile, Admin as AdminPage, ProductAuction, Contact
 } from '../pages/index';
 
 import {
@@ -14,6 +14,7 @@ import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
 const router = [
     { path: '/', component: Home },
     { path: '/login', layout: NoHeaderAndFooter, component: Login },
+    { path: '/contact', layout: Default, component: Contact },
     { path: '/login-success', layout: NoHeaderAndFooter, component: LoginGoogleSuccess },
     { path: '/register', layout: NoHeaderAndFooter, component: Register },
     { path: '/register-censor', layout: Default, component: RegisterCensor },

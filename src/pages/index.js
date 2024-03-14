@@ -8,6 +8,6 @@ export { default as ForgotPassword } from "./Authen/ForgotPassword/ForgotPasswor
 export { default as ResetPassword } from "./Authen/ResetPassword/ResetPassword";
 export { default as Profile } from "./Profile/Profile";
 export { default as Admin } from "./Admin/Admin";
-
+export { default as Contact } from "./Contact/Contact"
 //product Aution
 export { default as ProductAuction } from "./ProductAuction/ProductAuction"

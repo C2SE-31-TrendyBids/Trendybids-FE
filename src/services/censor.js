@@ -1,6 +1,5 @@
 
 import * as request from '../ultils/request'
-
 const registerCensor = async (name, phoneNumber, founding, address, companyTaxCode, taxCodeIssuanceDate, position, placeTaxCode, avatar) => {
     try {
         const formData = new FormData();
@@ -54,7 +53,23 @@ const getProductAuction = async (param) => {
     }
 }
 
+const AUCTION_SESSION_ENDPOINT = "/censor/get-auction-session"
+
+const getAuctionSession = async (params) => {
+    try {
+        return await request.get(AUCTION_SESSION_ENDPOINT, {
+            params: params,
+            headers: {
+                "ContentType": "application/json",
+            },
+        });
+
+    } catch (error) {
+        return error;
+    }
+};
 export {
     registerCensor,
-    getProductAuction
+    getProductAuction,
+    getAuctionSession,
 };
