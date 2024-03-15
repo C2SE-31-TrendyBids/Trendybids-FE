@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
@@ -19,6 +19,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false)
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,6 +48,7 @@ const Login = () => {
     }
     const handleLogin = async (e) => {
         setLoading(true)
+        console.log(rememberMe);
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
             return;
@@ -56,6 +58,10 @@ const Login = () => {
         if (loginResponse?.statusCode === 200) {
             const accessToken = loginResponse?.response?.accessToken;
             const refreshToken = loginResponse?.response?.refreshToken;
+            if (rememberMe) {
+                document.cookie = `email=${email}; max-age=604800`;
+                document.cookie = `password=${password}; max-age=604800`;
+            }
             const getUser = await userApi.getCurrentUser(accessToken);
             if (getUser?.statusCode === 200) {
                 const auth = getUser?.response
@@ -64,6 +70,7 @@ const Login = () => {
                 localStorage.setItem('auth', JSON.stringify({ ...auth }));
                 localStorage.setItem("access-token", JSON.stringify({ accessToken }))
                 localStorage.setItem("refresh-token", JSON.stringify({ refreshToken }))
+
                 handleNavigate(role)
                 console.log('đăng nhập thành công ');
                 setLoading(false)
@@ -122,6 +129,7 @@ const Login = () => {
                                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                                 <OutlinedInput
                                     id="outlined-adornment-password"
+                                    value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     type={showPassword ? 'text' : 'password'}
                                     endAdornment={
@@ -142,7 +150,7 @@ const Login = () => {
                         </div>
                         <div className='mt-4 flex items-center justify-between'>
                             <div>
-                                <Checkbox />
+                                <Checkbox onClick={(e) => setRememberMe(e.target.checked)} />
                                 <span>Remember me</span>
                             </div>
                             <div className='mr-10'>

@@ -57,4 +57,5 @@ const ProductItem = ({infoAuction = {}}) => {
         </div>
     )
 }
+
 export default ProductItem
