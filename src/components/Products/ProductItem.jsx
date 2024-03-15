@@ -25,10 +25,10 @@ const ProductItem = ({infoAuction = {}}) => {
 
 
     return (
-        <div ref={divRef} className="w-full h-full grid grid-rows-6">
+        <div ref={divRef} className="w-full max-h-[350px] grid grid-rows-6">
             <div className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
                 <img
-                    className="w-full h-full rounded-t-lg object-cover group-hover:scale-125 transition-all duration-500"
+                    className="w-full min-h-[200px] rounded-t-lg object-cover group-hover:scale-125 transition-all duration-500"
                     src={infoAuction?.product?.prdImages[0]?.prdImageURL}
                     alt={infoAuction?.product?.productName}/>
                 <div

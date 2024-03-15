@@ -1,5 +1,5 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, Profile, Admin as AdminPage
+    Home, Login, Register, ForgotPassword, ResetPassword, Profile, Admin as AdminPage, Censor, CensorDetail
 } from '../pages/index';
 
 import {
@@ -19,6 +19,8 @@ const router = [
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/profile', layout: User, component: Profile },
     { path: '/admin', layout: Admin, component: AdminPage },
+    { path: '/censor', component: Censor },
+    { path: '/censor/:censorId', component: CensorDetail },
 
 ]
 

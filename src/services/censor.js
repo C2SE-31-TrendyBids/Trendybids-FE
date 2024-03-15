@@ -15,6 +15,24 @@ const getAuctionSession = async (params) => {
         return error;
     }
 };
+
+const CENSORS_ENDPOINT = "/censor/get-censor"
+
+const getCensors = async (params) => {
+    try {
+        return await request.get(CENSORS_ENDPOINT, {
+            params: params,
+            headers: {
+                "ContentType": "application/json",
+            },
+        });
+
+    } catch (error) {
+        return error;
+    }
+};
+
 export {
     getAuctionSession,
+    getCensors
 };
