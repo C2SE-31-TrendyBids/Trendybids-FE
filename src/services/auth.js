@@ -53,8 +53,44 @@ const verifyEmail = async (email, otp) => {
         };
     }
 }
+const forgotPassword = async (email) => {
+    try {
+        const fogotRe = await request.post('/auth/forgot-password', {
+            email: email,
+        })
+        return {
+            response: fogotRe.data,
+            statusCode: fogotRe.status
+        }
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
+const resetPassword = async (email, password, otp) => {
+    try {
+        const resetPRe = await request.post('/auth/reset-password', {
+            email: email,
+            password: password,
+            otp: otp
+        })
+        return {
+            response: resetPRe.data,
+            statusCode: resetPRe.status
+        }
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
 export {
     loginApi,
     register,
-    verifyEmail
+    verifyEmail,
+    forgotPassword,
+    resetPassword
 };

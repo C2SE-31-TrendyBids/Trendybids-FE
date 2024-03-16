@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, CircularProgress } from '@mui/material';
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
 import CodeOtp from '../InputOtp/CodeOtp';
+import {toast} from "sonner";
 
 const Register = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -18,6 +19,8 @@ const Register = () => {
     const [passError, setPassError] = useState('')
     const [showPassword, setShowPassword] = useState(true);
     const [showConfirmPassword, setShowConfirmPassword] = useState(true)
+    const [loading, setLoading] = useState(false);
+
     const handleHiddenPassword = () => {
         showPassword ? setShowPassword(false) : setShowPassword(true);
     };
@@ -29,20 +32,24 @@ const Register = () => {
         return regex.test(email);
     };
     const handleRedgister = async (e) => {
+        setLoading(true)
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
+            setLoading(false)
             return;
         }
         if (password !== conFirmPassword) {
             setPassError("Passwords do not match");
+            setLoading(false)
             return
         }
         const registerReq = await authApi.register(email, password, fullName)
         if (registerReq.statusCode === 201) {
             setModalOpen(true)
+            setLoading(false)
         }
-        else console.log('đăng kí k thành công');
-
+        else toast.error('Register unsuccessful');
+        setLoading(false)
     }
     return (
         <div className=' max-w-screen h-screen' >
@@ -124,14 +131,19 @@ const Register = () => {
                                 </div>
                             </div>
                             {
-                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} />
+                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={null} index={"register"} />
                             }
                         </div>
 
                         <div className='flex items-center justify-center mt-6'>
-                            <Button variant="contained" size="large" onClick={(e) => { handleRedgister(e) }}>
-                                REGISTER
-                            </Button>
+                            {loading ? (
+                                <CircularProgress />
+
+                            ) : (
+                                <Button variant="contained" size="large" onClick={(e) => { handleRedgister(e) }}>
+                                    REGISTER
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <div className='m-6'>

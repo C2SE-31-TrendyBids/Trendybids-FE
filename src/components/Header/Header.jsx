@@ -5,7 +5,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 
 const Header = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isDropdown, setIsDropdown] = useState(true);
 
   return (
@@ -55,9 +55,8 @@ const Header = () => {
               {/*<!-- Dropdown menu -->*/}
               <div
                 id="dropdown"
-                className={`${
-                  isDropdown ? "hidden" : "block"
-                } absolute top-18 left-0 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
+                className={`${isDropdown ? "hidden" : "block"
+                  } absolute top-18 left-0 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
               >
                 <ul
                   className="py-2 px-2 text-sm text-gray-700 font-semibold"

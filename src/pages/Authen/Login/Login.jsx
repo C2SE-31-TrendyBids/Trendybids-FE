@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy.jpg"
 import Link from '@mui/material/Link';
-import { Checkbox, TextField, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Checkbox, TextField, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, CircularProgress } from '@mui/material';
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
@@ -12,19 +12,26 @@ import * as userApi from '../../../services/user'
 import AuthContext from "../../../context/authProvider";
 
 const Login = () => {
-    const { setAuth, auth } = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [emailError, setEmailError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false)
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     };
     const loginWithGoogle = async () => {
-        console.log();
+        const googleLoginURL = 'http://localhost:5000/api/auth/google';
+        const width = 500;
+        const height = 600;
+        const left = window.innerWidth / 2 - width / 2;
+        const top = window.innerHeight / 2 - height / 2;
+        window.open(googleLoginURL, "_blank", `width=${width}, height=${height}, left=${left}, top=${top}`);
     }
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
@@ -33,13 +40,15 @@ const Login = () => {
     const handleNavigate = (role) => {
 
         if (role === "Admin")
-            navigate('/');
+            navigate('/admin');
         // navigate('/admin/dashboard')
         else
             navigate('/');
 
     }
     const handleLogin = async (e) => {
+        setLoading(true)
+        console.log(rememberMe);
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
             return;
@@ -49,17 +58,22 @@ const Login = () => {
         if (loginResponse?.statusCode === 200) {
             const accessToken = loginResponse?.response?.accessToken;
             const refreshToken = loginResponse?.response?.refreshToken;
+            if (rememberMe) {
+                document.cookie = `email=${email}; max-age=604800`;
+                document.cookie = `password=${password}; max-age=604800`;
+            }
             const getUser = await userApi.getCurrentUser(accessToken);
             if (getUser?.statusCode === 200) {
-                const auth = getUser?.response?.user
-                const role = loginResponse?.response?.role?.name
+                const auth = getUser?.response
+                const role = getUser?.response?.role?.name
                 setAuth(auth)
-                console.log(role);
                 localStorage.setItem('auth', JSON.stringify({ ...auth }));
                 localStorage.setItem("access-token", JSON.stringify({ accessToken }))
                 localStorage.setItem("refresh-token", JSON.stringify({ refreshToken }))
+
                 handleNavigate(role)
                 console.log('đăng nhập thành công ');
+                setLoading(false)
             }
         } else {
             console.log(loginResponse);
@@ -67,6 +81,7 @@ const Login = () => {
                 console.log(loginResponse?.error?.response?.data?.message);
             else
                 console.log(loginResponse?.error?.response?.data?.message);
+            setLoading(false)
         }
     }
 
@@ -114,6 +129,7 @@ const Login = () => {
                                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                                 <OutlinedInput
                                     id="outlined-adornment-password"
+                                    value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     type={showPassword ? 'text' : 'password'}
                                     endAdornment={
@@ -134,7 +150,7 @@ const Login = () => {
                         </div>
                         <div className='mt-4 flex items-center justify-between'>
                             <div>
-                                <Checkbox />
+                                <Checkbox onClick={(e) => setRememberMe(e.target.checked)} />
                                 <span>Remember me</span>
                             </div>
                             <div className='mr-10'>
@@ -144,9 +160,14 @@ const Login = () => {
                             </div>
                         </div>
                         <div className='flex items-center justify-center m-4'>
-                            <Button variant="contained" size="large" onClick={(e) => { handleLogin(e) }} >
-                                LOGIN
-                            </Button>
+                            {loading ? (
+                                <CircularProgress />
+                            ) : (
+                                <Button variant="contained" size="large" onClick={(e) => { handleLogin(e) }} >
+                                    LOGIN
+                                </Button>
+                            )}
+
                         </div>
                     </div>
                 </div>
