@@ -1,10 +1,11 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, Profile, Admin as AdminPage
+    Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound ,Admin as AdminPage
 } from '../pages/index';
 
 import {
     Admin,
-    User
+    User,
+    Default
 } from '../layouts/index';
 
 
@@ -14,7 +15,10 @@ const router = [
     { path: '/register', layout: User, component: Register },
     { path: '/forgot-password', layout: User, component: ForgotPassword },
     { path: '/reset-password', layout: User, component: ResetPassword },
-    { path: '/profile', layout: User, component: Profile },
+    { path: '/about', layout: Default, component: AboutUS },
+    { path: '/profile', layout: User, component: EditProfile },
+    { path: '/profile/management-post', layout: User , component: ManagementPost },
+    { path: '/not-found', layout: Default, component: NotFound },
     { path: '/admin', layout: Admin, component: AdminPage },
 
 

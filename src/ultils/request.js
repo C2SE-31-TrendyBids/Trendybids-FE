@@ -1,10 +1,9 @@
 import axios from "axios";
 
-
 let isRefreshing = false;
 
 const instance = axios.create({
-    baseURL: 'http://localhost:5000/api/',
+  baseURL: "http://localhost:5000/api/",
 });
 
 // instance.interceptors.response.use(
@@ -47,26 +46,19 @@ const instance = axios.create({
 //     }
 // );
 
-
-
-
-
 // method instance
 export const get = async (endPoints, option = {}) => {
-    return await instance.get(endPoints, option);
+  return await instance.get(endPoints, option);
 };
 
 export const post = async (endPoints, body = {}, option = {}) => {
-    return await instance.post(endPoints, body, option);
+  return await instance.post(endPoints, body, option);
 };
 
 export const put = async (endPoints, body = {}, option = {}) => {
-    return await instance.put(endPoints, body, option);
+  return await instance.put(endPoints, body, option);
 };
 
 export const deleteRe = async (endPoints, option = {}) => {
-    return await instance.delete(endPoints, option);
+  return await instance.delete(endPoints, option);
 };
-
-
-

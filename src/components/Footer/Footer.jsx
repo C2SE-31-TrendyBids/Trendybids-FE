@@ -10,7 +10,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="lg:h-screen flex items-end justify-center">
+    <footer className=" flex items-end justify-center">
       <div className="bg-gray-900 w-full">
         <div className="w-full max-w-[85rem] pt-10 pb-6 px-4 sm:px-6 lg:px-8 lg:pt-16 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6">
