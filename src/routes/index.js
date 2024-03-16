@@ -1,12 +1,14 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, RegisterCensor, Profile, Admin as AdminPage, ProductAuction, Contact
+    Home, Login, Register, ForgotPassword, ResetPassword, RegisterCensor, Profile, Admin as AdminPage, ProductAuction, Contact,
+    PostAuction
 } from '../pages/index';
 
 import {
     Admin,
     Default,
     User,
-    NoHeaderAndFooter
+    NoHeaderAndFooter,
+    Censor
 } from '../layouts/index';
 import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
 
@@ -25,6 +27,9 @@ const router = [
 
     //product auction
     { path: '/product-auction', layout: Default, component: ProductAuction },
+
+    //Censor Management
+    { path: '/post-auction', layout: Censor, component: PostAuction }
 
 ]
 

@@ -205,7 +205,7 @@ const ProductAuction = () => {
                                     return (
                                         <div className='flex items-start'>
                                             <div className='border w-16 h-16'>
-                                                <img src={item.product.prdImages[0].prdImageURL} alt="abc" className='object-cover' />
+                                                <img src={item?.product?.prdImages[0]?.prdImageURL} alt="abc" className='object-cover' />
                                             </div>
                                             <div className='ml-4 mt-2'>
                                                 <span className='block text-sm font-semibold'>{item.product.productName}</span>

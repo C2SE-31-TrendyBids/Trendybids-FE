@@ -11,3 +11,6 @@ export { default as Admin } from "./Admin/Admin";
 export { default as Contact } from "./Contact/Contact"
 //product Aution
 export { default as ProductAuction } from "./ProductAuction/ProductAuction"
+
+// Censor management
+export { default as PostAuction } from "./Censor/PostAuctionSession/PostAuction"
