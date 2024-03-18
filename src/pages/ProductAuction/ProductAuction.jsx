@@ -6,10 +6,10 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Pagination from '@mui/material/Pagination';
 import * as censorApi from '../../services/censor'
 import * as categoryApi from '../../services/category'
-import Reveal from "../../components/Animate/Reveal";
-import { IoCaretForwardOutline } from "react-icons/io5";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import { Link } from 'react-router-dom';
 
 function valuetext(value) {
     return `${value}`;
@@ -17,7 +17,6 @@ function valuetext(value) {
 
 const ProductAuction = () => {
     const [productAuctions, setProductAuctions] = useState([])
-
     const [totalPage, setTotalPage] = useState(1)
     const [pageNumber, setPageNumber] = useState(1)
     const [categories, setCategories] = useState([])
@@ -63,8 +62,8 @@ const ProductAuction = () => {
                     setIsChangeFilter(true)
                 }
                 const productAuctionData = await censorApi.getProductAuction(params);
-                setProductAuctions(productAuctionData.data);
-                setTotalPage(productAuctionData.totalPages);
+                setProductAuctions(productAuctionData?.data);
+                setTotalPage(productAuctionData?.totalPages);
             };
             fetchApi();
         } catch (error) {
@@ -78,9 +77,9 @@ const ProductAuction = () => {
             const comingSoonData = await censorApi.getProductAuction({ limit: 3, order: ['startTime', 'DESC'] })
             const auctionEndedData = await censorApi.getProductAuction({ limit: 3, status: 'ended' })
 
-            setCategories(categoryData)
-            setComingSoon(comingSoonData.data)
-            setAuctionEnded(auctionEndedData.data)
+            setCategories(categoryData?.response?.categorys)
+            setComingSoon(comingSoonData?.data)
+            setAuctionEnded(auctionEndedData?.data)
         }
         fetchCategory()
         console.log(auctionEnded);
@@ -111,28 +110,22 @@ const ProductAuction = () => {
         <div className='w-full h-full'>
             <div className='relative'>
                 <img src={Panner} alt="" />
-                <div className='absolute top-[10%] left-[15%] font-semibold text-3xl'>
-                    <Reveal
-                        children={
-                            <>
-                                <h1 className="hidden md:block text-4xl font-bold mb-5">Auction products<br />
-                                    Please select the product you want</h1>
-                                <h1 className='font-semibold text-center text-blue-500'>TrendyBids</h1>
-                                <div className="hidden lg:flex mt-7 items-center gap-2">
-                                    <div className="bg-red-500 p-1 rounded-full">
-                                        <button className=" hover:animate-ping bg-red-500 p-2 rounded-full">
-                                            <IoCaretForwardOutline className="text-white" size={25} />
-                                        </button>
-                                    </div>
-                                    <h4 className=" uppercase text-[14px] font-medium">We are running our
-                                        summer
-                                        discount<br></br>
-                                        Watch video to learn more</h4>
-                                </div>
-                            </>
-                        }
-                    />
-                </div>
+                <span className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md">
+                    Product Auction
+                    <div className=" flex mt-2 text-lg  ">
+                        <div className="text-black hover:text-blue-500">
+                            <Link to="/" className="">
+                                Home
+                            </Link>
+                        </div>
+                        <div className="text-black">
+                            <span className=" items-center">
+                                <span className="mx-2"> &gt; </span>
+                                <span className="">Product Auction</span>
+                            </span>
+                        </div>
+                    </div>
+                </span>
             </div>
             <div className='max-w-[1230px] px-[30px] mt-8 mx-auto'>
                 <div className='grid grid-cols-12 gap-4'>
@@ -181,7 +174,7 @@ const ProductAuction = () => {
                                     return (
                                         <div className='flex items-start'>
                                             <div className='border w-16 h-16'>
-                                                <img src={item.product.prdImages[0].prdImageURL} alt="abc" className='object-cover' />
+                                                <img src={item?.product?.prdImages[0]?.prdImageURL} alt="abc" className='object-cover' />
                                             </div>
                                             <div className='ml-4 mt-2'>
                                                 <span className='block text-sm font-semibold'>{item.product.productName}</span>
@@ -234,7 +227,7 @@ const ProductAuction = () => {
 
                             <div className="hidden sm:flex sm:justify-end ">
                                 <div className='flex items-center justify-center'>
-                                    <button onClick={() => { clearFilters() }} className={`${isChangeFilter ? "block" : "hidden"} border px-2 rounded-xl bg-blue-400 text-white text-sm`}>Clear All</button>
+                                    <button onClick={() => { clearFilters() }} className={`${isChangeFilter ? "block" : "hidden"}  px-2 rounded-xl  text-red-500 text-2xl`}><MdOutlineDeleteOutline /></button>
                                 </div>
                                 <div className="relative w-[40%] mr-4">
                                     <RiArrowDropDownLine className='text-3xl absolute top-1 right-0' />

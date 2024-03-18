@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import background from "../../../public/images/wave_background.png"
-import logo from "../../../public/images/logoTrendy.jpg"
+import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import { CiLock } from "react-icons/ci";
@@ -41,11 +41,11 @@ const ResetPassword = () => {
     return (
         <div className=' max-w-screen h-screen' >
             <img src={background} alt="" className='w-full h-full object-cover' />
-            <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 bg-white text-black shadow-lg rounded-lg">
-                <div className='grid grid-cols-2 gap-2'>
-                    <div className='m-6'>
-                        <img src={logo} alt="" className='scale-105' />
-                        <div className='border-t border-t-gray-500'>
+            <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 bg-white text-black shadow-lg rounded-lg min-w-[400px]">
+                <div className='grid grid-cols-1 lg:grid-cols-2  gap-2'>
+                    <div className='lg:m-6 mx-auto'>
+                        <img src={logo} alt="" className='max-lg:w-36 max-lg:h-36' />
+                        <div className='border-t border-t-gray-500 max-lg:hidden'>
                             <span className='flex items-center justify-center m-4'>
                                 <Link href="/login" underline="always">
                                     {'Go back login'}
@@ -53,8 +53,8 @@ const ResetPassword = () => {
                             </span>
                         </div>
                     </div>
-                    <div className=''>
-                        <div className='text-3xl font-bold mt-12 mb-8'> RESET PASSWORD </div>
+                    <div className='text-center'>
+                        <div className='text-3xl font-bold lg:mt-12 mb-8'> RESET PASSWORD </div>
                         <div className='mt-3 flex items-center justify-start relative'>
                             <div>
                                 <CiLock className='text-3xl mr-2' />
@@ -130,6 +130,14 @@ const ResetPassword = () => {
                                 modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={password} index={"reset"} />
                             }
                         </div>
+                        <div className='lg:hidden block '>
+                            <span className='flex items-center justify-center m-4'>
+                                <Link href="/login" underline="always">
+                                    {'Go back login'}
+                                </Link>
+                            </span>
+                        </div>
+
                     </div>
                 </div>
             </div>

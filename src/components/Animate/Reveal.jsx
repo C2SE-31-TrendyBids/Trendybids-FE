@@ -1,7 +1,7 @@
 import {motion, useInView, useAnimation} from "framer-motion"
 import React, {useEffect, useRef} from "react";
 
-const Reveal = ({children, maxWidth = "1200px"}) => {
+const Reveal = ({children, maxWidth = "1230px"}) => {
     const ref = useRef(null)
     const isInView = useInView(ref, {once: true})
 
@@ -16,7 +16,7 @@ const Reveal = ({children, maxWidth = "1200px"}) => {
     }, [isInView])
 
     return (
-        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto"}}>
+        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto" , padding: maxWidth === "100%" ? "0" : "0 30px" }}>
             <motion.div
                 variants={
                     {
@@ -59,7 +59,6 @@ const Reveal = ({children, maxWidth = "1200px"}) => {
         </div>
 
     )
-
 
 }
 

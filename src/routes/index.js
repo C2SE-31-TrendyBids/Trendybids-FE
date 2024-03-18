@@ -1,6 +1,6 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, RegisterCensor, Profile, Admin as AdminPage, ProductAuction, Contact,
-    PostAuction
+    Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
+    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct
 } from '../pages/index';
 
 import {
@@ -8,7 +8,7 @@ import {
     Default,
     User,
     NoHeaderAndFooter,
-    Censor
+    CensorLayout
 } from '../layouts/index';
 import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
 
@@ -22,14 +22,20 @@ const router = [
     { path: '/register-censor', layout: Default, component: RegisterCensor },
     { path: '/forgot-password', layout: NoHeaderAndFooter, component: ForgotPassword },
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
-    { path: '/profile', layout: User, component: Profile },
+    { path: '/about', layout: Default, component: AboutUS },
+    { path: '/profile', layout: User, component: EditProfile },
+    { path: '/profile/management-post', layout: User, component: ManagementPost },
+    { path: '/not-found', layout: Default, component: NotFound },
     { path: '/admin', layout: Admin, component: AdminPage },
-
+    { path: '/censor', component: Censor },
+    { path: '/censor/:censorId', component: CensorDetail },
     //product auction
     { path: '/product-auction', layout: Default, component: ProductAuction },
 
     //Censor Management
-    { path: '/post-auction', layout: Censor, component: PostAuction }
+    { path: '/product-approve', layout: CensorLayout, component: PostAuction },
+    { path: '/all-product', layout: CensorLayout, component: ApproveProduct }
+
 
 ]
 

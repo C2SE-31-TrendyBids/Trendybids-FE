@@ -64,7 +64,7 @@ const Header = () => {
                 >
                   <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
                     <FaRegUserCircle className="mx-3" />
-                    <Link to="/" className="block pr-4 py-2">
+                    <Link to="/profile" className="block pr-4 py-2">
                       Profile
                     </Link>
                   </li>
@@ -74,8 +74,8 @@ const Header = () => {
                     </Link>
                   </li>
                   <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
-                    <Link to="/" className="block pr-4 py-2">
-                      Sign out
+                    <Link to="/logout" className="block pr-4 py-2">
+                      Log Out
                     </Link>
                   </li>
                 </ul>

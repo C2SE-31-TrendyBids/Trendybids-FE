@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import * as productApi from '../../../services/product'
-import ModalPost from './ModalPost';
-import ViewDetail from '../ApproveProduct/ViewDetail';
+import ViewDetal from './ViewDetail';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { Pagination } from '@mui/material';
 
-
-const PostAuction = () => {
+const ApproveProduct = () => {
     const [products, setProducts] = useState([]);
     const [nameProduct, setNameProduct] = useState('')
     const [isChangeFilter, setIsChangeFilter] = useState(false)
     const [sortBy, setSortBy] = useState('');
     const [type, setType] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalOpenView, setModalOpenView] = useState(false);
-
-    const [productId, setProductId] = useState('');
-    const [productView, setProductView] = useState('');
-
+    const [product, setProduct] = useState('');
+    const [change, setChange] = useState(false);
 
     const [totalPage, setTotalPage] = useState(1)
     const [pageNumber, setPageNumber] = useState(1)
@@ -34,7 +29,7 @@ const PostAuction = () => {
     };
     useEffect(() => {
         try {
-            let params = { page: pageNumber, limit: 8, status: 'Verified' };
+            let params = { page: pageNumber, limit: 8, status: 'Processing' };
             if (nameProduct !== '') {
                 params.productName = nameProduct
                 setIsChangeFilter(true)
@@ -55,16 +50,11 @@ const PostAuction = () => {
             console.log(error);
         }
 
-    }, [accessToken, nameProduct, sortBy, type, pageNumber])
-
-    const handlePostAuction = (id) => {
-        setProductId(id)
-        setModalOpen(true)
-    }
+    }, [accessToken, nameProduct, sortBy, type, pageNumber, change])
 
     const handleViewDetail = (product) => {
-        setProductView(product)
-        setModalOpenView(true)
+        setProduct(product)
+        setModalOpen(true)
     }
 
     const clearFilters = () => {
@@ -82,7 +72,7 @@ const PostAuction = () => {
                         type="search" name="search" placeholder="Search Product" value={nameProduct} onChange={(e) => { setNameProduct(e.target.value) }} />
                 </div>
                 <div className='w-full hidden lg:flex lg:items-center lg:justify-center'>
-                    <h1 className='text-[20px] font-extrabold text-[#007bff]'>Manage verified auction products
+                    <h1 className='text-[20px] font-extrabold text-[#007bff]'>Manage products
                     </h1>
                 </div>
                 <div className="hidden md:flex md:justify-end ">
@@ -125,14 +115,12 @@ const PostAuction = () => {
                         <div className="px-4 my-4 text-center">
                             <h3 className="text-base font-semibold">{item?.productName}</h3>
                             <p className='text-sm'>Starting Price : {item?.startingPrice}</p>
-                            <div className='flex items-center justify-between mt-2'>
+                            <div className='mt-2'>
                                 <button type="button"
                                     onClick={(e) => { handleViewDetail(item) }}
-                                    className="py-2 w-[48%] rounded-full text-black text-sm tracking-wider border-2 border-green-600 hover:bg-green-600 hover:text-white"
+                                    className="py-2 w-full rounded-full text-black text-sm tracking-wider border-2 border-green-600 hover:bg-green-600 hover:text-white"
                                 >View Detail</button>
-                                <button type="button"
-                                    className=" py-2 w-[48%] rounded-full text-black text-sm tracking-wider font-medium outline-none border-2 border-orange-600 hover:bg-orange-600 hover:text-white "
-                                    onClick={() => handlePostAuction(item?.id)}>Post Auction</button>
+
                             </div>
                         </div>
                     </div>
@@ -141,15 +129,11 @@ const PostAuction = () => {
             <div className='flex items-center justify-center mt-4'>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
-
             {
-                modalOpen && <ModalPost modalOpen={setModalOpen} productId={productId} accessToken={accessToken} />
-            }
-            {
-                modalOpenView && <ViewDetail modalOpen={setModalOpenView} product={productView} accessToken={null} change={null} setChange={null} index={1} />
+                modalOpen && <ViewDetal modalOpen={setModalOpen} product={product} accessToken={accessToken} change={change} setChange={setChange} index={0} />
             }
         </div>
     )
 }
 
-export default PostAuction;
+export default ApproveProduct

@@ -9,19 +9,28 @@ import ProductPickList from "../../components/HomeComponent/ProductPickList";
 import PremierSeller from "../../components/HomeComponent/PremierSeller";
 import RecentNew from "../../components/HomeComponent/RecentNew";
 import ProductPick from "../../components/HomeComponent/ProductPick";
-import {useEffect ,useState} from "react";
+import {useEffect, useState} from "react";
 import * as censorServices from "../../services/censor"
 
 const Home = () => {
-    const [auctionSessions , setAuctionSession] = useState([])
+    const [auctionSessions, setAuctionSession] = useState([])
+    const [censors, setCensors] = useState([])
+
+    const fetchCensors = async () => {
+        const responseCensor = await censorServices.getCensors({limit: 6})
+        responseCensor?.status === 200 && setCensors(responseCensor?.data?.censors)
+    }
+
+    const fetchAuctionSession = async () => {
+        const responseCensor = await censorServices.getAuctionSession({limit: 5})
+        responseCensor?.status === 200 && setAuctionSession(responseCensor?.data?.productAuctions)
+    }
 
     useEffect(() => {
-        const fetchAPI = async () => {
-            const responseCensor = await censorServices.getAuctionSession({})
-            responseCensor?.status === 200 && setAuctionSession(responseCensor?.data?.productAuctions)
-        }
-        fetchAPI()
+        fetchAuctionSession()
+        fetchCensors()
     }, [])
+
 
     return (
         <>
@@ -70,16 +79,14 @@ const Home = () => {
 
             {/*Trending Auction*/}
             <Slide
-                children={
-                    <TrendingAuction auctionSessions={auctionSessions}/>
-                }
+                children={<TrendingAuction/>}
             />
 
             {/*Upcoming Auction*/}
             <Slide
                 directionOfOperation={"left"}
                 maxWidth={"100%"}
-                children={<UpcomingAuction auctionSessions={auctionSessions} />}
+                children={<UpcomingAuction/>}
             />
 
             {/*Product Item*/}
@@ -91,22 +98,18 @@ const Home = () => {
             {/*Product Pick List*/}
             <Slide
                 directionOfOperation={"left"}
-                children={<ProductPickList auctionSessions={auctionSessions} />}
+                children={<ProductPickList auctionSessions={auctionSessions}/>}
             />
 
             {/*Premier Seller*/}
             <Reveal
-                children={
-                    <PremierSeller/>
-                }
+                children={<PremierSeller censorsList={censors}/>}
             />
 
             {/*Recent new*/}
             <Reveal
                 children={<RecentNew/>}
             />
-
-
         </>
     )
 }
