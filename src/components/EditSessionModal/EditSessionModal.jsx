@@ -8,12 +8,22 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import {format} from "date-fns";
 import {toast} from "sonner";
 import * as censorService from "../../services/censor";
+import moment from "moment/moment";
 
 const EditSessionModal = ({openModal, setOpenModal, sessionSelected, setSessionSelected, isUpdated, setIsUpdated}) => {
+    const currentDate = moment().format('YYYY-MM-DDTHH:mm');
     const accessToken = localStorage.getItem('access-token')
     const handleEditSession = async (e) => {
         if (!sessionSelected.title || !sessionSelected.description || !sessionSelected.startTime || !sessionSelected.endTime) {
             toast.error("Please fill out all fields");
+            return;
+        }
+        if (currentDate >= sessionSelected.startTime || currentDate >= sessionSelected.endTime) {
+            toast.error("Time must be after current date.");
+            return;
+        }
+        else if (sessionSelected.startTime >= sessionSelected.endTime) {
+            toast.error("The end time must occur after the start time");
             return;
         }
         const updateSession = await censorService.updateAuctionSession({
