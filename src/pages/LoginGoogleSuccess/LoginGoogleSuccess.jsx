@@ -18,8 +18,8 @@ const LoginGoogleSuccess = () => {
                 const role = getUser?.response?.role?.name
                 setAuth(userData)
                 localStorage.setItem('auth', JSON.stringify({ ...userData }));
-                localStorage.setItem("access-token", JSON.stringify({ accessToken }))
-                localStorage.setItem("refresh-token", JSON.stringify({ refreshToken }))
+                localStorage.setItem("access-token",  accessToken )
+                localStorage.setItem("refresh-token", refreshToken )
                 window.opener && window.close()
                 if (role === "Admin")
                     window.opener.location.href = '/admin';

@@ -151,6 +151,42 @@ const rejectProduct = async (productId, accessToken) => {
     }
 }
 
+const getAuctionSessionByCensor = async (params, accessToken) => {
+    try {
+        const response = await request.get("/censor/my-auction-session", {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return {
+            response: response.data,
+            statusCode: response.status
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
+const updateAuctionSession = async (body, accessToken, sessionId) => {
+    try {
+        console.log(body, sessionId)
+        const response = await request.put(`/censor/update-auction-session/${sessionId}`,
+            body,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status
+        }
+    } catch (error) {
+        return error;
+    }
+}
+
 
 export {
     registerCensor,
@@ -159,5 +195,7 @@ export {
     getCensors,
     postAuctionSession,
     verifyProduct,
-    rejectProduct
+    rejectProduct,
+    getAuctionSessionByCensor,
+    updateAuctionSession
 };
