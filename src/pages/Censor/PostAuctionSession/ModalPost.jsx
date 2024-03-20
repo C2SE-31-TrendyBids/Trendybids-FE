@@ -15,7 +15,7 @@ const ModalPost = ({ modalOpen, productId, accessToken }) => {
 
     const hanhlePost = async () => {
         setLoading(true)
-        const currentDate = moment().format('YYYY-MM-DD ');
+        const currentDate = moment().format('YYYY-MM-DDTHH:mm');
         const startDateTime = new Date(startDay + "T" + startTime);
         const endDateTime = new Date(endDay + "T" + endTime);
         const startTimePlusOneHour = new Date(startDateTime.getTime() + (1 * 60 * 60 * 1000))
