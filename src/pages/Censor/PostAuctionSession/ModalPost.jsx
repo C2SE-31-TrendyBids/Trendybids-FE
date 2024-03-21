@@ -4,7 +4,7 @@ import * as censorAPI from "../../../services/censor"
 import { toast } from "sonner";
 import moment from 'moment';
 
-const ModalPost = ({ modalOpen, productId, accessToken }) => {
+const ModalPost = ({ modalOpen, productId, accessToken, change, setChange }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -15,9 +15,10 @@ const ModalPost = ({ modalOpen, productId, accessToken }) => {
 
     const hanhlePost = async () => {
         setLoading(true)
-        const currentDate = moment().format('YYYY-MM-DD ');
-        const startDateTime = new Date(startDay + "T" + startTime);
-        const endDateTime = new Date(endDay + "T" + endTime);
+        const currentDate = moment().format('DD-MM-YYYY');
+        console.log(currentDate);
+        const startDateTime = new Date(moment(startDay).format('DD-MM-YYYY') + "T" + startTime);
+        const endDateTime = new Date(moment(endDay).format('DD-MM-YYYY') + "T" + endTime);
         const startTimePlusOneHour = new Date(startDateTime.getTime() + (1 * 60 * 60 * 1000))
         let datetimeStart = startDay + " " + startTime;
         let datetimeEnd = endDay + " " + endTime;
@@ -52,11 +53,13 @@ const ModalPost = ({ modalOpen, productId, accessToken }) => {
         else {
             toast.error("Error creating auction products")
         }
+        setChange(!change)
+        modalOpen(false)
     }
 
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
-            <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
+            <div className="w-full max-w-xl bg-white shadow-lg rounded-md p-6 relative">
                 <div className="flex items-center pb-3 border-b text-[#007bff]">
                     <h3 className="text-xl font-bold flex-1">POST PRODUCT AUCTION</h3>
                     <button onClick={() => modalOpen(false)}>

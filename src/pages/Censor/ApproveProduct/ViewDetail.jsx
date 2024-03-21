@@ -49,7 +49,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
     }
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
-            <div className="w-full max-w-3xl bg-white shadow-lg rounded-md p-6 relative">
+            <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
                 <div className="flex items-center pb-3 border-b text-[#007bff]">
                     <h3 className="text-xl font-bold flex-1">PRODUCT DETAIL</h3>
                     <button onClick={() => modalOpen(false)}>
@@ -108,7 +108,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                     <div className=' text-red-500 my-1'> $ {product?.startingPrice}</div>
                                     <div className='my-1'>{product?.category.name}</div>
                                     <div className='my-1'>{product?.owner.fullName}</div>
-                                    <div className='my-1'>{product?.owner.email}</div>
+                                    <div className='my-1 whitespace-nowrap'>{product?.owner.email}</div>
                                     <div className='my-1'>{moment(product?.createdAt).format('DD - MM - YYYY')}</div>
                                 </div>
                             </div>

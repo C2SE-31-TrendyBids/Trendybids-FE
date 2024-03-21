@@ -15,7 +15,7 @@ const PostAuction = () => {
     const [type, setType] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpenView, setModalOpenView] = useState(false);
-
+    const [change, setChange] = useState(true)
     const [productId, setProductId] = useState('');
     const [productView, setProductView] = useState('');
 
@@ -55,7 +55,7 @@ const PostAuction = () => {
             console.log(error);
         }
 
-    }, [accessToken, nameProduct, sortBy, type, pageNumber])
+    }, [accessToken, nameProduct, sortBy, type, pageNumber, change])
 
     const handlePostAuction = (id) => {
         setProductId(id)
@@ -143,7 +143,7 @@ const PostAuction = () => {
             </div>
 
             {
-                modalOpen && <ModalPost modalOpen={setModalOpen} productId={productId} accessToken={accessToken} />
+                modalOpen && <ModalPost modalOpen={setModalOpen} productId={productId} accessToken={accessToken} change={change} setChange={setChange} />
             }
             {
                 modalOpenView && <ViewDetail modalOpen={setModalOpenView} product={productView} accessToken={null} change={null} setChange={null} index={1} />

@@ -107,16 +107,17 @@ const getCensors = async (params) => {
 };
 const postAuctionSession = async (body, accessToken) => {
     try {
-        const reqAuction = await request.post('/censor/post-auction-session', {
-            body: body,
-        }, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            }
-        });
+        console.log(body);
+        const response = await request.post('/censor/post-auction-session',
+            body,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+            });
         return {
-            message: reqAuction.data.message,
-            statusCode: reqAuction.status
+            message: response.data.message,
+            statusCode: response.status
         }
     } catch (error) {
         return error;
