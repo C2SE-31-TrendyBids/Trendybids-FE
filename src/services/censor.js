@@ -3,21 +3,21 @@ import * as request from "../ultils/request";
 const CENSOR_URL = "/censor";
 
 export const getAllCensor = async () => {
-  try {
-    const response = await request.get(`${CENSOR_URL}/get-censor`, {
-      params: { page: 1, limit: 9999999 },
-    });
+    try {
+        const response = await request.get(`${CENSOR_URL}/get-censor`, {
+            params: { page: 1, limit: 9999999 },
+        });
 
-    return {
-      response: response.data,
-      statusCode: response.status,
-    };
-  } catch (error) {
-    return {
-      error,
-      statusCode: error.status,
-    };
-  }
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
 };
 
 
@@ -105,10 +105,59 @@ const getCensors = async (params) => {
         return error;
     }
 };
+const postAuctionSession = async (body, accessToken) => {
+    try {
+        const reqAuction = await request.post('/censor/post-auction-session', {
+            body: body,
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        });
+        return {
+            message: reqAuction.data.message,
+            statusCode: reqAuction.status
+        }
+    } catch (error) {
+        return error;
+    }
+}
+const verifyProduct = async (productId, accessToken) => {
+    try {
+        const reqVerify = await request.post('/censor/approve-auction-product', {
+            productId: productId
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        })
+        return reqVerify
+    } catch (error) {
+        return error;
+    }
+}
+const rejectProduct = async (productId, accessToken) => {
+    try {
+        const reqReject = await request.post('/censor/reject-auction-product', {
+            productId: productId
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        })
+        return reqReject
+    } catch (error) {
+        return error;
+    }
+}
+
 
 export {
     registerCensor,
     getProductAuction,
     getAuctionSession,
-    getCensors
+    getCensors,
+    postAuctionSession,
+    verifyProduct,
+    rejectProduct
 };

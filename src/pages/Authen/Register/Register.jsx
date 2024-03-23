@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import background from "../../../public/images/wave_background.png"
-import logo from "../../../public/images/logoTrendy.jpg"
+import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
 import { TextField, Button, CircularProgress } from '@mui/material';
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
 import CodeOtp from '../InputOtp/CodeOtp';
-import {toast} from "sonner";
+import { toast } from "sonner";
 
 const Register = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -44,20 +44,28 @@ const Register = () => {
             return
         }
         const registerReq = await authApi.register(email, password, fullName)
-        if (registerReq.statusCode === 201) {
+        console.log(registerReq?.response);
+        if (registerReq?.statusCode === 201) {
             setModalOpen(true)
             setLoading(false)
+            toast.success(registerReq?.response?.message)
         }
-        else toast.error('Register unsuccessful');
+        else if (registerReq?.statusCode === 200) {
+            toast.error(registerReq?.response?.message)
+        }
+        else toast.error(registerReq?.response?.message);
         setLoading(false)
     }
     return (
         <div className=' max-w-screen h-screen' >
             <img src={background} alt="" className='w-full h-full object-cover' />
-            <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 bg-white text-black shadow-lg rounded-lg">
-                <div className='grid grid-cols-2 gap-2'>
+            <div className="min-w-[400px] absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 bg-white text-black shadow-lg rounded-lg">
+                <div className='flex items-center justify-center'>
+                    <img src={logo} alt="" className='max-lg:w-36 max-lg:h-36 lg:hidden' />
+                </div>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-2'>
                     <div className=''>
-                        <div className='text-4xl font-bold mt-12 text-center'> REGISTER </div>
+                        <div className='text-4xl font-bold lg:mt-12 mt-4 text-center'> REGISTER </div>
                         <div className='w-full'>
                             <div className='mt-4 flex items-center justify-center'>
                                 <TextField id="standard-basic"
@@ -135,7 +143,7 @@ const Register = () => {
                             }
                         </div>
 
-                        <div className='flex items-center justify-center mt-6'>
+                        <div className='flex items-center justify-center mt-6 pb-4'>
                             {loading ? (
                                 <CircularProgress />
 
@@ -146,10 +154,10 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-                    <div className='m-6'>
-                        <img src={logo} alt="" className='scale-110' />
-                        <div className='border-t border-t-gray-500'>
-                            <span className='flex items-center justify-center m-4'>
+                    <div className='lg:m-6 mb-4'>
+                        <img src={logo} alt="" className='max-lg:w-36 max-lg:h-36 max-lg:hidden' />
+                        <div className='lg:border-t border-t-gray-500'>
+                            <span className='flex items-center justify-center lg:m-4'>
                                 <Link href="/login" underline="always">
                                     {'I already have an account'}
                                 </Link>

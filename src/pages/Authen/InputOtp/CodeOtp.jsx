@@ -3,6 +3,7 @@ import logo from "../../../public/images/logoTrendy.jpg"
 import { Button, CircularProgress, Link } from '@mui/material'
 import * as authApi from '../../../services/auth'
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const CodeOtp = ({ closeModal, email, password, index }) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
             else if (index === 'reset') {
                 const resetPasRe = await authApi.resetPassword(email, password, otpString)
                 if (resetPasRe?.statusCode === 200) {
+                    toast.success(resetPasRe?.response?.message)
                     console.log('Đặt lại mật khẩu thành công');
                     navigate('/login');
                     closeModal(false)
@@ -85,7 +87,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                 <div className="flex flex-row items-center justify-between mx-auto w-full">
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberOne}
                                             onChange={(e) => setNumberOne(e.target.value)}
@@ -93,7 +95,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                     </div>
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberTwo}
                                             onChange={(e) => setNumberTwo(e.target.value)}
@@ -101,7 +103,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                     </div>
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberThree}
                                             onChange={(e) => setNumberThree(e.target.value)}
@@ -109,7 +111,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                     </div>
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberFour}
                                             onChange={(e) => setNumberFour(e.target.value)}
@@ -117,7 +119,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                     </div>
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberFive}
                                             onChange={(e) => setNumberFive(e.target.value)}
@@ -125,7 +127,7 @@ const CodeOtp = ({ closeModal, email, password, index }) => {
                                     </div>
                                     <div className="w-12 h-12 ">
                                         <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                            className="w-full h-full flex flex-col items-center justify-center text-center px-2 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                             type="text"
                                             value={numberSix}
                                             onChange={(e) => setNumberSix(e.target.value)}

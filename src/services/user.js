@@ -20,14 +20,22 @@ const getCurrentUser = async (accessToken) => {
 };
 
 const JOIN_SESSION_ENDPOINT = "/user/join-auction-session"
-const joinSession = async (accessToken, paramObject) => {
+const joinSession = async (accessToken, sessionId) => {
     try {
-         return await request.get(`/user/me`, {
-             params: paramObject,
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
+        return await request.post(JOIN_SESSION_ENDPOINT, {
+                sessionId
             },
-        });
+            {
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded",
+                    Authorization:
+                        `Bearer ${accessToken}`,
+                }
+                ,
+            }
+        )
+            ;
     } catch (error) {
         return {
             error,

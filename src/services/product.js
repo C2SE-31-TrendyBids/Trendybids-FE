@@ -13,6 +13,7 @@ export const getAllProduct = async (accessToken, params = {}) => {
     });
 
     return {
+      totalPages: response.data.totalPages,
       response: response.data,
       statusCode: response.status,
     };
