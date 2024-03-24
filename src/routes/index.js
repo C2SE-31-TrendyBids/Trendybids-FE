@@ -11,6 +11,7 @@ import {
     CensorLayout
 } from '../layouts/index';
 import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
+import AuctionSession from "../pages/AuctionSession/AuctionSession";
 
 
 const router = [
@@ -34,9 +35,8 @@ const router = [
 
     //Censor Management
     { path: '/product-approve', layout: CensorLayout, component: PostAuction },
-    { path: '/all-product', layout: CensorLayout, component: ApproveProduct }
-
-
+    { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
+    { path: '/auction-session', layout: CensorLayout, component: AuctionSession }
 ]
 
 export { router }

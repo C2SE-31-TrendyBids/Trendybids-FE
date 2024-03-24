@@ -4,7 +4,7 @@ import Link from '@mui/material/Link';
 import * as censorApi from '../../../services/censor'
 import CircularProgress from '@mui/material/CircularProgress';
 import { IoCloudUploadSharp } from "react-icons/io5";
-
+import { toast } from "sonner";
 const RegisterCensor = () => {
     const [nameOrganization, setNameOrganization] = useState('');
     const [founding, setFounding] = useState('');
@@ -18,6 +18,8 @@ const RegisterCensor = () => {
     const [loading, setLoading] = useState(false)
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const accessToken = localStorage.getItem('access-token');
+
     const handleFileChange = (e) => {
         const newImage = e.target.files[0];
         newImage["id"] = Math.random();
@@ -29,54 +31,70 @@ const RegisterCensor = () => {
         setLoading(true)
         try {
             if (isCheck) {
-                if (nameOrganization.trim() === '') {
-                    alert('Please enter organization name');
+                if (nameOrganization.trim() === '' || nameOrganization.length < 5 || nameOrganization > 100) {
+                    toast.error('Please enter organization name , 5 < name organization < 100');
                     return
                 }
                 if (founding.trim() === '') {
-                    alert('Please enter founding date');
+                    toast.error('Please enter founding date');
                     return
                 }
-                if (placeTaxCode.trim() === '') {
-                    alert('Please enter place of tax code issuance');
+                if (placeTaxCode.trim() === '' || placeTaxCode < 10 || placeTaxCode > 200) {
+                    toast.error('Please enter place of tax code issuance , 10 < place tax code < 200');
                     return
                 }
                 if (dateTaxCode.trim() === '') {
-                    alert('Please enter tax code issuance date');
+                    toast.error('Please enter tax code issuance date');
                     return
                 }
-                if (phoneNumber.trim() === '') {
-                    alert('Please enter phone number');
+                if (phoneNumber.trim() === '' || phoneNumber.length < 10 || phoneNumber.length > 20) {
+                    toast.error('Please enter phone number , 9 < phone number < 20 ');
                     return
                 }
-                if (taxCode.trim() === '') {
-                    alert('Please enter company tax code');
+                if (taxCode.trim() === '' || taxCode.length < 8 || taxCode.length > 30) {
+                    toast.error('Please enter company tax code , 8 < tax code < 30');
                     return
                 }
-                if (address.trim() === '') {
-                    alert('Please enter business address');
+                if (address.trim() === '' || address.length < 10 || address.length > 200) {
+                    toast.error('Please enter business address , 10 < address < 200');
                     return
                 }
-                if (position.trim() === '') {
-                    alert('Please enter position');
+                if (position.trim() === '' || position.length < 1 || position.length > 50) {
+                    toast.error('Please enter position , 1 < possition < 50');
                     return
                 }
-                const censorReq = await censorApi.registerCensor(nameOrganization, phoneNumber, founding, address, taxCode, dateTaxCode, position, placeTaxCode, selectedFile)
+
+                const censorReq = await censorApi.registerCensor(accessToken, nameOrganization, phoneNumber, founding, address, taxCode, dateTaxCode, position, placeTaxCode, selectedFile)
                 if (censorReq.statusCode === 201) {
-                    alert(censorReq.message);
+                    toast.success(censorReq.message);
+                    resetAll()
                 }
                 else {
                     alert(censorReq.message);
                 }
             }
             else {
-                alert("Bạn chưa đồng ý điều kiện của chúng tôi")
+                alert("You have not agreed to our terms")
             }
         } catch (error) {
             alert(error)
         } finally {
             setLoading(false);
         }
+    }
+    const resetAll = () => {
+        selectedFile(null)
+        setAddress('')
+        setDateTaxCode('')
+        setFounding('')
+        setIsCheck(false)
+        setNameOrganization('')
+        setPosition('')
+        setTaxCode('')
+        setPhoneNumber('')
+        setPlaceTaxCode('')
+
+
     }
 
     return (

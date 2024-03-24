@@ -15,10 +15,13 @@ const ModalPost = ({ modalOpen, productId, accessToken, change, setChange }) => 
 
     const hanhlePost = async () => {
         setLoading(true)
-        const currentDate = moment().format('DD-MM-YYYY');
+        const currentDate = moment().format('MM-DD-YYYY');
         console.log(currentDate);
-        const startDateTime = new Date(moment(startDay).format('DD-MM-YYYY') + "T" + startTime);
-        const endDateTime = new Date(moment(endDay).format('DD-MM-YYYY') + "T" + endTime);
+        console.log(startDay);
+        console.log(startTime);
+        const startDateTime = new Date(startDay + "T" + startTime + ":00");
+        console.log(startDateTime);
+        const endDateTime = new Date(endDay + "T" + endTime + ":00");
         const startTimePlusOneHour = new Date(startDateTime.getTime() + (1 * 60 * 60 * 1000))
         let datetimeStart = startDay + " " + startTime;
         let datetimeEnd = endDay + " " + endTime;
