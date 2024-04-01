@@ -70,18 +70,18 @@ const ModalPost = ({ modalOpen, productId, accessToken, change, setChange }) => 
                     </button>
                 </div>
                 <div className="my-4">
-                    <div class="space-y-4 px-2 max-w-sm mx-auto font-[sans-serif]">
-                        <div class="flex items-center">
-                            <label class="text-black w-36 text-sm">Title</label>
+                    <div className="space-y-4 px-2 max-w-sm mx-auto font-[sans-serif]">
+                        <div className="flex items-center">
+                            <label className="text-black w-36 text-sm">Title</label>
                             <input type="text" placeholder="Input Title"
-                                class="px-2 py-2 w-full border-b-2 border-green-500 focus:border-[#007bff] outline-none text-sm bg-white"
+                                className="px-2 py-2 w-full border-b-2 border-green-500 focus:border-[#007bff] outline-none text-sm bg-white"
                                 onChange={(e) => setTitle(e.target.value)} />
                         </div>
-                        <div class="flex items-center max-w-lg mx-auto w-full font-[sans-serif]">
-                            <label class="text-black text-sm w-36">Description</label>
-                            <div class="w-full">
+                        <div className="flex items-center max-w-lg mx-auto w-full font-[sans-serif]">
+                            <label className="text-black text-sm w-36">Description</label>
+                            <div className="w-full">
                                 <textarea placeholder='Input description'
-                                    class="px-2 py-2 bg-white w-full text-sm border rounded border-green-500 outline-[#007bff] font-[sans-serif]"
+                                    className="px-2 py-2 bg-white w-full text-sm border rounded border-green-500 outline-[#007bff] font-[sans-serif]"
                                     rows="4"
                                     onChange={(e) => setDescription(e.target.value)} />
                             </div>

@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 const PremierSeller = ({censorsList = []}) => {
 
     return (
-        <div className="px-10 mx-auto mt-20 mb-32">
+        <div className="px-8 mx-auto mt-20 mb-32">
             <h2 className="text-[#0B1133] text-2xl font-bold">Premier Sellers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
                 {censorsList.map((item) => {

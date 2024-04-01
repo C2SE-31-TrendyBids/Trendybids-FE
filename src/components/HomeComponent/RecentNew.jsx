@@ -5,12 +5,12 @@ const RecentNew = () => {
 
 
     return (
-        <div className="px-10 mx-auto mt-20 mb-16 lg:mb-10">
+        <div className="px-8 mx-auto mt-20 mb-16 lg:mb-10">
             <h2 className="text-[#0B1133] text-2xl font-bold">Recent News</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 ">
-                {[1, 2, 3].map(() => {
+                {[1, 2, 3].map((item) => {
                     return (
-                        <div className="grid grid-rows-3">
+                        <div key={item} className="grid grid-rows-3">
                             <div
                                 className="row-span-2 bg-[#FEC23A] flex justify-center items-center rounded-t-lg">
                                 <img className="rounded-t-lg object-cover" src={Sport} alt=""/>

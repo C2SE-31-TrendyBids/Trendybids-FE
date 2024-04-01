@@ -21,10 +21,18 @@ export const getAllCensor = async () => {
   }
 };
 
-const registerCensor = async (accessToken, name, phoneNumber, founding, address, companyTaxCode, taxCodeIssuanceDate, position, placeTaxCode, avatar
+const registerCensor = async (
+  name,
+  phoneNumber,
+  founding,
+  address,
+  companyTaxCode,
+  taxCodeIssuanceDate,
+  position,
+  placeTaxCode,
+  avatar
 ) => {
   try {
-    console.log(avatar);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("phoneNumber", phoneNumber);
@@ -42,7 +50,6 @@ const registerCensor = async (accessToken, name, phoneNumber, founding, address,
       formData,
       {
         headers: {
-          "Authorization": `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       }
@@ -112,22 +119,25 @@ const getCensors = async (params) => {
 };
 const postAuctionSession = async (body, accessToken) => {
   try {
-    console.log(body);
-    const response = await request.post('/censor/post-auction-session',
-      body,
+    const reqAuction = await request.post(
+      "/censor/post-auction-session",
+      {
+        body: body,
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-        }
-      });
+        },
+      }
+    );
     return {
-      message: response.data.message,
-      statusCode: response.status
-    }
+      message: reqAuction.data.message,
+      statusCode: reqAuction.status,
+    };
   } catch (error) {
     return error;
   }
-}
+};
 const verifyProduct = async (productId, accessToken) => {
   try {
     const reqVerify = await request.post(

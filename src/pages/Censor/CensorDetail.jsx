@@ -62,19 +62,24 @@ const CensorDetail = () => {
                      alt="Background"/>
                 <div className="absolute top-0 left-0 right-0 bottom-0 bg-[#485367]/70"></div>
                 <div
-                    className="absolute bottom-1/2 left-1/2 translate-y-1/2 -translate-x-1/2  lg:translate-y-0 lg:translate-x-0 lg:bottom-8 lg:left-[13%] mx-auto">
-                    <div className=" flex flex-col justify-center items-center md:flex-row md:items-end">
-                        <div className="w-9 h-9 md:w-16 md:h-16 rounded-full p-[1.3px] bg-white mr-2">
-                            <img className="w-full h-full object-cover rounded-full"
-                                 src={censors?.avatarUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPyGNr2qL63Sfugk2Z1-KBEwMGOfycBribew&usqp=CAU"}
-                                 alt={censors?.name || ""}/>
+                    className="absolute left-0 right-0 bottom-1/2 translate-y-1/2 md:bottom-12  ">
+                    <div className="max-w-[1200px] px-10 mx-auto">
+                        <div
+                            className="flex flex-col justify-between items-center md:flex-row md:items-end">
+                            <div className="flex flex-col justify-center items-center md:flex-row md:justify-start md:items-end gap-4">
+                                <div className="w-9 h-9 md:w-16 md:h-16 rounded-full p-[1.3px] bg-white mr-2">
+                                    <img className="w-full h-full object-cover rounded-full"
+                                         src={censors?.avatarUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPyGNr2qL63Sfugk2Z1-KBEwMGOfycBribew&usqp=CAU"}
+                                         alt={censors?.name || ""}/>
+                                </div>
+                                <p className="text-white flex items-center  lg:mr-6"><FaLocationDot
+                                    className="text-white mr-2 mb-1" size={20}/>{censors?.address || "No Address"}</p>
+                                <p className="text-white flex items-center"><FaStar className="mr-2 mb-1 text-yellow-300"
+                                                                                    size={20}/>4.80
+                                    rating from 5 review</p>
+                            </div>
+                            <p className="md:ml-10 lg:ml-48 text-lg text-white font-medium">{censors?.name || "No Address"}</p>
                         </div>
-
-                        <p className="text-white flex items-center  lg:mr-6"><FaLocationDot
-                            className="text-white mr-2 mb-1" size={20}/>{censors?.address || "No Address"}</p>
-                        <p className="text-white flex items-center"><FaStar className="text-white mr-2 mb-1" size={20}/>4.80
-                            rating from 5 review</p>
-                        <p className="md:ml-10 lg:ml-48 text-lg text-white font-medium">{censors?.name || "No Address"}</p>
                     </div>
                 </div>
             </div>
@@ -132,7 +137,8 @@ const CensorDetail = () => {
                                                 <ProductItem key={item?.id} infoAuction={item}/>
                                             )
 
-                                        })) : <div className="col-span-1 md:col-span-2  lg:col-span-3 w-full flex items-center justify-center mt-14">
+                                        })) : <div
+                                            className="col-span-1 md:col-span-2  lg:col-span-3 w-full flex items-center justify-center mt-14">
                                             <img
                                                 className="w-60 h-60 object-cover"
                                                 src={NotFound}

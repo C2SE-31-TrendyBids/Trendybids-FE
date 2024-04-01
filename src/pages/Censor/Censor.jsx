@@ -26,15 +26,17 @@ const Censor = () => {
                      alt="Background"/>
                 <div className="absolute top-0 left-0 right-0 bottom-0 bg-[#485367]/70"></div>
                 <div
-                    className="absolute top-1/2 -translate-y-1/2 left-[13%] mx-auto">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl text-white font-bold mb-5">Censor List</h1>
-                    <p className="flex items-center text-lg text-white font-semibold">Home <GrFormNext
-                        className='text-gray-300' size={22}/> Censor List</p>
+                    className="absolute inset-0">
+                    <div className="max-w-[1200px] px-10 translate-y-full mx-auto">
+                        <h1 className="text-2xl md:text-4xl lg:text-6xl text-white font-bold mb-5">Censor List</h1>
+                        <p className="flex items-center text-lg text-white font-semibold">Home <GrFormNext
+                            className='text-gray-300' size={22}/> Censor List</p>
+                    </div>
                 </div>
             </div>
 
             <Reveal
-                children={<PremierSeller censorsList = {censors}/>}
+                children={<PremierSeller censorsList={censors}/>}
             />
         </>
     )

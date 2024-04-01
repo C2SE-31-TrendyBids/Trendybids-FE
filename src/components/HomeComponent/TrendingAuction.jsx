@@ -11,15 +11,12 @@ const TrendingAuction = () => {
 
     useEffect(() => {
         const fetchAPI = async () => {
-            const responseCensor = await censorServices.getAuctionSession({limit:6})
+            const responseCensor = await censorServices.getAuctionSession({limit:5})
             responseCensor?.status === 200 && setAuctionSession(responseCensor?.data?.productAuctions)
             responseCensor?.status === 200 && setFirstSessions(responseCensor?.data?.productAuctions[0])
         }
         fetchAPI()
     }, [])
-
-    console.log(auctionSessions)
-    console.log(firstSessions)
 
     return (
         <div className="px-10 mx-auto mt-28 mb-24">

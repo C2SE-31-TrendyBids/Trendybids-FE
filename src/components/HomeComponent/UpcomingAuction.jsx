@@ -13,7 +13,6 @@ const UpcomingAuction = () => {
         }
         fetchAPI()
     }, [])
-    console.log(auctionSessions)
 
     return (
         <div

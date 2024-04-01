@@ -1,6 +1,6 @@
 import {
     Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
-    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct
+    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct, ApproveCensor, ManagementAccount
 } from '../pages/index';
 
 import {
@@ -27,7 +27,6 @@ const router = [
     { path: '/profile', layout: User, component: EditProfile },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/not-found', layout: Default, component: NotFound },
-    { path: '/admin', layout: Admin, component: AdminPage },
     { path: '/censor', component: Censor },
     { path: '/censor/:censorId', component: CensorDetail },
     //product auction
@@ -36,7 +35,14 @@ const router = [
     //Censor Management
     { path: '/product-approve', layout: CensorLayout, component: PostAuction },
     { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
-    { path: '/auction-session', layout: CensorLayout, component: AuctionSession }
+    { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
+
+    //Admin
+    { path: '/admin', layout: Admin, component: AdminPage },
+    { path: '/Approve-Censor', layout: Admin, component: ApproveCensor },
+    { path: '/Account', layout: Admin, component: ManagementAccount },
+
+
 ]
 
 export { router }

@@ -34,14 +34,16 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
             const verify = await censorAPI.verifyProduct(id, accessToken)
             if (verify?.status === 200) {
                 toast.success(verify?.data?.message)
+            } else {
+                toast(verify?.data?.message)
             }
-            toast(verify?.data?.message)
         } else {
             const reject = await censorAPI.rejectProduct(id, accessToken)
             if (reject?.status === 200) {
                 toast.success(reject?.data?.message)
+            } else {
+                toast(reject?.data?.message)
             }
-            toast(reject?.data?.message)
         }
         setChange(!change)
         modalOpen(false)
