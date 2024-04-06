@@ -1,6 +1,6 @@
 import {
     Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
-    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct
+    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct,ProductAuctionDetail
 } from '../pages/index';
 
 import {
@@ -25,6 +25,7 @@ const publicRouter = [
     { path: '/not-found', layout: Default, component: NotFound },
     { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
     { path: '/product-auction', layout: Default, component: ProductAuction },
+    { path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail },
     { path: '/censor', component: Censor },
     { path: '/censor/:censorId', component: CensorDetail },
 ]

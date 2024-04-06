@@ -17,6 +17,7 @@ export { default as CensorDetail } from "./Censor/CensorDetail";
 export { default as Contact } from "./Contact/Contact"
 //product Aution
 export { default as ProductAuction } from "./ProductAuction/ProductAuction"
+export { default as ProductAuctionDetail } from "./ProductAuction/ProductAuctionDetail"
 
 // Censor management
 export { default as PostAuction } from "./Censor/PostAuctionSession/PostAuction"
