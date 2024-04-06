@@ -213,7 +213,7 @@ const updateAuctionSession = async (body, accessToken, sessionId) => {
   }
 };
 
- const deleteAuctionSession = async ({ accessToken, id }) => {
+const deleteAuctionSession = async ({ accessToken, id }) => {
   try {
     const response = await request.deleteRe(
       `/censor/delete-auction-session/${id}`,

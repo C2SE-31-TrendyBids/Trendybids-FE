@@ -23,8 +23,8 @@ const JOIN_SESSION_ENDPOINT = "/user/join-auction-session"
 const joinSession = async (accessToken, sessionId) => {
     try {
         return await request.post(JOIN_SESSION_ENDPOINT, {
-                sessionId
-            },
+            sessionId
+        },
             {
                 headers: {
                     "Content-Type":
@@ -45,7 +45,8 @@ const joinSession = async (accessToken, sessionId) => {
 };
 
 
+
 export {
     getCurrentUser,
-    joinSession
+    joinSession,
 };
