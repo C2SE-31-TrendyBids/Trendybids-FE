@@ -12,6 +12,8 @@ import {
 } from '../layouts/index';
 import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
 import AuctionSession from "../pages/AuctionSession/AuctionSession";
+import Message from "../pages/Message/Message";
+import MessageLayout from "../layouts/MessageLayout";
 
 const publicRouter = [
     { path: '/', component: Home },
@@ -35,17 +37,19 @@ const routerAdmin = [
 
 const routerUser = [
     { path: '/register-censor', layout: Default, component: RegisterCensor },
-    { path: '/profile', layout: User, component: EditProfile },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
 ]
 
 const routerCensor = [
     { path: '/product-approve', layout: CensorLayout, component: PostAuction },
-    { path: '/profile', layout: User, component: EditProfile },
     { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
     { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
-
-
 ]
 
-export { publicRouter, routerUser, routerCensor, routerAdmin }
+const routerAllRole = [
+    { path: '/profile', layout: User, component: EditProfile },
+    { path: '/messages', layout: MessageLayout, component: Message },
+    { path: '/messages/:conversationId', layout: MessageLayout, component: Message },
+]
+
+export { publicRouter, routerUser, routerCensor, routerAdmin, routerAllRole }
