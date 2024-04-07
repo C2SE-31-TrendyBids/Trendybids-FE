@@ -20,6 +20,15 @@ module.exports = {
                 },
                 '.fill-available': {
                     width: '-webkit-fill-available',
+                },
+                '.h-screen-header': {
+                    height: 'calc(100vh - 92px)'
+                },
+                '.h-sidebar-item': {
+                    height: 'calc(100% - 98px)'
+                },
+                '.w-message-channel': {
+                    width: 'calc(100% - 360px)'
                 }
             };
             addUtilities(newUtilities)

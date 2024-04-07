@@ -7,11 +7,13 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {AuthProvider} from './context/authProvider';
 import {MethodProvider} from './context/methodProvider';
 import {Toaster} from "sonner";
+import {Provider} from 'react-redux';
+import store from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
-        <Router>
+    <Router>
+        <Provider store={store}>
             <MethodProvider>
                 <AuthProvider>
                     <Toaster
@@ -26,8 +28,8 @@ root.render(
                     <App/>
                 </AuthProvider>
             </MethodProvider>
-        </Router>
-    </React.StrictMode>
+        </Provider>
+    </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function
