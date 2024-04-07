@@ -6,6 +6,8 @@ export { default as Register } from "./Authen/Register/Register";
 export { default as RegisterCensor } from "./Authen/Register/RegisterCensor";
 export { default as ForgotPassword } from "./Authen/ForgotPassword/ForgotPassword";
 export { default as ResetPassword } from "./Authen/ResetPassword/ResetPassword";
+export { default as LoginGoogleSuccess } from "/LoginGoogleSuccess/LoginGoogleSuccess";
+
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
 export { default as ManagementPost } from "./UserProfile/ManagementPost/ManagementPost";
@@ -26,4 +28,8 @@ export { default as ProductAuctionDetail } from "./ProductAuction/ProductAuction
 // Censor management
 export { default as PostAuction } from "./Censor/PostAuctionSession/PostAuction"
 export { default as ApproveProduct } from "./Censor/ApproveProduct/ApproveProduct"
+export { default as AuctionSession } from "./AuctionSession/AuctionSession"
+
+// Message
+export { default as Message } from "./Message/Message"
 

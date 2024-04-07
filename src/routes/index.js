@@ -1,6 +1,6 @@
 import {
     Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
-    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct, ApproveCensor, ManagementAccount
+    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct, ProductAuctionDetail, ApproveCensor, ManagementAccount, LoginGoogleSuccess, AuctionSession, Message
 } from '../pages/index';
 
 import {
@@ -8,12 +8,9 @@ import {
     Default,
     User,
     NoHeaderAndFooter,
-    CensorLayout
+    CensorLayout,
+    MessageLayout
 } from '../layouts/index';
-import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
-import AuctionSession from "../pages/AuctionSession/AuctionSession";
-import Message from "../pages/Message/Message";
-import MessageLayout from "../layouts/MessageLayout";
 
 const publicRouter = [
     { path: '/', component: Home },
