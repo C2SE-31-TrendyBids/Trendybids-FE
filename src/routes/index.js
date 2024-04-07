@@ -25,6 +25,9 @@ const publicRouter = [
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/about', layout: Default, component: AboutUS },
     { path: '/not-found', layout: Default, component: NotFound },
+    { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
+    { path: '/product-auction', layout: Default, component: ProductAuction },
+    { path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail },
     { path: '/censor', component: Censor },
     { path: '/censor/:censorId', component: CensorDetail },
 ]
