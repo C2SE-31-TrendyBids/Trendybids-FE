@@ -6,7 +6,7 @@ export { default as Register } from "./Authen/Register/Register";
 export { default as RegisterCensor } from "./Authen/Register/RegisterCensor";
 export { default as ForgotPassword } from "./Authen/ForgotPassword/ForgotPassword";
 export { default as ResetPassword } from "./Authen/ResetPassword/ResetPassword";
-export { default as LoginGoogleSuccess } from "/LoginGoogleSuccess/LoginGoogleSuccess";
+export { default as LoginGoogleSuccess } from "./LoginGoogleSuccess/LoginGoogleSuccess";
 
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
