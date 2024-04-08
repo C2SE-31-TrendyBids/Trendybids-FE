@@ -9,25 +9,28 @@ import {MethodProvider} from './context/methodProvider';
 import {Toaster} from "sonner";
 import {Provider} from 'react-redux';
 import store from './redux/store';
+import {SocketProvider} from "./context/socketProvider";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Router>
         <Provider store={store}>
-            <MethodProvider>
-                <AuthProvider>
-                    <Toaster
-                        richColors
-                        position="top-right"
-                        closeButton
-                        duration="2000"
-                        toastOptions={{
-                            style: {fontSize: '15px', width: 'fit-content', right: 0}
-                        }}
-                    />
-                    <App/>
-                </AuthProvider>
-            </MethodProvider>
+            <SocketProvider>
+                <MethodProvider>
+                    <AuthProvider>
+                        <Toaster
+                            richColors
+                            position="top-right"
+                            closeButton
+                            duration="2000"
+                            toastOptions={{
+                                style: {fontSize: '15px', width: 'fit-content', right: 0}
+                            }}
+                        />
+                        <App/>
+                    </AuthProvider>
+                </MethodProvider>
+            </SocketProvider>
         </Provider>
     </Router>
 );
