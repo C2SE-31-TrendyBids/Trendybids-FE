@@ -1,8 +1,5 @@
 import {
-    Home,
-    Login,
-    Register,
-    ForgotPassword,
+    Home, Login, Register, ForgotPassword,
     ResetPassword,
     AboutUS,
     EditProfile,
@@ -19,7 +16,9 @@ import {
     ApproveProduct,
     ProductAuctionDetail,
     ApproveCensor,
-    ManagementAccount, AuctionLive
+    ManagementAccount, AuctionLive,
+    LoginGoogleSuccess, AuctionSession,
+    Message
 } from '../pages/index';
 
 import {
@@ -27,10 +26,9 @@ import {
     Default,
     User,
     NoHeaderAndFooter,
-    CensorLayout
+    CensorLayout,
+    MessageLayout
 } from '../layouts/index';
-import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
-import AuctionSession from "../pages/AuctionSession/AuctionSession";
 
 const publicRouter = [
     {path: '/', component: Home},
@@ -47,7 +45,7 @@ const publicRouter = [
     {path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail},
     {path: '/censor', component: Censor},
     {path: '/censor/:censorId', component: CensorDetail},
-    {path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive},
+    {path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive}
 ]
 
 const routerAdmin = [
@@ -58,7 +56,6 @@ const routerAdmin = [
 
 const routerUser = [
     {path: '/register-censor', layout: Default, component: RegisterCensor},
-    {path: '/profile', layout: User, component: EditProfile},
     {path: '/profile/management-post', layout: User, component: ManagementPost},
 ]
 
@@ -69,4 +66,10 @@ const routerCensor = [
     {path: '/auction-session', layout: CensorLayout, component: AuctionSession},
 ]
 
-export {publicRouter, routerUser, routerCensor, routerAdmin}
+const routerAllRole = [
+    {path: '/profile', layout: User, component: EditProfile},
+    {path: '/messages', layout: MessageLayout, component: Message},
+    {path: '/messages/:conversationId', layout: MessageLayout, component: Message},
+]
+
+export {publicRouter, routerUser, routerCensor, routerAdmin, routerAllRole}
