@@ -19,7 +19,7 @@ import {
     ApproveProduct,
     ProductAuctionDetail,
     ApproveCensor,
-    ManagementAccount
+    ManagementAccount, AuctionLive
 } from '../pages/index';
 
 import {
@@ -47,6 +47,7 @@ const publicRouter = [
     {path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail},
     {path: '/censor', component: Censor},
     {path: '/censor/:censorId', component: CensorDetail},
+    {path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive},
 ]
 
 const routerAdmin = [
@@ -66,8 +67,6 @@ const routerCensor = [
     {path: '/profile', layout: User, component: EditProfile},
     {path: '/all-product', layout: CensorLayout, component: ApproveProduct},
     {path: '/auction-session', layout: CensorLayout, component: AuctionSession},
-
-
 ]
 
 export {publicRouter, routerUser, routerCensor, routerAdmin}

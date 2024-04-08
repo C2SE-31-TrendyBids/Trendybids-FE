@@ -33,6 +33,11 @@ const ProductAuctionDetail = () => {
             setIsLoading(false)
         }
         productAuctionId && fetchProductAuction();
+        // auto scroll on top
+        window.onload = function () {
+            window.scrollTo(0, 0);
+        }
+
     }, [productAuctionId])
 
     useEffect(() => {
@@ -106,7 +111,8 @@ const ProductAuctionDetail = () => {
                                 >Register to participate in the auction
                                 </button>
                             </>
-                            : <div className="text-center font-semibold text-lg text-red-400">The auction { auctionSessionDetail?.status === "ongoing" ? "is underway": "has ended"} </div>
+                            : <div className="text-center font-semibold text-lg text-red-400">The
+                                auction {auctionSessionDetail?.status === "ongoing" ? "is underway" : "has ended"} </div>
                     }
 
                 </div>

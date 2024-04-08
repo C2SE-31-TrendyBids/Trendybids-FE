@@ -51,7 +51,8 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
     return (
         <Link
             className={type === "itemSlider" && "mx-3 block"}
-            to={`/product-auction/${infoAuction?.id}`} relative={"route"}>
+            to={`${infoAuction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
+            relative={"route"}>
             <div ref={divRef} className="w-full max-h-[350px] grid grid-rows-6 shadow rounded-t-lg">
                 <div
                     className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
