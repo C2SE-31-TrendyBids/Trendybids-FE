@@ -1,14 +1,17 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import MessageContainer from "./MessageContainer";
 import MessageInputField from "./MessageInputField";
 import {FaSearch} from "react-icons/fa";
 import {motion} from "framer-motion";
+import SocketContext from "../../context/socketProvider";
 
 const MessageChannel = ({conversation}) => {
+    const socket = useContext(SocketContext)
     const [openSearch, setOpenSearch] = useState(false)
 
+
     return (
-        <div className="h-full w-message-channel flex flex-col overflow-hidden relative">
+        <div className="h-full lg:w-msg-channel-lg md:w-msg-channel-md flex flex-col overflow-hidden relative">
             <header className="text-start border-b-[1.5px] w-full h-[62px] px-[32px] shadow-sm">
                 {conversation && (
                     <div className="h-full flex justify-between items-center">
@@ -39,7 +42,7 @@ const MessageChannel = ({conversation}) => {
             <MessageContainer/>
 
             {/*Message input field*/}
-            <MessageInputField />
+            <MessageInputField/>
         </div>
     );
 };

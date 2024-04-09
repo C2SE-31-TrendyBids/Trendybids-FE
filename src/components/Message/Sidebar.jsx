@@ -29,7 +29,7 @@ const Sidebar = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
-        }, 60000);
+        }, 300000);
 
         return () => clearInterval(interval);
     }, []);

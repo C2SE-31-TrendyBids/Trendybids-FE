@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Sidebar from "../../components/Message/Sidebar";
 import MessageChannel from "../../components/Message/MessageChannel";
 import {useDispatch, useSelector} from "react-redux";
@@ -6,15 +6,28 @@ import messageSvg from "../../assets/vectors/message.svg";
 import {useNavigate, useParams} from 'react-router-dom';
 import {fetchConversationsThunk} from "../../redux/slices/conversation";
 import {toast} from "sonner";
-import {fetchMessagesThunk} from "../../redux/slices/message";
+import {fetchMessagesThunk, setMessage} from "../../redux/slices/message";
+import SocketContext from "../../context/socketProvider";
 
 const Message = () => {
+    const socket = useContext(SocketContext)
+    const {conversationId} = useParams()
     const accessToken = localStorage.getItem('access-token')
     const dispatch = useDispatch()
     const {conversations} = useSelector((state) => state.conversation)
     const [conversation, setConversation] = useState({})
     const navigate = useNavigate();
-    const {conversationId} = useParams()
+
+    // Listen for the connected event
+    useEffect(() => {
+        socket.on('connected', (data) => console.log('Connected', data))
+        socket.on('onMessage', (data) => {
+            console.log(data)
+            dispatch(setMessage(
+                data
+            ));
+        })
+    }, [])
 
     useEffect(() => {
         // Dispatch the fetchConversationsThunk action to fetch the conversations
@@ -32,7 +45,7 @@ const Message = () => {
                     navigate(`/messages/${curConvId}`);
                 }
                 setConversation(curConv || data.response.conversations[0]);
-                dispatch(fetchMessagesThunk({accessToken, conversationId: curConvId}));
+                dispatch(fetchMessagesThunk({accessToken, conversationId: curConvId}))
             }
         })
     }, [accessToken, dispatch, conversationId, navigate]);

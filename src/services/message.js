@@ -53,7 +53,7 @@ export const getConversationMessage = async (accessToken, conversationId) => {
 
 export const createMessage = async (accessToken, body) => {
     try {
-        const response = await request.post("/message", body, {
+        const response = await request.post("/message/create", body, {
             headers: {Authorization: `Bearer ${accessToken}`}
         });
         return {
