@@ -67,8 +67,8 @@ const ApproveProduct = () => {
     return (
         <div className='max-w-[1230px] px-[30px] mx-auto '>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-2'>
-                <div class="inline-flex text-gray-600 ">
-                    <input class="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
+                <div className="inline-flex text-gray-600 ">
+                    <input className="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
                         type="search" name="search" placeholder="Search Product" value={nameProduct} onChange={(e) => { setNameProduct(e.target.value) }} />
                 </div>
                 <div className='w-full hidden lg:flex lg:items-center lg:justify-center'>

@@ -15,7 +15,7 @@ const PostAuction = () => {
     const [type, setType] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpenView, setModalOpenView] = useState(false);
-
+    const [change, setChange] = useState(true)
     const [productId, setProductId] = useState('');
     const [productView, setProductView] = useState('');
 
@@ -55,7 +55,7 @@ const PostAuction = () => {
             console.log(error);
         }
 
-    }, [accessToken, nameProduct, sortBy, type, pageNumber])
+    }, [accessToken, nameProduct, sortBy, type, pageNumber, change])
 
     const handlePostAuction = (id) => {
         setProductId(id)
@@ -77,8 +77,8 @@ const PostAuction = () => {
     return (
         <div className='max-w-[1230px] px-[30px] mx-auto '>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-2'>
-                <div class="inline-flex text-gray-600 ">
-                    <input class="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
+                <div className="inline-flex text-gray-600 ">
+                    <input className="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
                         type="search" name="search" placeholder="Search Product" value={nameProduct} onChange={(e) => { setNameProduct(e.target.value) }} />
                 </div>
                 <div className='w-full hidden lg:flex lg:items-center lg:justify-center'>
@@ -143,7 +143,7 @@ const PostAuction = () => {
             </div>
 
             {
-                modalOpen && <ModalPost modalOpen={setModalOpen} productId={productId} accessToken={accessToken} />
+                modalOpen && <ModalPost modalOpen={setModalOpen} productId={productId} accessToken={accessToken} change={change} setChange={setChange} />
             }
             {
                 modalOpenView && <ViewDetail modalOpen={setModalOpenView} product={productView} accessToken={null} change={null} setChange={null} index={1} />

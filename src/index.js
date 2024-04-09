@@ -5,24 +5,36 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {AuthProvider} from './context/authProvider';
+import {MethodProvider} from './context/methodProvider';
 import {Toaster} from "sonner";
+import ScrollToTop from "./services/scrollToTop";
+import {Provider} from 'react-redux';
+import store from './redux/store';
+import {SocketProvider} from "./context/socketProvider";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Router>
-            <AuthProvider>
-                <Toaster
-                    richColors
-                    position="top-right"
-                    closeButton
-                    duration="2000"
-                    toastOptions={{
-                        style: {fontSize: '15px', width: 'fit-content', right: 0}
-                    }}
-                />
-                <App/>
-            </AuthProvider>
+            <ScrollToTop/>
+            <Provider store={store}>
+                <SocketProvider>
+                    <MethodProvider>
+                        <AuthProvider>
+                            <Toaster
+                                richColors
+                                position="top-right"
+                                closeButton
+                                duration="2000"
+                                toastOptions={{
+                                    style: {fontSize: '15px', width: 'fit-content', right: 0}
+                                }}
+                            />
+                            <App/>
+                        </AuthProvider>
+                    </MethodProvider>
+                </SocketProvider>
+            </Provider>
         </Router>
     </React.StrictMode>
 );
