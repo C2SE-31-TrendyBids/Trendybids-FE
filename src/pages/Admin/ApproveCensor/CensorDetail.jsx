@@ -8,11 +8,11 @@ import { TbDeviceLandlinePhone } from "react-icons/tb";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaQrcode } from "react-icons/fa";
 
-const CensorDetail = ({ modalOpen, product, accessToken, change, setChange }) => {
-    const id = product?.id
+const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => {
+    const id = censor?.id
     const [loadingReject, setLoadingReject] = useState(false)
     const [loadingAccept, setLoadingAccept] = useState(false)
-    console.log(product);
+    console.log(censor);
 
     const handleAccept = async (type) => {
         setLoadingAccept(true)
@@ -51,11 +51,11 @@ const CensorDetail = ({ modalOpen, product, accessToken, change, setChange }) =>
                 <div className="my-4">
                     <div className='grid grid-cols-12 h-64 gap-2'>
                         <div className='col-span-4 '>
-                            <img src={product?.avatarUrl} alt="hinhanh" className='w-full h-full' />
+                            <img src={censor?.avatarUrl} alt="hinhanh" className='w-full h-full' />
                         </div>
                         <div className='col-span-8 text-black ml-2'>
                             <div className='text-center text-2xl font-thin text-[#007bff]'>
-                                <span>{product?.name}</span>
+                                <span>{censor?.name}</span>
                             </div>
                             <div className='grid grid-cols-5'>
                                 <div className='col-span-3 font-semibold'>
@@ -79,12 +79,12 @@ const CensorDetail = ({ modalOpen, product, accessToken, change, setChange }) =>
                                     </div>
                                 </div>
                                 <div className='col-span-2'>
-                                    <div className='flex my-3 border-b'>{product?.phoneNumber}</div>
-                                    <div className='flex my-3 border-b'>{moment(product?.founding).format('DD - MM - YYYY')}</div>
-                                    <div className='flex my-3 border-b'>{product?.address}</div>
-                                    <div className='flex my-3 border-b'>{product?.companyTaxCode || "XXX-XXXX-XXXX"}</div>
-                                    <div className='flex my-3 border-b'>{product?.placeTaxCode || "Lien Chieu - Da Nang"}</div>
-                                    <div className='flex my-3 border-b'>{moment(product?.taxCodeIssuanceDate).format('DD - MM - YYYY') || "01-01-2001"}</div>
+                                    <div className='flex my-3 border-b'>{censor?.phoneNumber}</div>
+                                    <div className='flex my-3 border-b'>{moment(censor?.founding).format('DD - MM - YYYY')}</div>
+                                    <div className='flex my-3 border-b'>{censor?.address}</div>
+                                    <div className='flex my-3 border-b'>{censor?.companyTaxCode || "XXX-XXXX-XXXX"}</div>
+                                    <div className='flex my-3 border-b'>{censor?.placeTaxCode || "Lien Chieu - Da Nang"}</div>
+                                    <div className='flex my-3 border-b'>{moment(censor?.taxCodeIssuanceDate).format('DD - MM - YYYY') || "01-01-2001"}</div>
                                 </div>
                             </div>
 
@@ -107,9 +107,9 @@ const CensorDetail = ({ modalOpen, product, accessToken, change, setChange }) =>
                     ) : (
                         <div className="flex gap-2 flex-wrap justify-center p-4 ">
                             <button type="button"
-                                className={`py-2.5 px-5 me-2 text-sm font-medium text-white bg-red-600 rounded-lg border border-gray-200 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center ${product?.status === 'Rejected' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
+                                className={`py-2.5 px-5 me-2 text-sm font-medium text-white bg-red-600 rounded-lg border border-gray-200 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center ${censor?.status === 'Rejected' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
                                 onClick={(e) => handleReject("2")}
-                                disabled={product?.status === 'Rejected'}
+                                disabled={censor?.status === 'Rejected'}
                             >
                                 Reject
                             </button>
@@ -129,9 +129,9 @@ const CensorDetail = ({ modalOpen, product, accessToken, change, setChange }) =>
                         <div className="flex gap-2 flex-wrap justify-center p-4">
                             <button
                                 type="button"
-                                className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center ${product?.status === 'Verified' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
+                                className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center ${censor?.status === 'Verified' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
                                 onClick={(e) => handleAccept("1")}
-                                disabled={product?.status === 'Verified'}
+                                disabled={censor?.status === 'Verified'}
                             >
                                 Accept
                             </button>

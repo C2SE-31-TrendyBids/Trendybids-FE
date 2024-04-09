@@ -15,6 +15,8 @@ import AuctionSession from "../pages/AuctionSession/AuctionSession";
 
 const publicRouter = [
     { path: '/', component: Home },
+    { path: '/product-auction', layout: Default, component: ProductAuction },
+
     { path: '/login', layout: NoHeaderAndFooter, component: Login },
     { path: '/contact', layout: Default, component: Contact },
     { path: '/login-success', layout: NoHeaderAndFooter, component: LoginGoogleSuccess },

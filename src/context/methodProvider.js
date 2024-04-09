@@ -1,11 +1,11 @@
-import {createContext} from 'react';
-import {toast} from "sonner";
-import {useNavigate} from "react-router-dom";
+import { createContext } from 'react';
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import * as userServices from "../services/user";
 
 const MethodContext = createContext({});
 
-export const MethodProvider = ({children}) => {
+export const MethodProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const fetchUser = async (accessToken) => {
@@ -32,7 +32,7 @@ export const MethodProvider = ({children}) => {
             } else {
                 const userInfo = await fetchUser(accessToken);
                 if (userInfo) {
-                    localStorage.setItem('auth', JSON.stringify({...auth}))
+                    localStorage.setItem('auth', JSON.stringify({ ...auth }))
                 } else {
                     toast.error('Access failed!');
                     navigate('/login');
@@ -59,9 +59,13 @@ export const MethodProvider = ({children}) => {
 
         return result.replace(/ /g, '-'); // Replace spaces with hyphens
     }
+    const validateEmail = (email) => {
+        // Biểu thức chính quy để kiểm tra định dạng email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
-
-    return <MethodContext.Provider value={{fetchUserDetails , convertToLowerCase}}>{children}</MethodContext.Provider>;
+    return <MethodContext.Provider value={{ fetchUserDetails, convertToLowerCase, validateEmail }}>{children}</MethodContext.Provider>;
 };
 
 export default MethodContext;
