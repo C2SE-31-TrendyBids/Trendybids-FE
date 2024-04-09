@@ -26,8 +26,8 @@ const messageSlice = createSlice({
         loading: false,
     },
     reducers: {
-        addMessage: (state, action) => {
-            console.log('addMessage')
+        setMessage: (state, action) => {
+            console.log('setMessage')
             state.messages.unshift(action.payload);
         },
     },
@@ -46,6 +46,6 @@ const messageSlice = createSlice({
     }
 });
 
-export const {addMessage} = messageSlice.actions
+export const {setMessage} = messageSlice.actions
 
 export default messageSlice;

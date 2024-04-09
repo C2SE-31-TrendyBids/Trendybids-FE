@@ -19,16 +19,34 @@ module.exports = {
                     "scrollbar-width": "none"
                 },
                 '.fill-available': {
-                    width: '-webkit-fill-available',
+                    "width": '-webkit-fill-available',
                 },
                 '.h-screen-header': {
-                    height: 'calc(100vh - 92px)'
+                    "height": 'calc(100vh - 92px)'
                 },
                 '.h-sidebar-item': {
-                    height: 'calc(100% - 98px)'
+                    "height": 'calc(100% - 98px)'
                 },
-                '.w-message-channel': {
-                    width: 'calc(100% - 360px)'
+                '.w-msg-channel-lg': {
+                    "width": 'calc(100% - 360px)'
+                },
+                '.w-msg-channel-md': {
+                    "width": 'calc(100% - 80px)'
+                },
+                '.truncate-2-lines': {
+                    "display": "-webkit-box",
+                    "-webkit-line-clamp": "2",
+                    "-webkit-box-orient": "vertical",
+                    "overflow": "hidden"
+                },
+                '.modal-backdrop': {
+                    "position": 'fixed',
+                    "top": 0,
+                    "left": 0,
+                    "width": '100%',
+                    "height": '100%',
+                    "background": 'rgba(0, 0, 0, 0.5)',
+                    "backdrop-filter": 'blur(5px)',
                 }
             };
             addUtilities(newUtilities)
