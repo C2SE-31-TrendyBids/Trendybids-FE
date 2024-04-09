@@ -77,7 +77,7 @@ const ManagementPost = () => {
         }
         const response = await getAllProduct(token, { productName, page })
         if (response.response) {
-            console.log("Get data:",response?.response?.products);
+            // console.log("Get data:",response?.response?.products);
             setProducts(response?.response?.products);  
             setPagination((prev) => ({
                 ...prev,
@@ -98,7 +98,6 @@ const ManagementPost = () => {
             setImagesDeleteID([]);
             setImages([]);
         })();
-        console.log("Call against");
     }, [change]);
 
     useEffect(() => {
@@ -221,7 +220,6 @@ const ManagementPost = () => {
             }
         });
     };
-    console.log(images);
     const handleOpenEdit = async (prod) => {
         setValues({
             id: prod?.id,

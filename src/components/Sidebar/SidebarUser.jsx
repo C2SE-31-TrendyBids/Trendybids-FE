@@ -32,9 +32,9 @@ export default function SidebarUser() {
   };
 
   return (
-    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem]  shadow-none mb-32">
+    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem]  shadow-none mb-32 ">
       <div className="mb-2 flex items-center justify-center p-4">
-        <Link to="/" className="">
+        <Link to="/" >
           <h2 className="text-4xl font-extrabold text-white">
             <span className="text-black inline-block">Trendy</span>
             <span className="text-blue-500 inline-block">Bids</span>
@@ -43,11 +43,11 @@ export default function SidebarUser() {
       </div>
 
       <div className="p-2">
-        <div class="flex xl:w-full max-xl:w-full bg-gray-100 px-6 py-3 rounded outline outline-transparent focus-within:outline-[#007bff]">
+        <div className ="flex xl:w-full max-xl:w-full bg-gray-100 px-6 py-3 rounded outline outline-transparent focus-within:outline-[#007bff]">
           <input
             type="text"
             placeholder="Search something..."
-            class="w-full text-sm bg-transparent rounded outline-none pr-2"
+            className="w-full text-sm bg-transparent rounded outline-none pr-2"
           />
           <IoIosSearch className="w-6 h-6" />
         </div>

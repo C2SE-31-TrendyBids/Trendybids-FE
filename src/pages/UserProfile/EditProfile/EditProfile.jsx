@@ -1,17 +1,43 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { MdPhoneIphone, MdOutlineLocationOn } from "react-icons/md";
 import { toast } from "sonner";
 import * as userApi from "../../../services/user";
-const EditProfile = () => {
-    const [images, setImages] = useState([]);
-    const [loadingAva, setLoadingAva] = useState(true);
-    const fileRef = useRef();
-    const [user, setUser] = useState({});
-    const [id, setId] = useState({});
+import AuthContext from "../../../context/authProvider";
 
-    const handleUpdateAvatar = async () => {};
+const EditProfile = () => {
+    const fileRef = useRef();
+    const { user, setUser } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
+
+    const handleUpdateAvatar = async (event) => {
+        try {
+            const {
+                target: { files },
+            } = event;
+            const accessToken = localStorage.getItem("access-token");
+
+            if (!accessToken) return;
+
+            const file = files[0];
+
+            if (!file) return;
+            setLoading(true);
+
+            const response = await userApi.uploadAvatar(accessToken, file);
+
+            setUser((prev) => ({
+                ...prev,
+                avatarUrl: response?.response?.url,
+            }));
+        } catch (error) {
+            console.log(`upload error`, error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const accessToken = localStorage.getItem("access-token");
@@ -22,7 +48,11 @@ const EditProfile = () => {
             address: user.address,
         };
         try {
-            const userEdit = await userApi.editUser(accessToken, id, formData);
+            const userEdit = await userApi.editUser(
+                accessToken,
+                user?.id,
+                formData
+            );
             toast.success("User Data Updated Successfully", userEdit.response);
             // Xử lý khi cập nhật thành công
             console.log(formData);
@@ -35,27 +65,15 @@ const EditProfile = () => {
         // Xử lý logic khi người dùng nhấn nút "Cancel" ở đây
         console.log("Form canceled!");
     };
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            const accessToken = localStorage.getItem("access-token");
-            if (!accessToken) return;
 
-            try {
-                const responseUser = await userApi.getCurrentUser(accessToken);
-                console.log(responseUser);
-                if (responseUser?.statusCode === 200) {
-                    const userInfo = responseUser?.response;
-                    setUser(userInfo);
-                    setId(userInfo.id);
-                }
-            } catch (error) {
-                toast.error("Error parsing access token", error);
-            }
-        };
-        fetchCurrentUser();
-    }, []);
     return (
         <div className="w-full overflow-x-auto mt-20">
+            {loading ? (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-300/80 z-50">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-700"></div>
+                </div>
+            ) : null}
+
             <div className="">
                 <div>
                     <h1 className="text-[22px] font-bold text-[#007bff] ">
@@ -63,11 +81,9 @@ const EditProfile = () => {
                     </h1>
                 </div>
                 <div className="flex flex-col items-center">
-                    {loadingAva ? (
+                    {user?.avatarUrl ? (
                         <img
-                            src={
-                                "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
-                            }
+                            src={user.avatarUrl}
                             alt="loading-avatar"
                             className="w-40 h-40 object-cover border-2 rounded-full"
                         />
@@ -172,13 +188,6 @@ const EditProfile = () => {
                             <span className="text-sm text-gray-400">
                                 <br /> Định dạng: .JPG, .PNG, .JPEG
                             </span>
-                            {/* <button
-                type="button"
-                className="ml-2 text-gray-400 hover:text-red-500 focus:outline-none"
-                onClick={() => removeImage()}
-              >
-                <FaTimes />
-              </button> */}
                         </div>
                     </div>
                     <div className="flex justify-end">
