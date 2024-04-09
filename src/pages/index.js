@@ -9,6 +9,7 @@ export { default as ResetPassword } from "./Authen/ResetPassword/ResetPassword";
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
 export { default as ManagementPost } from "./UserProfile/ManagementPost/ManagementPost";
+export { default as ChangePassword } from "./UserProfile/ChangePassword/ChangePassword";
 
 export { default as AboutUS } from "./AboutUS/AboutUS";
 export { default as Admin } from "./Admin/Admin";

@@ -1,5 +1,5 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
+    Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, ChangePassword, NotFound, Admin as AdminPage
     , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct
 } from '../pages/index';
 
@@ -25,6 +25,7 @@ const router = [
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/about', layout: Default, component: AboutUS },
     { path: '/profile', layout: User, component: EditProfile },
+    { path: '/changepassword', layout: User, component: ChangePassword },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/not-found', layout: Default, component: NotFound },
     { path: '/admin', layout: Admin, component: AdminPage },
