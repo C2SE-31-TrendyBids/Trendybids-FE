@@ -19,6 +19,31 @@ const getCurrentUser = async (accessToken) => {
   }
 };
 
+const uploadAvatar = async (accessToken, file) => {
+  try {
+    const formData = new FormData();
+
+    formData.append("avatar", file);
+
+    const response = await request.post(`/user/upload-avatar`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return {
+      response: response.data,
+      statusCode: response.status,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+
 const JOIN_SESSION_ENDPOINT = "/user/join-auction-session";
 const joinSession = async (accessToken, sessionId) => {
   try {
@@ -93,4 +118,4 @@ const changePass = async (accessToken, id, oldPassword, newPassword) => {
   }
 };
 
-export { getCurrentUser, joinSession, editUser, changePass };
+export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar };
