@@ -4,6 +4,7 @@ import {
     AboutUS,
     EditProfile,
     ManagementPost,
+    ChangePassword,
     NotFound,
     Admin as AdminPage
     ,
@@ -40,6 +41,9 @@ const publicRouter = [
     { path: '/forgot-password', layout: NoHeaderAndFooter, component: ForgotPassword },
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/about', layout: Default, component: AboutUS },
+    { path: '/profile', layout: User, component: EditProfile },
+    { path: '/changepassword', layout: User, component: ChangePassword },
+    { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/not-found', layout: Default, component: NotFound },
     { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
     { path: '/product-auction', layout: Default, component: ProductAuction },

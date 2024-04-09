@@ -11,6 +11,8 @@ export { default as LoginGoogleSuccess } from "./LoginGoogleSuccess/LoginGoogleS
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
 export { default as ManagementPost } from "./UserProfile/ManagementPost/ManagementPost";
+export { default as ChangePassword } from "./UserProfile/ChangePassword/ChangePassword";
+
 export { default as AboutUS } from "./AboutUS/AboutUS";
 //Admin
 export { default as Admin } from "./Admin/Admin";
