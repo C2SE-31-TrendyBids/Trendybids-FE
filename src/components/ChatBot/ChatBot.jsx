@@ -57,9 +57,9 @@ const ChatBot = () => {
 
     return (
         <div className="fixed bottom-8 right-8 ">
-            <div className={`absolute ${showChatbox ? 'transform -translate-y-[550px] translate-x-[-500px]' : 'hidden'}`}>
+            <div className={`absolute ${showChatbox ? 'animate-fade-left animate-ease-in-out animate-duration-1000 right-[50px] bottom-[90px]' : 'hidden'}`}>
                 <div className="w-[450px]  rounded-xl shadow-lg">
-                    <div className=" flex bg-gradient-to-r from-[rgba(14,7,126,1)] to-blue-400 text-white p-4 rounded-t-xl">
+                    <div className=" flex bg-[rgba(14,7,126,1)] text-white p-4 rounded-t-xl">
                         <img src={avatar} alt="imagename" className="w-16 h-16 rounded-full" />
                         <div className='ml-4'>
                             <h4 className="text-lg">TrendyBot</h4>
@@ -86,7 +86,7 @@ const ChatBot = () => {
                         ))}
                     </div>
                     <form onSubmit={handleSubmit}>
-                        <div className="flex items-center justify-between px-4 py-5 bg-gradient-to-r from-[rgba(14,7,126,1)] to-blue-400 shadow-lg rounded-b-xl">
+                        <div className="flex items-center justify-between px-4 py-5 bg-[rgba(14,7,126,1)] shadow-lg rounded-b-xl">
                             <input
                                 type="text"
                                 value={message}

@@ -5,102 +5,51 @@ import * as censorApi from '../../../services/censor'
 import CircularProgress from '@mui/material/CircularProgress';
 import { IoCloudUploadSharp } from "react-icons/io5";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form"
+
 const RegisterCensor = () => {
-    const [nameOrganization, setNameOrganization] = useState('');
-    const [founding, setFounding] = useState('');
-    const [placeTaxCode, setPlaceTaxCode] = useState('');
-    const [dateTaxCode, setDateTaxCode] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [taxCode, setTaxCode] = useState('');
-    const [address, setAddress] = useState('');
-    const [position, setPosition] = useState('');
-    const [isCheck, setIsCheck] = useState(false);
     const [loading, setLoading] = useState(false)
     const [selectedFile, setSelectedFile] = useState(null);
-
     const accessToken = localStorage.getItem('access-token');
-
+    const user = JSON.parse(localStorage.getItem('auth'))
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: {
+            isCheck: false, taxCode: '', nameOrganization: '', phoneNumber: '', founding: '', address: "", dateTaxCode: '', position: '', placeTaxCode: '',
+        }
+    });
     const handleFileChange = (e) => {
         const newImage = e.target.files[0];
         newImage["id"] = Math.random();
         setSelectedFile(newImage);
     };
-
-    const submitRegister = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         setLoading(true)
         try {
-            if (isCheck) {
-                if (nameOrganization.trim() === '' || nameOrganization.length < 5 || nameOrganization > 100) {
-                    toast.error('Please enter organization name , 5 < name organization < 100');
-                    return
-                }
-                if (founding.trim() === '') {
-                    toast.error('Please enter founding date');
-                    return
-                }
-                if (placeTaxCode.trim() === '' || placeTaxCode < 10 || placeTaxCode > 200) {
-                    toast.error('Please enter place of tax code issuance , 10 < place tax code < 200');
-                    return
-                }
-                if (dateTaxCode.trim() === '') {
-                    toast.error('Please enter tax code issuance date');
-                    return
-                }
-                if (phoneNumber.trim() === '' || phoneNumber.length < 10 || phoneNumber.length > 20) {
-                    toast.error('Please enter phone number , 9 < phone number < 20 ');
-                    return
-                }
-                if (taxCode.trim() === '' || taxCode.length < 8 || taxCode.length > 30) {
-                    toast.error('Please enter company tax code , 8 < tax code < 30');
-                    return
-                }
-                if (address.trim() === '' || address.length < 10 || address.length > 200) {
-                    toast.error('Please enter business address , 10 < address < 200');
-                    return
-                }
-                if (position.trim() === '' || position.length < 1 || position.length > 50) {
-                    toast.error('Please enter position , 1 < possition < 50');
-                    return
-                }
-
-                const censorReq = await censorApi.registerCensor(accessToken, nameOrganization, phoneNumber, founding, address, taxCode, dateTaxCode, position, placeTaxCode, selectedFile)
-                if (censorReq.statusCode === 201) {
-                    toast.success(censorReq.message);
-                    resetAll()
-                }
-                else {
-                    alert(censorReq.message);
-                }
+            const censorReq = await censorApi.registerCensor(accessToken, data.nameOrganization, data.phoneNumber, data.founding, data.address, data.taxCode, data.dateTaxCode, data.position, data.placeTaxCode, selectedFile)
+            if (censorReq.statusCode === 201) {
+                toast.success(censorReq.message);
+                reset({
+                    isCheck: false, taxCode: '', nameOrganization: '', phoneNumber: '', founding: '', address: "", dateTaxCode: '', position: '', placeTaxCode: ''
+                });
+                setSelectedFile(null)
             }
             else {
-                alert("You have not agreed to our terms")
+                toast(censorReq.message);
             }
         } catch (error) {
-            alert(error)
+            toast(error)
         } finally {
             setLoading(false);
         }
     }
-    const resetAll = () => {
-        selectedFile(null)
-        setAddress('')
-        setDateTaxCode('')
-        setFounding('')
-        setIsCheck(false)
-        setNameOrganization('')
-        setPosition('')
-        setTaxCode('')
-        setPhoneNumber('')
-        setPlaceTaxCode('')
-
-
-    }
-
+    const handlePhoneNumberChange = (e) => {
+        const value = e.target.value.replace(/\D/g, '');
+        e.target.value = value;
+    };
     return (
         <div className='max-w-[1230px] px-[30px] mx-auto mt-4'>
             <div className='border shadow-lg rounded-lg bg-white h-auto'>
-                <form action="" className='flex items-center justify-center' onSubmit={submitRegister}>
+                <form action="" className='flex items-center justify-center' onSubmit={handleSubmit(onSubmit)}>
                     <div className='w-4/5'>
                         <div className='flex items-center justify-center'>
                             <img src={logo} alt="" />
@@ -111,48 +60,65 @@ const RegisterCensor = () => {
 
                         <div className='my-2'>
                             <span className='text-base text-blue-800'>Organization Name</span>
-                            <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setNameOrganization(e.target.value)} />
+                            <input {...register("nameOrganization", { require: true, minLength: { value: 5, message: "Please enter organization name > 5 " }, maxLength: { value: 100, message: "Please enter organization name  < 100" } })}
+                                type="text" className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                            <span className='text-red-500 text-xs'>{errors?.orgabizationName?.message}</span>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
                             <div>
                                 <div className='my-2'>
                                     <span className='text-base text-blue-800'>Founding : </span>
-                                    <input type="date" className='w-full border p-2 rounded-md my-2' onChange={(e) => setFounding(e.target.value)} />
+                                    <input {...register("founding", { required: "Please enter the founding date." })}
+                                        type="date" className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                                    <span className='text-red-500 text-xs'>{errors?.founding?.message}</span>
+
                                 </div>
                                 <div className='my-2'>
-                                    <span className='text-base text-blue-800'>Place of issuance of tax code : </span>
-                                    <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setPlaceTaxCode(e.target.value)} />
+                                    <span className='text-base text-blue-800'>Company Tax Code : </span>
+                                    <input {...register("taxCode", { require: true, minLength: { value: 8, message: "taxcode length > 8" }, maxLength: { value: 30, message: "taxcode length < 30" } })}
+                                        type="text" className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                                    <span className='text-red-500 text-xs'>{errors?.taxCode?.message}</span>
                                 </div>
                                 <div className='my-2'>
                                     <span className='text-base text-blue-800'>Tax code issuance date : </span>
-                                    <input type="date" className='w-full border p-2 rounded-md my-2' onChange={(e) => setDateTaxCode(e.target.value)} />
+                                    <input {...register("dateTaxCode", { required: "Please enter the Tax code issuance date." })}
+                                        type="date" className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                                    <span className='text-red-500 text-xs'>{errors?.dateTaxCode?.message}</span>
                                 </div>
                                 <div className='my-2'>
                                     <span className='text-base text-blue-800'>Representative Name :  </span>
-                                    <input type="text" className='w-full border p-2 rounded-md my-2' />
+                                    <input type="text" className='w-full border p-2 rounded-md my-2 text-black font-semibold' value={user?.username} disabled />
                                 </div>
                             </div>
+
                             <div>
-                                <div>
-                                    <div className='my-2'>
-                                        <span className='text-base text-blue-800'>Phone Number :  </span>
-                                        <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setPhoneNumber(e.target.value)} />
-                                    </div>
-                                    <div className='my-2'>
-
-                                        <span className='text-base text-blue-800'>Company tax code :  </span>
-                                        <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setTaxCode(e.target.value)} />
-                                    </div>
-                                    <div className='my-2'>
-
-                                        <span className='text-base text-blue-800'>Business address :  </span>
-                                        <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setAddress(e.target.value)} />
-                                    </div>
-                                    <div className='my-2'>
-
-                                        <span className='block text-base text-blue-800'>Position :  </span>
-                                        <input type="text" className='w-full border p-2 rounded-md my-2' onChange={(e) => setPosition(e.target.value)} />
-                                    </div>
+                                <div className='my-2'>
+                                    <span className='text-base text-blue-800'>Phone Number :  </span>
+                                    <input {...register("phoneNumber", { required: "Phone number is required", minLength: { value: 10, message: "Please enter phone number > 9 " }, maxLength: { value: 11, message: "Please enter phone number  < 12" } })}
+                                        type="tel" className='w-full border p-2 rounded-md my-2 text-black font-semibold' onChange={handlePhoneNumberChange} />
+                                    <span className='text-red-500 text-xs'>{errors?.phoneNumber?.message}</span>
+                                </div>
+                                <div className='my-2'>
+                                    <span className='text-base text-blue-800'>Place of issuance of tax code :  </span>
+                                    <input {...register("placeTaxCode", { required: true, minLength: { value: 10, message: "Place tax code should be at least 10 characters" }, maxLength: { value: 200, message: "Place tax code should be at most 200 characters" } })}
+                                        type="text"
+                                        className='w-full border p-2 rounded-md my-2 text-black font-semibold'
+                                    />
+                                    {errors.placeTaxCode && <span className='text-red-500 text-xs'>{errors.placeTaxCode.message}</span>}
+                                </div>
+                                <div className='my-2'>
+                                    <span className='text-base text-blue-800'>Business address :  </span>
+                                    <input  {...register("address", { required: true, minLength: { value: 10, message: "Address should be at least 10 characters" }, maxLength: { value: 200, message: "Address should be at most 200 characters" } })}
+                                        type="text"
+                                        className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                                    {errors.address && <span className='text-red-500 text-xs'>{errors.address.message}</span>}
+                                </div>
+                                <div className='my-2'>
+                                    <span className='block text-base text-blue-800'>Position :  </span>
+                                    <input
+                                        {...register("position", { required: true, minLength: { value: 1, message: "Position should not be empty" }, maxLength: { value: 50, message: "Position should be at most 50 characters" } })}
+                                        type="text" className='w-full border p-2 rounded-md my-2 text-black font-semibold' />
+                                    {errors.position && <span className='text-red-500 text-xs'>{errors.position.message}</span>}
                                 </div>
                             </div>
                         </div>
@@ -168,7 +134,7 @@ const RegisterCensor = () => {
                                         />
                                     </div>
                                 ) : (
-                                    <div class="flex flex-col items-center justify-center pb-6 pt-5">
+                                    <div className="flex flex-col items-center justify-center pb-6 pt-5">
                                         <IoCloudUploadSharp className='text-5xl text-gray-500' />
                                         <p className="mb-2 text-sm text-gray-500 text-center">
                                             <span className="font-semibold">Click to upload or drag and drop</span>
@@ -177,12 +143,16 @@ const RegisterCensor = () => {
                                     </div>
 
                                 )}
-                                <input id="fileInput" type='file' class="hidden" onChange={handleFileChange} />
+                                <input id="fileInput" type='file' className="hidden" onChange={handleFileChange} />
                             </label>
                         </div>
                         <div>
                             <div className='flex'>
-                                <input type="checkbox" className='border p-2 m-2 h-3 w-5' onClick={(e) => setIsCheck(e.target.checked)} />
+                                <input
+                                    {...register("isCheck", { required: true })}
+                                    type="checkbox"
+                                    className='border p-2 m-2 h-3 w-5'
+                                />
                                 <div className='max-sm:text-sm'>
                                     <span>I commit to comply with </span>
                                     <Link href="#" underline="always">
@@ -194,6 +164,7 @@ const RegisterCensor = () => {
                                     </span>
                                 </div>
                             </div>
+                            {errors.isCheck && <span className='text-red-500 text-xs'>Please check the box to proceed</span>}
                         </div>
                         <div className='text-center my-4'>
                             <button className='border py-2 px-10 rounded-md bg-[#38B6FF] text-white font-semibold'>
@@ -212,7 +183,6 @@ const RegisterCensor = () => {
                 </form>
             </div>
         </div>
-
     )
 }
 
