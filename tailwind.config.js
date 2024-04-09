@@ -9,7 +9,7 @@ module.exports = {
         },
     },
     plugins: [
-        function ({addUtilities}) {
+        function ({ addUtilities }) {
             const newUtilities = {
                 '.no-scrollbar::-webkit-scrollbar': {
                     'display': 'none',
@@ -32,7 +32,8 @@ module.exports = {
                 }
             };
             addUtilities(newUtilities)
-        }
+        },
+        require('tailwindcss-animated')
     ]
 }
 

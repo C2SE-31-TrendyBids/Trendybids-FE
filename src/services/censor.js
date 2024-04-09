@@ -22,6 +22,7 @@ export const getAllCensor = async () => {
 };
 
 const registerCensor = async (
+  accessToken,
   name,
   phoneNumber,
   founding,
@@ -50,6 +51,7 @@ const registerCensor = async (
       formData,
       {
         headers: {
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       }
