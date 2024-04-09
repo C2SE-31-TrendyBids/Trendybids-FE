@@ -1,6 +1,24 @@
 import {
-    Home, Login, Register, ForgotPassword, ResetPassword, AboutUS, EditProfile, ManagementPost, NotFound, Admin as AdminPage
-    , RegisterCensor, ProductAuction, Contact, Censor, CensorDetail, PostAuction, ApproveProduct, ApproveCensor, ManagementAccount
+    Home, Login, Register, ForgotPassword,
+    ResetPassword,
+    AboutUS,
+    EditProfile,
+    ManagementPost,
+    NotFound,
+    Admin as AdminPage
+    ,
+    RegisterCensor,
+    ProductAuction,
+    Contact,
+    Censor,
+    CensorDetail,
+    PostAuction,
+    ApproveProduct,
+    ProductAuctionDetail,
+    ApproveCensor,
+    ManagementAccount, AuctionLive,
+    LoginGoogleSuccess, AuctionSession,
+    Message
 } from '../pages/index';
 
 import {
@@ -8,15 +26,13 @@ import {
     Default,
     User,
     NoHeaderAndFooter,
-    CensorLayout
+    CensorLayout,
+    MessageLayout
 } from '../layouts/index';
-import LoginGoogleSuccess from "../pages/LoginGoogleSuccess/LoginGoogleSuccess";
-import AuctionSession from "../pages/AuctionSession/AuctionSession";
 
 const publicRouter = [
-    { path: '/', component: Home },
-    { path: '/product-auction', layout: Default, component: ProductAuction },
 
+    { path: '/', component: Home },
     { path: '/login', layout: NoHeaderAndFooter, component: Login },
     { path: '/contact', layout: Default, component: Contact },
     { path: '/login-success', layout: NoHeaderAndFooter, component: LoginGoogleSuccess },
@@ -25,8 +41,13 @@ const publicRouter = [
     { path: '/reset-password/:email', layout: NoHeaderAndFooter, component: ResetPassword },
     { path: '/about', layout: Default, component: AboutUS },
     { path: '/not-found', layout: Default, component: NotFound },
+    { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
+    { path: '/product-auction', layout: Default, component: ProductAuction },
+    { path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail },
     { path: '/censor', component: Censor },
     { path: '/censor/:censorId', component: CensorDetail },
+    { path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive },
+    { path: '/product-auction', layout: Default, component: ProductAuction },
 ]
 
 const routerAdmin = [
@@ -37,7 +58,6 @@ const routerAdmin = [
 
 const routerUser = [
     { path: '/register-censor', layout: Default, component: RegisterCensor },
-    { path: '/profile', layout: User, component: EditProfile },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
 ]
 
@@ -46,8 +66,12 @@ const routerCensor = [
     { path: '/profile', layout: User, component: EditProfile },
     { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
     { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
-
-
 ]
 
-export { publicRouter, routerUser, routerCensor, routerAdmin }
+const routerAllRole = [
+    { path: '/profile', layout: User, component: EditProfile },
+    { path: '/messages', layout: MessageLayout, component: Message },
+    { path: '/messages/:conversationId', layout: MessageLayout, component: Message },
+]
+
+export { publicRouter, routerUser, routerCensor, routerAdmin, routerAllRole }

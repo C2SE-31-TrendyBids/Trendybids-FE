@@ -3,7 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { CiCircleRemove } from "react-icons/ci";
 import { FaCloudUploadAlt, FaTimes } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
-import { get } from "./../../../ultils/request";
+import { get } from "../../../ultils/request";
 import { addProduct, deleteProduct, getAllProduct, updateProduct } from "../../../services/product";
 import { toast } from "sonner";
 import { getAllCategory } from "./../../../services/category";

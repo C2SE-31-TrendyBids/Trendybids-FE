@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { publicRouter, routerUser, routerCensor, routerAdmin } from "./routes/index";
+import { publicRouter, routerUser, routerCensor, routerAdmin, routerAllRole } from "./routes/index";
 import { Default } from "./layouts/index";
 import React, { Fragment } from "react";
 import { NotFound } from "./pages/index"
@@ -32,6 +32,7 @@ const App = () => {
             {renderRoutes(routerUser)}
             {renderRoutes(routerCensor)}
             {renderRoutes(routerAdmin)}
+            {renderRoutes(routerAllRole)}
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
