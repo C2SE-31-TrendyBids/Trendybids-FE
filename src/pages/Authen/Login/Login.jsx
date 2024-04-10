@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import background from "../../../public/images/wave_background.png";
 import logo from "../../../public/images/logoTrendy1.jpg";
-
 import {
     Checkbox,
     TextField,
@@ -21,10 +20,12 @@ import { Link, useNavigate } from "react-router-dom";
 import * as authApi from "../../../services/auth";
 import * as userApi from "../../../services/user";
 import AuthContext from "../../../context/authProvider";
+import MethodContext from "../../../context/methodProvider";
 import { toast } from "sonner";
 
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
+    const { validateEmail } = useContext(MethodContext)
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
@@ -47,10 +48,6 @@ const Login = () => {
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(";").shift();
     };
-    const validateEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
     const loginWithGoogle = async () => {
         const googleLoginURL = "http://localhost:5000/api/auth/google";
         const width = 500;
@@ -69,19 +66,18 @@ const Login = () => {
     };
     const handleNavigate = (role) => {
         if (role === "Admin") navigate("/admin");
-        // navigate('/admin/dashboard')
+        if (role === "Censor") navigate("/all-product")
         else navigate("/");
     };
     const handleLogin = async (e) => {
         setLoading(true);
-        console.log(rememberMe);
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
+            setLoading(false)
             return;
         }
         // fetch api login
         const loginResponse = await authApi.loginApi(email, password);
-
         if (loginResponse?.statusCode === 200) {
             const accessToken = loginResponse?.response?.accessToken;
             const refreshToken = loginResponse?.response?.refreshToken;
