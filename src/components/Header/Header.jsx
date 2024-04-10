@@ -1,51 +1,22 @@
-import React, { useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
-import { FaRegCircleUser } from "react-icons/fa6";
+import React, {useContext} from "react";
+import {useNavigate, Link} from "react-router-dom";
+import {useState} from "react";
+import {FaRegCircleUser} from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
 import * as authServices from "../../services/auth";
-import * as userApi from "../../services/user";
-import { toast } from "sonner";
-import { MdLogout } from "react-icons/md";
+import {toast} from "sonner";
+import {MdLogout} from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
 
 const Header = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
-    const [isLogin, setIsLogin] = useState(false);
     const [isDropdown, setIsDropdown] = useState(true);
-    const [user, setUser] = useState({});
-    const { auth } = useContext(AuthContext);
+    const {auth, isLogin} = useContext(AuthContext);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            const accessToken = localStorage.getItem("access-token");
-            console.log(accessToken);
-            if (!accessToken) return;
-            try {
-                const accessToken = localStorage.getItem("access-token");
-                const responseUser = await userApi.getCurrentUser(accessToken);
-                console.log(responseUser);
-                if (responseUser?.statusCode === 200) {
-                    const userInfo = responseUser?.response;
-                    setUser(userInfo);
-                    console.log(user);
-                    const newAuth = { ...auth, userInfo };
-                    localStorage.setItem("auth", JSON.stringify(newAuth));
-                    setIsLogin(true);
-                }
-            } catch (error) {
-                console.error("Error parsing access token:", error);
-            }
-        };
-        fetchCurrentUser();
-    }, []);
-
-    // handleLogout function
+    const token = localStorage.getItem("access-token");
 
     const handleLogout = async () => {
         try {
-            const token = localStorage.getItem("auth_token"); // Lấy token xác thực từ local storage hoặc bất kỳ nơi nào bạn lưu trữ nó
             const fetchLogout = await authServices.logOut(token);
             if (fetchLogout?.status === 200) {
                 localStorage.removeItem("auth");
@@ -59,12 +30,11 @@ const Header = () => {
                 });
             } else {
                 console.log(fetchLogout?.response);
-                toast.error("Sign Out Failed!", "error");
+                toast.error("Sign Out Failed!");
             }
         } catch (error) {
             console.error("Logout error:", error);
-            // Xử lý lỗi ở đây nếu cần thiết
-            toast.error("Sign Out Failed!", "error");
+            toast.error("Sign Out Failed!");
         }
     };
 
@@ -73,7 +43,7 @@ const Header = () => {
             <div className="flex flex-wrap items-center justify-between gap-5 relative max-w-[1200px] mx-auto">
                 <Link to="/" className="">
                     <div className="flex items-center ml-2">
-                        <img src={ImageLogo} alt="logo" className="w-16 " />
+                        <img src={ImageLogo} alt="logo" className="w-16 "/>
                         <h2 className="ml-2 font-bold text-[22px] tracking-wide">
                             <span className="text-black">Trendy</span>
                             <span className="text-[#007bff]">Bids</span>
@@ -82,7 +52,7 @@ const Header = () => {
                 </Link>
                 <div className="flex items-center lg:order-2">
                     {/*not login*/}
-                    {isLogin ? (
+                    {token && isLogin ? (
                         <div className="relative">
                             <button
                                 id="dropdownDefaultButton"
@@ -91,16 +61,11 @@ const Header = () => {
                                 type="button"
                                 onClick={() => setIsDropdown(!isDropdown)}
                             >
-                                <span className="text-sm font-medium">
-                                    {user?.fullName}
-                                </span>
+                                <span className="text-sm font-medium">{auth?.fullName}</span>
                                 <img
                                     className="w-[40px] h-[40px] rounded-full mx-3"
-                                    src={
-                                        user?.avatarUrl ||
-                                        "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
-                                    }
-                                    alt={user?.fullNamename || "customer"}
+                                    src={auth?.avatarUrl || "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"}
+                                    alt={auth?.fullName || "customer"}
                                 ></img>
                                 <svg
                                     className="w-2.5 h-2.5 ml-2.5"
@@ -111,9 +76,9 @@ const Header = () => {
                                 >
                                     <path
                                         stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="m1 1 4 4 4-4"
                                     />
                                 </svg>
@@ -131,20 +96,15 @@ const Header = () => {
                                     aria-labelledby="dropdownDefaultButton"
                                 >
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
-                                        <FaRegCircleUser className="mx-3 text-xl" />
-                                        <Link
-                                            to="/profile"
-                                            className="block pr-4 py-3"
-                                        >
+                                        <FaRegCircleUser className="mx-3 text-xl"/>
+                                        <Link to="/profile" className="block pr-4 py-3">
                                             Profile
                                         </Link>
                                     </li>
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
-                                        <MdLogout className="mx-3 text-xl" />
+                                        <MdLogout className="mx-3 text-xl"/>
                                         <button
-                                            onClick={(e) => {
-                                                handleLogout(e);
-                                            }}
+                                            onClick={(e) => handleLogout(e)}
                                             className="block pr-4 py-3"
                                         >
                                             Log Out
@@ -220,10 +180,10 @@ const Header = () => {
                     <li className="max-lg:border-b max-lg:py-2 px-3 max-lg:rounded"></li>
                     <li className="group max-lg:border-b max-lg:py-2 relative">
                         <Link
-                            to="/auction-session"
+                            to="/product-auction"
                             className="hover:text-[#007bff] hover:fill-[#007bff] text-gray-600 font-semibold text-[15px] block"
                         >
-                            Auction Session
+                            Product Auction
                         </Link>
                     </li>
                     <li className="max-lg:border-b max-lg:py-2 px-3 max-lg:rounded">

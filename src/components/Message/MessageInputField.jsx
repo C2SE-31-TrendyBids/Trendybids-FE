@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 import {motion} from "framer-motion";
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
@@ -6,12 +6,22 @@ import Tooltip from '@mui/material/Tooltip';
 import {IoIosImages} from "react-icons/io";
 import {IoCloseCircle, IoSend, IoDocumentTextOutline} from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
+import {setMessage} from "../../redux/slices/message";
+import {useDispatch} from "react-redux";
+import AuthContext from "../../context/authProvider";
+import {useParams} from "react-router-dom";
+import * as messageService from "../../services/message"
 
 const MessageInputField = () => {
-    const imgRef = useRef();
+    const {conversationId} = useParams()
+    const accessToken = localStorage.getItem('access-token')
+    const fileRef = useRef();
     const [showEmojis, setShowEmojis] = useState(false);
     const [content, setContent] = useState('');
-    const [images, setImages] = useState([]);
+    const [filesAttach, setFilesAttach] = useState([]);
+    const dispatch = useDispatch();
+    const {auth} = useContext(AuthContext);
+    const formData = new FormData();
 
     const addEmoji = (e) => {
         let emoji = e.native;
@@ -21,16 +31,54 @@ const MessageInputField = () => {
     const addFile = (e) => {
         e.preventDefault();
         const files = e.target.files;
-        console.log(files);
-        setImages([...images, files[0]]);
+        setFilesAttach([...filesAttach, files[0]]);
+
+        // Reset the value of imgRef
+        fileRef.current.value = null;
+    }
+
+    const sendMessage = async (e) => {
+        e.preventDefault();
+        if(content === '' && filesAttach.length === 0) return;
+
+        const { id, fullName, avatarUrl } = auth;
+        // Create temporary object and dispatch the setMessage action
+        dispatch(setMessage({
+            id: Math.random(),
+            content: content || null,
+            filesAttach: filesAttach.length > 0 ? filesAttach.map(item => ({
+                id: Math.random(),
+                name: item.name,
+                type: item.type,
+                url: URL.createObjectURL(item)
+            })) : [],
+            createdAt: new Date(),
+            user: { id, fullName, avatarUrl }
+        }))
+
+        // Create a form data object
+        formData.append('conversationId', conversationId)
+        content !== '' && formData.append('content', content)
+        filesAttach.length > 0 && filesAttach.forEach((file) => formData.append('filesAttach', file));
+
+        // Call API the createMessage service and reset the content and filesAttach
+        try {
+            await Promise.allSettled([
+                messageService.createMessage(accessToken, formData),
+                setContent(''),
+                setFilesAttach([]),
+            ])
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
         <div className="w-full px-[15px] py-4">
-            <form action="" className="flex justify-center items-end gap-x-0.5 relative">
+            <div className="flex justify-center items-end gap-x-0.5 relative">
                 {/*Upload Image*/}
                 <div>
-                    <input type="file" hidden ref={imgRef}
+                    <input type="file" hidden ref={fileRef}
                         onChange={addFile}
                     />
                     <Tooltip title="Attach file">
@@ -38,7 +86,7 @@ const MessageInputField = () => {
                             className="p-1.5 rounded-full hover:bg-gray-100"
                             onClick={(e) => {
                                 e.preventDefault()
-                                imgRef.current.click();
+                                fileRef.current.click();
                             }}
                         >
                             <IoIosImages color="blue" size="30px"/>
@@ -67,8 +115,8 @@ const MessageInputField = () => {
                 </div>
 
                 {/*Input*/}
-                <div className="hidden w-full lg:flex flex-col px-3 rounded-lg border-[1px] border-gray-300 bg-gray-50 focus-within:border-blue-500">
-                    <FilePreview images={images} setImages={setImages}/>
+                <form onSubmit={(e) => sendMessage(e)} className="w-full lg:flex flex-col px-3 rounded-lg border-[1px] border-gray-300 bg-gray-50 focus-within:border-blue-500">
+                    {filesAttach.length > 0 && <FilePreview filesAttach={filesAttach} setFilesAttach={setFilesAttach}/>}
                     <div className="flex items-center">
                         <input
                             type="text"
@@ -78,43 +126,38 @@ const MessageInputField = () => {
                             onChange={(e) => setContent(e.target.value)}
                         />
                         <Tooltip title="Send">
-                            <button className="hover:bg-gray-200 rounded-full p-2">
+                            <button type="submit" className="hover:bg-gray-200 rounded-full p-2">
                                 <IoSend color="blue" size='20px'/>
                             </button>
                         </Tooltip>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 };
 
-const FilePreview = ({images, setImages}) => {
+const FilePreview = ({filesAttach, setFilesAttach}) => {
     return (
-        images.length > 0 && (
-            <div className="flex flex-wrap gap-x-2 items-center py-2">
-                {images.map((image, index) => (
-                    <div key={index} className="relative border rounded-lg shadow-2xl">
-                        {image.type.includes('image') ? (
-                            <img src={image && URL.createObjectURL(image)} alt="preview" className="w-14 h-14 object-cover rounded-lg"/>
-                        ) : (
-                            <div className="w-[150px] h-14 px-2 rounded-lg flex items-center gap-x-2">
-                                <span  className="p-2 bg-gray-200 rounded-full">
-                                    <IoDocumentTextOutline size="20px" color="blue"/>
-                                </span>
-                                <h3 className="text-sm truncate-2-lines">{image.name}</h3>
-                            </div>
-                        )}
-                        <motion.button whileHover={{scale: 1.3}} className="absolute top-[-7px] right-[-9px] p-1 bg-transparent rounded-full" onClick={(e) => {
-                            e.preventDefault();
-                            setImages(images.filter(item => item !== image));
-                        }}>
-                            <IoCloseCircle color="red" size="20px"/>
-                        </motion.button>
-                    </div>
-                ))}
-            </div>
-        )
+        <div className="flex flex-wrap gap-x-2 items-center py-2">
+            {filesAttach.map((item, index) => (
+                <div key={index} className="relative border rounded-lg shadow-2xl">
+                    {item.type.includes('image') ? (
+                        <img src={item && URL.createObjectURL(item)} alt="preview" className="w-14 h-14 object-cover rounded-lg"/>
+                    ) : (
+                        <div className="w-[150px] h-14 px-2 rounded-lg flex items-center gap-x-2">
+                            <span  className="p-2 bg-gray-200 rounded-full">
+                                <IoDocumentTextOutline size="20px" color="blue"/>
+                            </span>
+                            <h3 className="text-sm truncate-2-lines">{item.name}</h3>
+                        </div>
+                    )}
+                    <motion.span whileHover={{scale: 1.3}} className="absolute top-[-7px] right-[-9px] p-1 bg-transparent rounded-full" onClick={() => setFilesAttach(filesAttach.filter(file => file !== item))}>
+                        <IoCloseCircle color="red" size="20px"/>
+                    </motion.span>
+                </div>
+            ))}
+        </div>
     )
 }
 
