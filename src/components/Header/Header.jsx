@@ -1,19 +1,20 @@
-import React, {useContext} from "react";
-import {useNavigate, Link} from "react-router-dom";
-import {useState} from "react";
-import {FaRegCircleUser} from "react-icons/fa6";
+import React, { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { FaRegCircleUser } from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
 import * as authServices from "../../services/auth";
-import {toast} from "sonner";
-import {MdLogout} from "react-icons/md";
+import { toast } from "sonner";
+import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
 
 const Header = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isDropdown, setIsDropdown] = useState(true);
-    const {auth, isLogin} = useContext(AuthContext);
+    const { auth, isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
+    const [activeButton, setActiveButton] = useState(null);
 
     const handleLogout = async () => {
         try {
@@ -43,7 +44,7 @@ const Header = () => {
             <div className="flex flex-wrap items-center justify-between gap-5 relative max-w-[1200px] mx-auto">
                 <Link to="/" className="">
                     <div className="flex items-center ml-2">
-                        <img src={ImageLogo} alt="logo" className="w-16 "/>
+                        <img src={ImageLogo} alt="logo" className="w-16 " />
                         <h2 className="ml-2 font-bold text-[22px] tracking-wide">
                             <span className="text-black">Trendy</span>
                             <span className="text-[#007bff]">Bids</span>
@@ -61,10 +62,15 @@ const Header = () => {
                                 type="button"
                                 onClick={() => setIsDropdown(!isDropdown)}
                             >
-                                <span className="text-sm font-medium">{auth?.fullName}</span>
+                                <span className="text-sm font-medium">
+                                    {auth?.fullName}
+                                </span>
                                 <img
                                     className="w-[40px] h-[40px] rounded-full mx-3"
-                                    src={auth?.avatarUrl || "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"}
+                                    src={
+                                        auth?.avatarUrl ||
+                                        "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
+                                    }
                                     alt={auth?.fullName || "customer"}
                                 ></img>
                                 <svg
@@ -96,13 +102,16 @@ const Header = () => {
                                     aria-labelledby="dropdownDefaultButton"
                                 >
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
-                                        <FaRegCircleUser className="mx-3 text-xl"/>
-                                        <Link to="/profile" className="block pr-4 py-3">
+                                        <FaRegCircleUser className="mx-3 text-xl" />
+                                        <Link
+                                            to="/profile"
+                                            className="block pr-4 py-3"
+                                        >
                                             Profile
                                         </Link>
                                     </li>
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
-                                        <MdLogout className="mx-3 text-xl"/>
+                                        <MdLogout className="mx-3 text-xl" />
                                         <button
                                             onClick={(e) => handleLogout(e)}
                                             className="block pr-4 py-3"
@@ -169,38 +178,45 @@ const Header = () => {
                     id="collapseMenu"
                     className="lg:!flex lg:space-x-5 max-lg:space-y-2 max-lg:hidden max-lg:py-4 max-lg:w-full"
                 >
-                    <li className="max-lg:border-b max-lg:bg-[#007bff] max-lg:py-2 px-3 max-lg:rounded">
-                        <Link
-                            to="/"
-                            className="lg:hover:text-[#007bff] text-[#007bff] max-lg:text-white block font-semibold text-[15px]"
-                        >
-                            Home
-                        </Link>
+                     <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
+                            activeButton === "home"
+                                ? "text-[#007bff] border-[#007bff] "
+                                : "text-black"
+                        }`}
+                        onClick={() => setActiveButton("home")}
+                    >
+                        <Link to="/">Home</Link>
                     </li>
-                    <li className="max-lg:border-b max-lg:py-2 px-3 max-lg:rounded"></li>
-                    <li className="group max-lg:border-b max-lg:py-2 relative">
-                        <Link
-                            to="/product-auction"
-                            className="hover:text-[#007bff] hover:fill-[#007bff] text-gray-600 font-semibold text-[15px] block"
-                        >
-                            Product Auction
-                        </Link>
+                    <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
+                            activeButton === "productAuction"
+                                ? "text-[#007bff] border-[#007bff] "
+                                : "text-black"
+                        }`}
+                        onClick={() => setActiveButton("productAuction")}
+                    >
+                        <Link to="/product-auction">Product Auction</Link>
                     </li>
-                    <li className="max-lg:border-b max-lg:py-2 px-3 max-lg:rounded">
-                        <Link
-                            to="/about"
-                            className="hover:text-[#007bff] hover:fill-[#007bff] text-gray-600 font-semibold text-[15px] block"
-                        >
-                            About
-                        </Link>
+                    <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
+                            activeButton === "about"
+                                ? "text-[#007bff] border-[#007bff] "
+                                : "text-black"
+                        }`}
+                        onClick={() => setActiveButton("about")}
+                    >
+                        <Link to="/about">About</Link>
                     </li>
-                    <li className="max-lg:border-b max-lg:py-2 px-3 max-lg:rounded">
-                        <Link
-                            to="/contact"
-                            className="hover:text-[#007bff] hover:fill-[#007bff] text-gray-600 font-semibold text-[15px] block"
-                        >
-                            Contact
-                        </Link>
+                    <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
+                            activeButton === "contact"
+                                ? "text-[#007bff] border-[#007bff] "
+                                : "text-black"
+                        }`}
+                        onClick={() => setActiveButton("contact")}
+                    >
+                        <Link to="/contact">Contact</Link>
                     </li>
                 </ul>
             </div>
