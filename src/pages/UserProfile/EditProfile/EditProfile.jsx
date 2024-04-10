@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { MdPhoneIphone, MdOutlineLocationOn } from "react-icons/md";
@@ -8,7 +8,7 @@ import AuthContext from "../../../context/authProvider";
 
 const EditProfile = () => {
     const fileRef = useRef();
-    const { user, setUser } = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
     const handleUpdateAvatar = async (event) => {
@@ -27,10 +27,12 @@ const EditProfile = () => {
 
             const response = await userApi.uploadAvatar(accessToken, file);
 
-            setUser((prev) => ({
+            setAuth((prev) => ({
                 ...prev,
                 avatarUrl: response?.response?.url,
             }));
+            localStorage.setItem('auth', JSON.stringify({ ...auth, avatarUrl: response?.response?.url }));
+
         } catch (error) {
             console.log(`upload error`, error);
         } finally {
@@ -42,17 +44,18 @@ const EditProfile = () => {
         e.preventDefault();
         const accessToken = localStorage.getItem("access-token");
         const formData = {
-            fullName: user.fullName,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            address: user.address,
+            fullName: auth.fullName,
+            email: auth.email,
+            phoneNumber: auth.phoneNumber,
+            address: auth.address,
         };
         try {
             const userEdit = await userApi.editUser(
                 accessToken,
-                user?.id,
+                auth?.id,
                 formData
             );
+            localStorage.setItem('auth', JSON.stringify({ ...formData }));
             toast.success("User Data Updated Successfully", userEdit.response);
             // Xử lý khi cập nhật thành công
             console.log(formData);
@@ -81,9 +84,9 @@ const EditProfile = () => {
                     </h1>
                 </div>
                 <div className="flex flex-col items-center">
-                    {user?.avatarUrl ? (
+                    {auth?.avatarUrl ? (
                         <img
-                            src={user.avatarUrl}
+                            src={auth.avatarUrl}
                             alt="loading-avatar"
                             className="w-40 h-40 object-cover border-2 rounded-full"
                         />
@@ -107,10 +110,10 @@ const EditProfile = () => {
                                 type="name"
                                 name="fullName"
                                 className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none "
-                                value={user?.fullName}
+                                value={auth?.fullName}
                                 onChange={(e) =>
-                                    setUser({
-                                        ...user,
+                                    setAuth({
+                                        ...auth,
                                         fullName: e.target.value,
                                     })
                                 }
@@ -125,9 +128,9 @@ const EditProfile = () => {
                                 type="email"
                                 name="email"
                                 className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                                value={user?.email}
+                                value={auth?.email}
                                 onChange={(e) =>
-                                    setUser({ ...user, email: e.target.value })
+                                    setAuth({ ...auth, email: e.target.value })
                                 }
                             />
                             <MdOutlineEmail className="w-[18px] h-[18px] absolute right-4" />
@@ -140,10 +143,10 @@ const EditProfile = () => {
                                 type="phone"
                                 name="phoneNumber"
                                 className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                                value={user?.phoneNumber}
+                                value={auth?.phoneNumber}
                                 onChange={(e) =>
-                                    setUser({
-                                        ...user,
+                                    setAuth({
+                                        ...auth,
                                         phoneNumber: e.target.value,
                                     })
                                 }
@@ -158,10 +161,10 @@ const EditProfile = () => {
                                 type="address"
                                 name="address"
                                 className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                                value={user?.address}
+                                value={auth?.address}
                                 onChange={(e) =>
-                                    setUser({
-                                        ...user,
+                                    setAuth({
+                                        ...auth,
                                         address: e.target.value,
                                     })
                                 }
