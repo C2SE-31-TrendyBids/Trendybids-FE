@@ -14,7 +14,6 @@ import {
     Button,
 } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
-import { IoHome } from "react-icons/io5";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
@@ -122,15 +121,14 @@ const Login = () => {
                 <div className=" grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="lg:m-6 mx-auto ">
                         <Link to="/">
-                            <IoHome className="left-3 top-3 lg:w-5 lg:h-5 text-[#ff6347] absolute  " />
+                            <div className="">
+                                <img
+                                    src={logo}
+                                    alt=""
+                                    className="max-lg:w-36 max-lg:h-36 lg:mt-20"
+                                />
+                            </div>
                         </Link>
-                        <div className="">
-                            <img
-                                src={logo}
-                                alt=""
-                                className="max-lg:w-36 max-lg:h-36 lg:mt-20"
-                            />
-                        </div>
                         <div className="hidden lg:block">
                             <span className="flex items-center justify-center font-medium">
                                 <span className="text-black mr-1 tracking-wide">
