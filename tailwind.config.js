@@ -22,7 +22,7 @@ module.exports = {
                     "width": '-webkit-fill-available',
                 },
                 '.h-screen-header': {
-                    "height": 'calc(100vh - 92px)'
+                    "height": 'calc(100vh - 68px)'
                 },
                 '.h-sidebar-item': {
                     "height": 'calc(100% - 98px)'
