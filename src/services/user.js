@@ -118,4 +118,19 @@ const changePass = async (accessToken, id, oldPassword, newPassword) => {
     }
 };
 
-export {getCurrentUser, joinSession, editUser, changePass, uploadAvatar};
+const searchUser = async (keyword) => {
+    try {
+        const response = await request.get(`/user/search?keyword=${keyword}`);
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+export {getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser};

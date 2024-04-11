@@ -9,10 +9,11 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 import {setMessage} from "../../redux/slices/message";
 import {useDispatch} from "react-redux";
 import AuthContext from "../../context/authProvider";
-import {useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import * as messageService from "../../services/message"
+import {updateConversation} from "../../redux/slices/conversation";
 
-const MessageInputField = () => {
+const MessageInputField = ({sendCreateNew}) => {
     const {conversationId} = useParams()
     const accessToken = localStorage.getItem('access-token')
     const fileRef = useRef();
@@ -22,6 +23,8 @@ const MessageInputField = () => {
     const dispatch = useDispatch();
     const {auth} = useContext(AuthContext);
     const formData = new FormData();
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const addEmoji = (e) => {
         let emoji = e.native;
@@ -43,7 +46,7 @@ const MessageInputField = () => {
 
         const { id, fullName, avatarUrl } = auth;
         // Create temporary object and dispatch the setMessage action
-        dispatch(setMessage({
+        const messageData = {
             id: Math.random(),
             content: content || null,
             filesAttach: filesAttach.length > 0 ? filesAttach.map(item => ({
@@ -54,7 +57,9 @@ const MessageInputField = () => {
             })) : [],
             createdAt: new Date(),
             user: { id, fullName, avatarUrl }
-        }))
+        }
+        dispatch(setMessage(messageData))
+        dispatch(updateConversation({conversationId, message: messageData}))
 
         // Create a form data object
         formData.append('conversationId', conversationId)
@@ -115,7 +120,13 @@ const MessageInputField = () => {
                 </div>
 
                 {/*Input*/}
-                <form onSubmit={(e) => sendMessage(e)} className="w-full lg:flex flex-col px-3 rounded-lg border-[1px] border-gray-300 bg-gray-50 focus-within:border-blue-500">
+                <form onSubmit={(e) => {
+                    if (location.pathname.includes('/messages/new')) {
+                        return sendCreateNew(e, content, filesAttach)
+                    } else {
+                        return sendMessage(e)
+                    }
+                }} className="w-full lg:flex flex-col px-3 rounded-lg border-[1px] border-gray-300 bg-gray-50 focus-within:border-blue-500">
                     {filesAttach.length > 0 && <FilePreview filesAttach={filesAttach} setFilesAttach={setFilesAttach}/>}
                     <div className="flex items-center">
                         <input
