@@ -58,7 +58,7 @@ const routerAdmin = [
 ]
 
 const routerUser = [
-    { path: '/register-censor', layout: Default, component: RegisterCensor },
+    { path: '/register-censor', layout: User, component: RegisterCensor },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/changepassword', layout: User, component: ChangePassword },
 ]
