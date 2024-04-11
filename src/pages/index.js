@@ -35,4 +35,5 @@ export { default as AuctionSession } from "./AuctionSession/AuctionSession"
 
 // Message
 export { default as Message } from "./Message/Message"
+export { default as NewMessage } from "./Message/NewMessage"
 
