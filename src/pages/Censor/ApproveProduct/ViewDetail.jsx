@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import * as censorAPI from "../../../services/censor"
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
 
     }
     return (
-        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
+        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear ">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
                 <div className="flex items-center pb-3 border-b text-[#007bff]">
                     <h3 className="text-xl font-bold flex-1">PRODUCT DETAIL</h3>
@@ -69,7 +69,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
 
                                 {images.map((image, index) => (
                                     <div key={index} className={` h-64 ${currentIndex === index + 1 ? '' : 'hidden'}`} style={{ transition: 'opacity 0.3s' }}>
-                                        <img src={image.prdImageURL} alt="Image" className="absolute inset-0 z-10 h-full w-full object-cover" />
+                                        <img src={image.prdImageURL} alt="Imaget" className="absolute inset-0 z-10 h-full w-full object-cover" />
                                     </div>
                                 ))}
                                 <button onClick={back} className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex justify-center items-center rounded-full shadow-md z-10 bg-gray-100 hover:bg-gray-200">

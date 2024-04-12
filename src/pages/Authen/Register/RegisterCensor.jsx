@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "../../../public/images/logoTrendy1.jpg";
 import Link from "@mui/material/Link";
 import * as censorApi from "../../../services/censor";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,12 +11,7 @@ const RegisterCensor = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const accessToken = localStorage.getItem("access-token");
     const user = JSON.parse(localStorage.getItem("auth"));
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, } = useForm({
         defaultValues: {
             isCheck: false,
             taxCode: "",
@@ -50,6 +44,7 @@ const RegisterCensor = () => {
                 data.placeTaxCode,
                 selectedFile
             );
+            console.log(censorReq.message);
             if (censorReq.statusCode === 201) {
                 toast.success(censorReq.message);
                 reset({
@@ -65,7 +60,7 @@ const RegisterCensor = () => {
                 });
                 setSelectedFile(null);
             } else {
-                toast(censorReq.message);
+                toast.error(censorReq?.message);
             }
         } catch (error) {
             toast(error);
@@ -80,15 +75,10 @@ const RegisterCensor = () => {
     return (
         <div className="w-full px-[30px] mx-auto mb-10">
             <div className="border shadow-lg rounded-lg bg-white h-auto ">
-                <form
-                    action=""
-                    className="flex items-center justify-center"
+                <form action="" className="flex items-center justify-center"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="w-4/5">
-                        {/* <div className='flex items-center justify-center'>
-                            <img src={logo} alt="" />
-                        </div> */}
                         <div className="text-center my-10">
                             <span className="text-2xl font-bold text-blue-500">
                                 Register Auction Organization
@@ -185,7 +175,7 @@ const RegisterCensor = () => {
                                     <input
                                         type="text"
                                         className="w-full border p-2 rounded-md my-2 text-black "
-                                        value={user?.username}
+                                        value={user?.fullName}
                                         disabled
                                     />
                                 </div>

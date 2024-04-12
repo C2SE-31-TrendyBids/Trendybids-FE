@@ -64,8 +64,9 @@ const Login = () => {
         event.preventDefault();
     };
     const handleNavigate = (role) => {
+        console.log(role);
         if (role === "Admin") navigate("/admin");
-        if (role === "Censor") navigate("/all-product")
+        else if (role === "Censor") navigate("/all-product")
         else navigate("/");
     };
     const handleLogin = async (e) => {
