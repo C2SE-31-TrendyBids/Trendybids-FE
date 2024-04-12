@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import background from "../../../public/images/wave_background.png";
 import logo from "../../../public/images/logoTrendy1.jpg";
-
 import {
     Checkbox,
     TextField,
@@ -20,10 +19,12 @@ import { Link, useNavigate } from "react-router-dom";
 import * as authApi from "../../../services/auth";
 import * as userApi from "../../../services/user";
 import AuthContext from "../../../context/authProvider";
+import MethodContext from "../../../context/methodProvider";
 import { toast } from "sonner";
 
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
+    const { validateEmail } = useContext(MethodContext)
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
@@ -46,10 +47,6 @@ const Login = () => {
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(";").shift();
     };
-    const validateEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
     const loginWithGoogle = async () => {
         const googleLoginURL = "http://localhost:5000/api/auth/google";
         const width = 500;
@@ -67,20 +64,20 @@ const Login = () => {
         event.preventDefault();
     };
     const handleNavigate = (role) => {
+        console.log(role);
         if (role === "Admin") navigate("/admin");
-        // navigate('/admin/dashboard')
+        else if (role === "Censor") navigate("/all-product")
         else navigate("/");
     };
     const handleLogin = async (e) => {
         setLoading(true);
-        console.log(rememberMe);
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
+            setLoading(false)
             return;
         }
         // fetch api login
         const loginResponse = await authApi.loginApi(email, password);
-
         if (loginResponse?.statusCode === 200) {
             const accessToken = loginResponse?.response?.accessToken;
             const refreshToken = loginResponse?.response?.refreshToken;
@@ -145,8 +142,7 @@ const Login = () => {
                     </div>
                     <div className="">
                         <div className="text-[38px] font-extrabold lg:my-4 lg:mt-12 text-center text-blue-500 tracking-wide">
-                            {" "}
-                            Login{" "}
+                            Login
                         </div>
                         <div className="flex items-center justify-center">
                             <div
@@ -158,125 +154,110 @@ const Login = () => {
                             </div>
                         </div>
                         <div className="mb-3 flex items-center justify-around">
-                            <div className="w-[120px] h-0.5 bg-gray-300 bg-opacity-60 rounded-[100px] mr-2" />{" "}
-                            <span className="font-semibold">Or</span>{" "}
-                            <div className="w-[120px] h-0.5 bg-gray-300 bg-opacity-60 rounded-[100px] ml-2" />{" "}
+                            <div className="w-[120px] h-0.5 bg-gray-300 bg-opacity-60 rounded-[100px] mr-2" />
+                            <span className="font-semibold">Or</span>
+                            <div className="w-[120px] h-0.5 bg-gray-300 bg-opacity-60 rounded-[100px] ml-2" />
                         </div>
-
-                        <div>
-                            <div className="mt-5 flex items-center justify-center">
-                                <TextField
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    type="email"
-                                    value={email}
-                                    id="outlined-basic"
-                                    label="Your Email"
-                                    variant="outlined"
-                                    error={Boolean(emailError)}
-                                    helperText={emailError}
-                                    className="w-[90%]"
-                                />
-                            </div>
-                            <FormControl
-                                sx={{ m: 2.5, width: "90%" }}
-                                variant="outlined"
-                            >
-                                <InputLabel htmlFor="outlined-adornment-password">
-                                    Password
-                                </InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
-                                    type={showPassword ? "text" : "password"}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={
-                                                    handleClickShowPassword
-                                                }
-                                                onMouseDown={
-                                                    handleMouseDownPassword
-                                                }
-                                                edge="end"
-                                                style={{
-                                                    backgroundColor:
-                                                        "transparent",
-                                                }} // Thêm CSS để đặt màu nền của icon là trong suốt
-                                            >
-                                                {showPassword ? (
-                                                    <MdOutlineVisibility
-                                                        style={{
-                                                            color: "#000",
-                                                        }}
-                                                    /> // Thay đổi màu của icon thành màu tương ứng của ô input
-                                                ) : (
-                                                    <MdOutlineVisibilityOff
-                                                        style={{
-                                                            color: "#000",
-                                                        }}
-                                                    /> // Thay đổi màu của icon thành màu tương ứng của ô input
-                                                )}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                    style={{ background: "transparent" }}
-                                />
-                            </FormControl>
-                            <div className="mx-2 flex items-center justify-between">
-                                <div>
-                                    <Checkbox
-                                        checked={rememberMe}
-                                        onClick={(e) =>
-                                            setRememberMe(e.target.checked)
-                                        }
+                        <form onSubmit={handleLogin}>
+                            <div>
+                                <div className="mt-5 flex items-center justify-center">
+                                    <TextField
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        type="email"
+                                        value={email}
+                                        id="outlined-basic"
+                                        label="Your Email"
+                                        variant="outlined"
+                                        error={Boolean(emailError)}
+                                        helperText={emailError}
+                                        className="w-[90%]"
                                     />
-                                    <span className="text-[16px] font-normal">
-                                        Remember password
-                                    </span>
                                 </div>
-                                <div className="mr-2 font-medium text-blue-500 hover:opacity-80">
-                                    <Link
-                                        href="/forgot-password"
-                                        underline="hover"
-                                    >
-                                        {"Forgot password"}
-                                    </Link>
+                                <FormControl
+                                    sx={{ m: 2.5, width: "90%" }}
+                                    variant="outlined"
+                                >
+                                    <InputLabel htmlFor="outlined-adornment-password">
+                                        Password
+                                    </InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-password"
+                                        value={password}
+                                        onChange={(e) =>
+                                            setPassword(e.target.value)
+                                        }
+                                        type={showPassword ? "text" : "password"}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                    style={{
+                                                        backgroundColor: "transparent",
+                                                    }} >
+                                                    {showPassword ? (
+                                                        <MdOutlineVisibility />
+                                                    ) : (
+                                                        <MdOutlineVisibilityOff />
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                        style={{ background: "transparent" }}
+                                    />
+                                </FormControl>
+                                <div className="mx-2 flex items-center justify-between">
+                                    <div>
+                                        <Checkbox
+                                            checked={rememberMe}
+                                            onClick={(e) =>
+                                                setRememberMe(e.target.checked)
+                                            }
+                                        />
+                                        <span className="text-[16px] font-normal">
+                                            Remember password
+                                        </span>
+                                    </div>
+                                    <div className="mr-2 font-medium text-blue-500 hover:opacity-80">
+                                        <Link
+                                            href="/forgot-password"
+                                            underline="hover"
+                                        >
+                                            {"Forgot password"}
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex items-center justify-center my-4 lg:my-8 px-4 ">
-                            {loading ? (
-                                <CircularProgress />
-                            ) : (
-                                <Button
-                                    style={{
-                                        fontWeight: "bold",
-                                        width: "100%",
-                                        fontSize: "1.25rem",
-                                        padding: "0.5rem 1.rem",
-                                        borderRadius: "1rem",
-                                        backgroundColor: "#3B82F6",
-                                        transition: "opacity 0.3s ease",
-                                        "&:hover": {
-                                            opacity: 0.8,
-                                        },
-                                    }}
-                                    variant="contained"
-                                    size="large"
-                                    onClick={(e) => {
-                                        handleLogin(e);
-                                    }}
-                                >
-                                    Login
-                                </Button>
-                            )}
-                        </div>
+                            <div className="flex items-center justify-center my-4 lg:my-8 px-4 ">
+                                {loading ? (
+                                    <CircularProgress />
+                                ) : (
+                                    <Button
+                                        style={{
+                                            fontWeight: "bold",
+                                            width: "100%",
+                                            fontSize: "1.25rem",
+                                            padding: "0.5rem 1.rem",
+                                            borderRadius: "1rem",
+                                            backgroundColor: "#3B82F6",
+                                            transition: "opacity 0.3s ease",
+                                            "&:hover": {
+                                                opacity: 0.8,
+                                            },
+                                        }}
+                                        variant="contained"
+                                        size="large"
+                                        onClick={(e) => { handleLogin(e) }}
+                                    >
+                                        Login
+                                    </Button>
+                                )}
+                            </div>
+                        </form>
                         <div className="lg:hidden block ">
                             <span className="flex items-center justify-center m-4 text-blue-500 font-bold">
                                 <Link href="/register" underline="always">

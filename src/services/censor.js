@@ -62,7 +62,7 @@ const registerCensor = async (
     };
   } catch (error) {
     return {
-      error,
+      message: error?.response?.data?.message,
       statusCode: error.status,
     };
   }
@@ -123,14 +123,11 @@ const postAuctionSession = async (body, accessToken) => {
   try {
     const reqAuction = await request.post(
       "/censor/post-auction-session",
-      {
-        body: body,
+      body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+    }
     );
     return {
       message: reqAuction.data.message,

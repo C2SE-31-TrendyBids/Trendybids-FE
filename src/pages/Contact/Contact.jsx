@@ -1,7 +1,7 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Map from "../../components/Map/Map";
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const Contact = () => {
     const submitForm = () => {
@@ -16,19 +16,19 @@ const Contact = () => {
                     className="w-full h-[350px] object-cover pixelated"
                 />
                 <span className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md"> Contact Us
-                      <div className="flex mt-2 text-lg">
-                            <div className="text-black hover:text-blue-500">
-                                <Link to="/" className="">
-                                    Home
-                                </Link>
-                            </div>
-                            <div className="text-black">
-                                <span className=" items-center">
-                                    <span className="mx-2">></span>
-                                    <span className="">Contact Us</span>
-                                </span>
-                            </div>
-                      </div>
+                    <div className="flex mt-2 text-lg">
+                        <div className="text-black hover:text-blue-500">
+                            <Link to="/" className="">
+                                Home
+                            </Link>
+                        </div>
+                        <div className="text-black">
+                            <span className=" items-center">
+                                <span className="mx-2">&gt</span>
+                                <span className="">Contact Us</span>
+                            </span>
+                        </div>
+                    </div>
                 </span>
             </div>
             <div
@@ -165,7 +165,7 @@ const Contact = () => {
                             ></textarea>
                         </div>
                         <motion.button
-                            whileHover={{scale: 1.05}}
+                            whileHover={{ scale: 1.05 }}
                             onClick={submitForm}
                             type="button"
                             className="text-white  bg-[#007bff] hover:bg-blue-600 font-semibold rounded text-sm px-6 py-3 w-full"
@@ -265,7 +265,7 @@ const Contact = () => {
                 </div>
             </div>
             <div className="w-full h-[450px] mb-20 border border-blue-100">
-                <Map/>
+                <Map />
             </div>
         </div>
     );

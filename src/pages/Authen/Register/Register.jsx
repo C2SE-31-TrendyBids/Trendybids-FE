@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
@@ -8,6 +8,7 @@ import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
 import CodeOtp from '../InputOtp/CodeOtp';
 import { toast } from "sonner";
+import MethodContext from '../../../context/methodProvider';
 
 const Register = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -20,16 +21,13 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(true);
     const [showConfirmPassword, setShowConfirmPassword] = useState(true)
     const [loading, setLoading] = useState(false);
+    const { validateEmail } = useContext(MethodContext)
 
     const handleHiddenPassword = () => {
         showPassword ? setShowPassword(false) : setShowPassword(true);
     };
     const handleHiddenConfirmPassword = () => {
         showConfirmPassword ? setShowConfirmPassword(false) : setShowConfirmPassword(true);
-    };
-    const validateEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
     };
     const handleRedgister = async (e) => {
         setLoading(true)

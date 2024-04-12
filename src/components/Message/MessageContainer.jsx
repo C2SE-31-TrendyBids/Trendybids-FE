@@ -1,18 +1,56 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {CircularProgress} from "@mui/material";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Tooltip from '@mui/material/Tooltip';
 import AuthContext from "../../context/authProvider";
 import moment from "moment";
 import {IoDocumentTextOutline} from "react-icons/io5";
 import ImageGallery from "../ImageGallery/ImageGallery";
+import {fetchMessagesThunk, setMoreMessage} from "../../redux/slices/message";
+import {useParams} from "react-router-dom";
+import * as messageService from "../../services/message";
 
 const MessageContainer = () => {
-    const {messages, loading} = useSelector((state) => state.message);
     const {auth} = useContext(AuthContext)
+    const accessToken = localStorage.getItem('access-token')
+    const {messages, loading} = useSelector((state) => state.message);
+    const {conversationId} = useParams()
+    const dispatch = useDispatch()
+    const messageListRef = useRef(null);
     const [showGallery, setShowGallery] = useState(false)
     const [listImg, setListImg] = useState([])
     const [selectedImg, setSelectedImg] = useState({})
+    const [nextPage, setNextPage] = useState(2);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = async (e) => {
+            if (isLoadingMore) return;
+            const { scrollTop, scrollHeight, clientHeight } = e.target;
+            if ((Math.round(Math.abs(scrollTop)) === scrollHeight- clientHeight - 1)) {
+                setIsLoadingMore(true);
+                const moreMessage = await messageService.getConversationMessage(accessToken, conversationId, {page: nextPage, limit: 10})
+                if (moreMessage.response.data.length !== 0) {
+                    setNextPage(nextPage + 1);
+                    console.log('moreMessage:', moreMessage.response.data.reverse())
+                    dispatch(setMoreMessage(moreMessage.response.data.reverse()))
+                }
+                setIsLoadingMore(false);
+            }
+        };
+
+        const messageListElement = messageListRef.current;
+        messageListElement.addEventListener('scroll', handleScroll);
+
+        // Cleanup function
+        return () => {
+            messageListElement.removeEventListener('scroll', handleScroll);
+        };
+    }, [nextPage, isLoadingMore]);
+
+    useEffect(() => {
+        setNextPage(2)
+    }, [conversationId])
 
     const handleShowGallery = (item) => {
         const arrImg = messages.reduce((acc, message) => {
@@ -28,7 +66,7 @@ const MessageContainer = () => {
     }
 
     return (
-        <div className="flex flex-1 flex-col-reverse overflow-y-scroll py-[5px] px-6">
+        <div className="flex flex-1 flex-col-reverse overflow-y-scroll py-[5px] px-6" ref={messageListRef}>
             {loading ? (
                 <CircularProgress className="h-12 w-12 m-auto"/>
             ) : (
@@ -83,7 +121,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery}) => {
 
     return (
         <div key={item.id} className={`flex flex-col my-0.5 ${alignItem} ${marginLeftStyle}`}>
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-start gap-x-2">
                 {showAvatar && !isUserLogin && (
                     <img src={item.user.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"} alt="avatar" className="h-8 w-8 rounded-full"/>
                 )}
@@ -97,7 +135,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery}) => {
                                 <TimeTooltip key={index} item={item} placement={placement}>
                                     {imageTypes.includes(item.name.split('.').pop()) ? (
                                         <div key={index} className={`${filesAttach.length > 1 && "w-[calc(33%-10px)]"} m-1`}>
-                                            <img src={item.url} loading="lazy" alt="image" onClick={() => handleShowGallery(item)} className="w-full h-auto rounded-lg shadow-sm hover:opacity-85"/>
+                                            <img src={item.url} alt="image" onClick={() => handleShowGallery(item)} className="w-full h-auto rounded-lg shadow-sm hover:opacity-85"/>
                                         </div>
                                     ) : (
                                         <a key={index} href={item.url} download="filename.extension" className="h-14 px-2 rounded-lg flex items-center gap-x-2 bg-gray-100 m-1">
@@ -118,6 +156,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery}) => {
 }
 
 const TimeTooltip = ({children, item, placement}) => {
+    if (!children) return null;
     return (
         <Tooltip title={moment(item.createdAt).format('LT')} placement={placement} componentsProps={{
             tooltip: {

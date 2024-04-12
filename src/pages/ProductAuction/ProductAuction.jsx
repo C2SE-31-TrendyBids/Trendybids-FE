@@ -10,22 +10,23 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { Link } from 'react-router-dom';
-
+import { useLocation } from 'react-router-dom';
 function valuetext(value) {
     return `${value}`;
 }
 
 const ProductAuction = () => {
+    const location = useLocation();
+    const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
+
     const [productAuctions, setProductAuctions] = useState([])
     const [totalPage, setTotalPage] = useState(1)
     const [pageNumber, setPageNumber] = useState(1)
     const [categories, setCategories] = useState([])
-    const [categoryId, setCategoryId] = useState('')
     const [sortBy, setSortBy] = useState('');
     const [type, setType] = useState('');
     const [nameProduct, setNameProduct] = useState('')
     const [isChangeFilter, setIsChangeFilter] = useState(false)
-
     const [comingSoon, setComingSoon] = useState([])
     const [auctionEnded, setAuctionEnded] = useState([])
     const [value, setValue] = useState([0, 10000]);
@@ -265,7 +266,7 @@ const ProductAuction = () => {
                     </div>
                 </div>
             </div>
-            <div className='flex items-center justify-center mt-4'>
+            <div className='flex items-center justify-center'>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
         </div >

@@ -20,7 +20,9 @@ import {
     ManagementAccount, AuctionLive,
     LoginGoogleSuccess, AuctionSession,
     Message,
-    DashboardCensor
+    DashboardCensor,
+    NewMessage
+
 } from '../pages/index';
 
 import {
@@ -76,6 +78,7 @@ const routerAllRole = [
     { path: '/profile', layout: User, component: EditProfile },
     { path: '/messages', layout: MessageLayout, component: Message },
     { path: '/messages/:conversationId', layout: MessageLayout, component: Message },
+    { path: '/messages/new', layout: MessageLayout, component: NewMessage },
 ]
 
 export { publicRouter, routerUser, routerCensor, routerAdmin, routerAllRole }
