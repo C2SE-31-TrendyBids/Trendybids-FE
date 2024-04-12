@@ -19,7 +19,8 @@ import {
     ApproveCensor,
     ManagementAccount, AuctionLive,
     LoginGoogleSuccess, AuctionSession,
-    Message
+    Message,
+    DashboardCensor
 } from '../pages/index';
 
 import {
@@ -64,6 +65,7 @@ const routerUser = [
 ]
 
 const routerCensor = [
+    { path: '/dashboard-censor', layout: CensorLayout, component: DashboardCensor },
     { path: '/product-approve', layout: CensorLayout, component: PostAuction },
     { path: '/profile', layout: User, component: EditProfile },
     { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
