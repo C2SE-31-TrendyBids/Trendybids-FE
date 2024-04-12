@@ -74,7 +74,6 @@ const AuctionSession = () => {
             navigation("/login");
             return;
         }
-
         Swal.fire({
             title: "Are you sure you want to Delete?",
             text: "Be careful you will lose data",
