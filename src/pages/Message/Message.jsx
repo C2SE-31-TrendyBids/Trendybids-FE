@@ -59,6 +59,8 @@ const Message = () => {
     }, []);
 
     useEffect(() => {
+        const curConv = conversations.find((item) => item.id === conversationId);
+        setConversation(curConv);
         conversationId && dispatch(fetchMessagesThunk({accessToken, conversationId}))
     }, [conversationId])
 
