@@ -1,16 +1,17 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {CircularProgress} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
+import moment from "moment";
+import Highlighter from "react-highlight-words";
+import {useParams} from "react-router-dom";
 import Tooltip from '@mui/material/Tooltip';
 import AuthContext from "../../context/authProvider";
-import moment from "moment";
-import {IoDocumentTextOutline} from "react-icons/io5";
-import ImageGallery from "../ImageGallery/ImageGallery";
-import {fetchMessagesThunk, setMoreMessage} from "../../redux/slices/message";
-import {useParams} from "react-router-dom";
+import {setMoreMessage} from "../../redux/slices/message";
 import * as messageService from "../../services/message";
+import ImageGallery from "../ImageGallery/ImageGallery";
+import {IoDocumentTextOutline} from "react-icons/io5";
 
-const MessageContainer = () => {
+const MessageContainer = ({messageRef, isAllPage, searchValue}) => {
     const {auth} = useContext(AuthContext)
     const accessToken = localStorage.getItem('access-token')
     const {messages, loading} = useSelector((state) => state.message);
@@ -27,7 +28,7 @@ const MessageContainer = () => {
         const handleScroll = async (e) => {
             if (isLoadingMore) return;
             const { scrollTop, scrollHeight, clientHeight } = e.target;
-            if ((Math.round(Math.abs(scrollTop)) === scrollHeight- clientHeight - 1)) {
+            if ((Math.round(Math.abs(scrollTop)) === scrollHeight- clientHeight - 1) && isAllPage === false) {
                 setIsLoadingMore(true);
                 const moreMessage = await messageService.getConversationMessage(accessToken, conversationId, {page: nextPage, limit: 10})
                 if (moreMessage.response.data.length !== 0) {
@@ -70,7 +71,7 @@ const MessageContainer = () => {
             {loading ? (
                 <CircularProgress className="h-12 w-12 m-auto"/>
             ) : (
-                sortedMessage(messages, auth.id, handleShowGallery)
+                sortedMessage(messages, auth.id, handleShowGallery, messageRef, searchValue)
             )}
             {showGallery && <ImageGallery images={listImg} selectedImg={selectedImg} setShowGallery={setShowGallery}/>}
         </div>
@@ -78,7 +79,7 @@ const MessageContainer = () => {
 };
 
 // sortedMessage function sorts and displays the list of messages
-const sortedMessage = (messages, userId, handleShowGallery) => {
+const sortedMessage = (messages, userId, handleShowGallery, messageRef, searchValue) => {
     const threshold = 60 * 60 * 1000; // 1 hour in milliseconds
 
     return messages && messages.map((item, index, arr) => {
@@ -97,14 +98,14 @@ const sortedMessage = (messages, userId, handleShowGallery) => {
                         {moment(item.createdAt).calendar()}
                     </div>
                 )}
-                <Message item={item} userId={userId} showAvatar={showAvatar} handleShowGallery={handleShowGallery}/>
+                <Message item={item} userId={userId} showAvatar={showAvatar} handleShowGallery={handleShowGallery} messageRef={messageRef} searchValue={searchValue}/>
             </div>
         )
     })
 }
 
 // Message component displays a specific message
-const Message = ({item, userId, showAvatar, handleShowGallery}) => {
+const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searchValue}) => {
     const isUserLogin = userId === item.user.id;
 
     // Determine the style css for the message
@@ -120,14 +121,23 @@ const Message = ({item, userId, showAvatar, handleShowGallery}) => {
     const imageTypes = ['png', 'jpeg', 'jpg'];
 
     return (
-        <div key={item.id} className={`flex flex-col my-0.5 ${alignItem} ${marginLeftStyle}`}>
+        <div key={item.id} className={`flex flex-col my-0.5 ${alignItem} ${marginLeftStyle}`} ref={el => messageRef.current[item.id] = el}>
             <div className="flex items-start gap-x-2">
                 {showAvatar && !isUserLogin && (
-                    <img src={item.user.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"} alt="avatar" className="h-8 w-8 rounded-full"/>
+                    <img src={item.user.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"} alt="avatar" className="h-8 w-8 rounded-full object-cover border"/>
                 )}
                 <div className={`flex flex-col gap-y-1 ${alignItem}`}>
                     <TimeTooltip item={item} placement={placement}>
-                        {item.content !== null && <span className={`py-1.5 px-4 rounded-b-lg ${bgColor} ${roundedStyle}`}>{item.content}</span>}
+                        {item.content !== null &&
+                            <span className={`py-1.5 px-4 rounded-b-lg ${bgColor} ${roundedStyle}`}>
+                                <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={searchValue}
+                                    autoEscape={true}
+                                    textToHighlight={item.content}
+                                />
+                            </span>
+                        }
                     </TimeTooltip>
                     {(filesAttach && filesAttach.length > 0) && (
                         <div className={`flex flex-wrap flex-row gap-x-1 w-[50%] ${justifyContent}`}>
@@ -158,13 +168,23 @@ const Message = ({item, userId, showAvatar, handleShowGallery}) => {
 const TimeTooltip = ({children, item, placement}) => {
     if (!children) return null;
     return (
-        <Tooltip title={moment(item.createdAt).format('LT')} placement={placement} componentsProps={{
-            tooltip: {
-                sx: {
-                    backgroundColor: "#545353",
+        <Tooltip
+            title={moment(item.createdAt).format('LT')}
+            placement={placement}
+            PopperProps={{
+                popperOptions: {
+                    modifiers: [{
+                        name: 'preventOverflow',
+                        options: { altAxis: true, tether: false },
+                    }],
+                },
+            }}
+            componentsProps={{
+                tooltip: {
+                    sx: { backgroundColor: "#545353" }
                 }
-            }
-        }}>
+            }}
+        >
             {children}
         </Tooltip>
     )

@@ -6,14 +6,14 @@ import Tooltip from '@mui/material/Tooltip';
 import {IoIosImages} from "react-icons/io";
 import {IoCloseCircle, IoSend, IoDocumentTextOutline} from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-import {setMessage} from "../../redux/slices/message";
+import {addMessage} from "../../redux/slices/message";
 import {useDispatch} from "react-redux";
 import AuthContext from "../../context/authProvider";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import * as messageService from "../../services/message"
 import {updateConversation} from "../../redux/slices/conversation";
 
-const MessageInputField = ({sendCreateNew}) => {
+const MessageInputField = ({sendCreateNew, handleStartTyping, handleStopTyping}) => {
     const {conversationId} = useParams()
     const accessToken = localStorage.getItem('access-token')
     const fileRef = useRef();
@@ -24,7 +24,6 @@ const MessageInputField = ({sendCreateNew}) => {
     const {auth} = useContext(AuthContext);
     const formData = new FormData();
     const location = useLocation()
-    const navigate = useNavigate()
 
     const addEmoji = (e) => {
         let emoji = e.native;
@@ -58,7 +57,7 @@ const MessageInputField = ({sendCreateNew}) => {
             createdAt: new Date(),
             user: { id, fullName, avatarUrl }
         }
-        dispatch(setMessage(messageData))
+        dispatch(addMessage(messageData))
         dispatch(updateConversation({conversationId, message: messageData}))
 
         // Create a form data object
@@ -135,6 +134,8 @@ const MessageInputField = ({sendCreateNew}) => {
                             placeholder="Aa"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
+                            onKeyDown={handleStartTyping}
+                            onKeyUp={handleStopTyping}
                         />
                         <Tooltip title="Send">
                             <button type="submit" className="hover:bg-gray-200 rounded-full p-2">
