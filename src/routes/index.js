@@ -20,7 +20,9 @@ import {
     ManagementAccount, AuctionLive,
     LoginGoogleSuccess, AuctionSession,
     Message,
+    DashboardCensor,
     NewMessage
+
 } from '../pages/index';
 
 import {
@@ -59,12 +61,13 @@ const routerAdmin = [
 ]
 
 const routerUser = [
-    { path: '/register-censor', layout: Default, component: RegisterCensor },
+    { path: '/register-censor', layout: User, component: RegisterCensor },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/changepassword', layout: User, component: ChangePassword },
 ]
 
 const routerCensor = [
+    { path: '/dashboard-censor', layout: CensorLayout, component: DashboardCensor },
     { path: '/product-approve', layout: CensorLayout, component: PostAuction },
     { path: '/profile', layout: User, component: EditProfile },
     { path: '/all-product', layout: CensorLayout, component: ApproveProduct },

@@ -64,21 +64,20 @@ const ChangePassword = () => {
     return (
         <div>
             <section className="">
-                <div className="mt-20">
+                <div className="mt-24 ">
                     <h1 className="text-[22px] font-bold text-[#007bff] ">
-                         User Change Password
+                        User Change Password
                     </h1>
                 </div>
-                <div className="flex flex-col items-center justify-center px-6 py-8 mt-12 mx-auto  lg:py-0">
-                    <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-100 dark:border-gray-700 sm:p-8">
+                <div className="flex flex-col items-center justify-center px-6 py-6 mt-10 mx-auto  lg:py-0">
+                    {/* <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-100 dark:border-gray-700 sm:p-8"> */}
+                    <div className="w-[60%] p-6 border shadow-lg rounded-lg bg-white m:max-w-md md:mt-0 sm:p-8 ">
                         <form
                             className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
                             action="#"
                         >
                             <div>
-                                <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                                >
+                                <label className=" text-[16px] block mb-2 text-sm font-bold text-gray-900 dark:text-black">
                                     Current Password
                                 </label>
                                 <div className="relative ">
@@ -90,7 +89,7 @@ const ChangePassword = () => {
                                                 ? "password"
                                                 : "text"
                                         }
-                                        placeholder="Current password..."
+                                        placeholder="Enter current password..."
                                         value={curPassword}
                                         onChange={(e) =>
                                             setCurPassword(e.target.value)
@@ -119,9 +118,7 @@ const ChangePassword = () => {
                                 </div>
                             </div>
                             <div>
-                                <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                                >
+                                <label className="text-[16px] block mb-2 text-sm font-bold text-gray-900 dark:text-black">
                                     New Password
                                 </label>
                                 <div className="relative ">
@@ -133,7 +130,7 @@ const ChangePassword = () => {
                                                 ? "password"
                                                 : "text"
                                         }
-                                        placeholder="New password..."
+                                        placeholder="Enter new password..."
                                         value={newPassword}
                                         onChange={(e) =>
                                             setNewPassword(e.target.value)
@@ -162,11 +159,8 @@ const ChangePassword = () => {
                                 </div>
                             </div>
                             <div>
-                                <label
-                                   
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                                >
-                                    Confirm password
+                                <label className=" text-[16px] block mb-2 text-sm font-bold text-gray-900 dark:text-black">
+                                    Confirm Password
                                 </label>
                                 <div className="relative ">
                                     <input
@@ -177,7 +171,7 @@ const ChangePassword = () => {
                                                 ? "password"
                                                 : "text"
                                         }
-                                        placeholder="Confirm password..."
+                                        placeholder="Enter confirm password..."
                                         value={reNewPassword}
                                         onChange={(e) =>
                                             setReNewPassword(e.target.value)

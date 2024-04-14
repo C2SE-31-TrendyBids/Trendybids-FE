@@ -7,8 +7,12 @@ const ChatBot = () => {
     const [showChatbox, setShowChatbox] = useState(false);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-
-
+    const mesExample = ['How to register as an auction organization?',
+        'How can I list a product for auction?',
+        'How many auction organizations are there currently?',
+        'How many products are currently being auctioned?',
+        'How many upcoming products will be auctioned?',
+        'Products currently being auctioned with a price above $100.']
     const toggleChatbox = () => {
         setShowChatbox(!showChatbox);
     }
@@ -17,12 +21,9 @@ const ChatBot = () => {
             if (message === '') {
                 return;
             }
-
-            let msg1 = { name: 'User', messages: message };
-            const newMessages = [...messages, msg1];
-
-            const SERVER_ADDRESS = 'http://localhost:4000';
-
+            let msg1 = { name: 'User', messages: message }
+            const newMessages = [...messages, msg1]
+            const SERVER_ADDRESS = 'http://localhost:4000'
             const response = await fetch(`${SERVER_ADDRESS}/predict`, {
                 method: 'POST',
                 body: JSON.stringify({ message: message }),
@@ -31,11 +32,9 @@ const ChatBot = () => {
                     'Content-Type': 'application/json'
                 },
             });
-
             if (!response.ok) {
                 throw new Error('Failed to fetch');
             }
-
             const data = await response.json();
             let msg2 = { name: "TrendyBids", messages: data.answer };
             const updatedMessages = [...newMessages, msg2];
@@ -56,9 +55,9 @@ const ChatBot = () => {
 
 
     return (
-        <div className="fixed bottom-8 right-8 ">
+        <div className="fixed bottom-8 right-8 z-50">
             <div className={`absolute ${showChatbox ? 'animate-fade-left animate-ease-in-out animate-duration-1000 right-[50px] bottom-[90px]' : 'hidden'}`}>
-                <div className="w-[450px]  rounded-xl shadow-lg">
+                <div className="w-[380px]  rounded-xl shadow-lg">
                     <div className=" flex bg-[rgba(14,7,126,1)] text-white p-4 rounded-t-xl">
                         <img src={avatar} alt="imagename" className="w-16 h-16 rounded-full" />
                         <div className='ml-4'>
@@ -67,6 +66,11 @@ const ChatBot = () => {
                         </div>
                     </div>
                     <div className=" bg-gray-100 w-full h-96 overflow-scroll no-scrollbar">
+                        {mesExample?.map((item) => (
+                            <div>
+                                <button className='text-[10px] border p-2 '>{item}</button>
+                            </div>
+                        ))}
                         {messages?.map((item) => (
                             <div className='w-full'>
                                 {item?.name === 'TrendyBids' ? (

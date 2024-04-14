@@ -4,6 +4,7 @@ import {CgShutterstock} from "react-icons/cg";
 import {FaPeopleGroup} from "react-icons/fa6";
 import {IoSettingsSharp} from "react-icons/io5";
 import {RiAuctionLine} from "react-icons/ri";
+import { AiOutlineStock } from "react-icons/ai";
 import {MdOutlineProductionQuantityLimits} from "react-icons/md";
 import {useContext, useEffect, useState} from "react";
 import MethodProvider from "../context/methodProvider";
@@ -16,8 +17,9 @@ const CensorLayout = ({children}) => {
 
     const sidebarItems = [
         {icon: <IoIosHome size={20}/>, text: "Home", active: false},
+        {icon: <AiOutlineStock size={20}/>, text: "Dashboard Censor", active: false},
         {icon: <FaPeopleGroup size={20}/>, text: "Member", active: false},
-        {icon: <CgShutterstock size={20}/>, text: "All Product", active: false, alert: true},
+        {icon: <CgShutterstock size={20}/>, text: "All Product", active: false, alert: false},
         {icon: <MdOutlineProductionQuantityLimits size={20}/>, text: "Product Approve", active: false},
         {icon: <RiAuctionLine size={20}/>, text: "Auction Session", active: false},
         {icon: <IoSettingsSharp size={20}/>, text: "Settings", active: false},
