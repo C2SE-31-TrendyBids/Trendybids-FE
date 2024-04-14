@@ -45,7 +45,7 @@ const NewMessage = () => {
                         <div className="h-full flex justify-between items-center">
                             <div className="flex items-center justify-start gap-x-[12px]">
                                 <img className="bg-primaryColor h-[40px] w-[40px] rounded-full object-cover"
-                                     src={selectedUser.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"}
+                                     src={selectedUser.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
                                      alt="avatar"/>
                                 <span className="font-bold">{selectedUser?.fullName}</span>
                             </div>

@@ -9,6 +9,7 @@ import {FaSearch} from "react-icons/fa";
 import {BsDot} from "react-icons/bs";
 import { TiMessages } from "react-icons/ti";
 import CreateConversationModal from "./CreateConversationModal";
+import {useDebounce} from "@uidotdev/usehooks";
 
 const MessageSidebar = () => {
     const navigate = useNavigate()
@@ -18,6 +19,12 @@ const MessageSidebar = () => {
     const {auth} = useContext(AuthContext)
     const [currentTime, setCurrentTime] = useState(new Date());
     const conversationId = useParams().conversationId
+    const [search, setSearch] = useState({
+        open: false,
+        value: '',
+        result: []
+    })
+    const searchDebounce = useDebounce(search.value, 500)
 
     const getName = (fullName) => {
         if (fullName) {
@@ -34,6 +41,32 @@ const MessageSidebar = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        if (searchDebounce !== '') {
+            const filterConv = conversations.filter(item => item.recipient.fullName.toLowerCase().includes(searchDebounce.toLowerCase()))
+            setSearch({
+                ...search,
+                open: true,
+                result: filterConv
+            })
+        } else {
+            setSearch({
+                ...search,
+                open: false,
+                result: []
+            })
+        }
+    }, [searchDebounce])
+
+    const handleNavigateMessage = (id) => {
+        setSearch({
+            open: false,
+            value: '',
+            result: []
+        })
+        navigate(`/messages/${id}`)
+    }
+
     return (
         <aside className="h-full lg:w-[360px] md:w-[80px] border-r-[1px] overflow-hidden">
             <header className="flex flex-col justify-between items-center px-[20px] border-b-[1px]">
@@ -47,14 +80,37 @@ const MessageSidebar = () => {
                         </motion.span>
                     </Tooltip>
                 </div>
-                <div
-                    className="hidden w-full lg:flex items-center px-3 mb-3 rounded-2xl border-[1px] border-gray-300 bg-gray-50">
+                <div className="hidden w-full lg:flex items-center px-3 mb-3 rounded-2xl border-[1px] border-gray-300 bg-gray-50 relative">
                     <FaSearch color="#007AFE" size="20px" className=""/>
                     <input
                         type="text"
-                        placeholder="Search name or message..."
+                        placeholder="Search name of message ..."
                         className="w-full py-1 px-3 focus:outline-none focus:border-blue-500 bg-transparent"
+                        value={search.value}
+                        onChange={(e) => setSearch({...search, value: e.target.value})}
                     />
+                    {search.open && (
+                        <div className="absolute h-[250px] w-[90%] rounded-md top-9 p-2 overflow-y-auto bg-white shadow-2xl">
+                            {search.result.length > 0 ? search.result.map((item) => (
+                                <li
+                                    className={`flex items-center justify-center gap-x-[15px] py-[5px] px-[10px] rounded-lg box-border cursor-pointer ${item.id === conversationId ? "bg-blue-50" : "hover:bg-gray-100"}`}
+                                    key={item.id}
+                                    onClick={() => handleNavigateMessage(item.id)}
+                                >
+                                    <img className="h-[40px] w-[40px] rounded-full object-cover"
+                                         src={item?.recipient?.avatarUrl || "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"}
+                                         alt="avatar"/>
+                                    <div className="hidden lg:flex lg:flex-col w-full">
+                                        <span className="w-full truncate text-start">{item?.recipient?.fullName}</span>
+                                    </div>
+                                </li>
+                            )) : (
+                                <span className="h-wull w-full text-center py-[35%]">
+                                    No results were found
+                                </span>
+                            )}
+                        </div>
+                    )}
                 </div>
             </header>
             <ul className="h-sidebar-item overflow-y-auto">
@@ -62,19 +118,19 @@ const MessageSidebar = () => {
                     conversations.map((item) => (
                         item.id === 'create' ? (
                             <li key={item.id} className="flex items-center justify-center gap-x-[15px] py-[10px] px-[10px] mx-2 rounded-lg box-border cursor-pointer bg-blue-50">
-                                <img className="h-[40px] w-[40px] rounded-full object-cover"
-                                     src={item?.recipient?.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"}
+                                <img className="lg:h-[40px] lg:w-[40px] md:h-[20px] md:w-[20px] h-[20px] w-[20px] rounded-full object-cover border"
+                                     src={item?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
                                      alt="avatar"/>
                                 <span className="w-full font-medium truncate text-start">{item?.content}</span>
                             </li>
                         ) : (
                             <li
-                                className={`flex items-center justify-center gap-x-[15px] py-[10px] px-[10px] mx-2 rounded-lg box-border cursor-pointer ${item.id === conversationId ? "bg-blue-50" : "hover:bg-gray-100"}`}
+                                className={`flex items-center justify-center gap-x-[15px] py-[10px] lg:px-[10px] px-[5px] mx-2 rounded-lg box-border cursor-pointer ${item.id === conversationId ? "bg-blue-50" : "hover:bg-gray-100"}`}
                                 key={item.id}
                                 onClick={() => navigate(`/messages/${item.id}`)}
                             >
-                                <img className="h-[40px] w-[40px] rounded-full object-cover"
-                                     src={item?.recipient?.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"}
+                                <img className="lg:h-[40px] lg:w-[40px] md:h-[35px] md:w-[35px] h-[25px] w-[25px] rounded-full object-cover border"
+                                     src={item?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
                                      alt="avatar"/>
                                 <div className="hidden lg:flex lg:flex-col w-full">
                                     <span className="w-full font-medium truncate text-start">{item?.recipient?.fullName}</span>
