@@ -60,8 +60,32 @@ export const MethodProvider = ({children}) => {
         return result.replace(/ /g, '-'); // Replace spaces with hyphens
     }
 
+    const calculateTimeLeft = (targetDate) => {
+        const difference = +new Date(targetDate) - +new Date();
+        let timeLeft = {};
 
-    return <MethodContext.Provider value={{fetchUserDetails , convertToLowerCase}}>{children}</MethodContext.Provider>;
+        if (difference > 0) {
+            timeLeft = {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / (1000 * 60)) % 60),
+                seconds: Math.floor((difference / 1000) % 60)
+            };
+        } else {
+            // If the time has passed, set the hour value to 0
+            timeLeft = {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0
+            };
+        }
+
+        return timeLeft;
+    };
+
+
+    return <MethodContext.Provider value={{fetchUserDetails , convertToLowerCase , calculateTimeLeft}}>{children}</MethodContext.Provider>;
 };
 
 export default MethodContext;
