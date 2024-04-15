@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {CircularProgress} from "@mui/material";
 import * as userApi from "../../services/user";
 import AuthContext from "../../context/authProvider";

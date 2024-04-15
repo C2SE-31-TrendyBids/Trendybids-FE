@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { getAllUsers } from '../../../services/admin';
+import { getAllUsers, deleteUser } from '../../../services/admin';
 import { Pagination } from '@mui/material';
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { LiaUserCheckSolid } from "react-icons/lia";
 import noDataSvg from "../../../assets/vectors/no data.svg";
-
+import Swal from "sweetalert2";
+import ViewEditUser from './ViewEditUser';
 const ManagementAccount = () => {
     const accessToken = localStorage.getItem('access-token');
     const [accounts, setAccounts] = useState([])
@@ -13,6 +14,10 @@ const ManagementAccount = () => {
     const [search, setSearch] = useState("");
     const [totalActive, setTotalActive] = useState(0)
     const [totalUser, setTotalUser] = useState(0)
+    const [change, setChange] = useState(false)
+    const [userViewEdit, setUserViewEdit] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false);
+
 
     const handlePageChange = (event, page) => {
         setPageNumber(page);
@@ -54,7 +59,36 @@ const ManagementAccount = () => {
             console.log(error);
         }
 
-    }, [accessToken, pageNumber, search])
+    }, [accessToken, pageNumber, search, change])
+
+    const handleModalEdit = (user) => {
+        setUserViewEdit(user)
+        setModalOpen(true)
+    }
+    const handleDeleteAuction = async (id) => {
+        Swal.fire({
+            title: "Are you sure you want to Delete?",
+            text: "Be careful you will lose data",
+            icon: "Error",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Agree To Delete",
+            cancelButtonText: "Cancel",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteUser(accessToken, id);
+                if (response?.status === 200) {
+                    setChange(!change);
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Delete user successfully",
+                        icon: "success",
+                    });
+                }
+            }
+        });
+    };
 
     return (
         <div className='w-[1230px] px-[30px] mx-auto h-screen relative'>
@@ -160,7 +194,7 @@ const ManagementAccount = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-3">
-                                        <button className="mr-4" title="Edit">
+                                        <button className="mr-4" title="Edit" onClick={() => handleModalEdit(item)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
                                                 viewBox="0 0 348.882 348.882">
                                                 <path
@@ -171,7 +205,13 @@ const ManagementAccount = () => {
                                                     data-original="#000000" />
                                             </svg>
                                         </button>
-                                        <button className="mr-4" title="Delete">
+                                        {
+                                            modalOpen && <ViewEditUser modalOpen={setModalOpen} user={userViewEdit} accessToken={accessToken} change={change} setChange={setChange} index={1} />
+                                        }
+                                        <button
+                                            className="mr-4"
+                                            title="Delete"
+                                            onClick={() => handleDeleteAuction(item.id)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
                                                 <path
                                                     d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"

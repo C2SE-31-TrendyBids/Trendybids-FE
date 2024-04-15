@@ -60,6 +60,13 @@ export const MethodProvider = ({children}) => {
         return result.replace(/ /g, '-'); // Replace spaces with hyphens
     }
 
+    const validateEmail = (email) => {
+        // Biểu thức chính quy để kiểm tra định dạng email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+
     const calculateTimeLeft = (targetDate) => {
         const difference = +new Date(targetDate) - +new Date();
         let timeLeft = {};
@@ -85,7 +92,13 @@ export const MethodProvider = ({children}) => {
     };
 
 
-    return <MethodContext.Provider value={{fetchUserDetails , convertToLowerCase , calculateTimeLeft}}>{children}</MethodContext.Provider>;
+    return <MethodContext.Provider value={{
+        fetchUserDetails,
+        convertToLowerCase,
+        validateEmail,
+        calculateTimeLeft
+    }}>{children}</MethodContext.Provider>;
+
 };
 
 export default MethodContext;

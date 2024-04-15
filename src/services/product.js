@@ -25,10 +25,9 @@ export const getAllProduct = async (accessToken, params = {}) => {
   }
 };
 
-export const addProduct = async ({ accessToken, data }) => {
+export const addProduct = async (accessToken, data ) => {
   try {
     const formData = new FormData();
-
     Object.keys(data).forEach((t) => {
       if (t === "prdImageURL" && Array.isArray(data[t])) {
         data[t].forEach((d) => {
@@ -60,10 +59,9 @@ export const addProduct = async ({ accessToken, data }) => {
   }
 };
 
-export const updateProduct = async ({ accessToken, data: { id, ...others } }) => {
+export const updateProduct = async (accessToken, { id, ...others }) => {
   try {
     const formData = new FormData();
-
     Object.keys(others).forEach((t) => {
       if (t === "prdImageURL" && Array.isArray(others[t])) {
         others[t].forEach((d) => {
@@ -73,7 +71,6 @@ export const updateProduct = async ({ accessToken, data: { id, ...others } }) =>
         formData.append(t, others[t]);
       }
     });
-
     const response = await request.put(`${PRODUCT_URL}/update-product/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -90,12 +87,13 @@ export const updateProduct = async ({ accessToken, data: { id, ...others } }) =>
 
     return {
       error,
-      statusCode: error.status,
+      statusCode: error.response.status,
     };
   }
 };
 
-export const deleteProduct = async ({ accessToken, id }) => {
+
+export const deleteProduct = async (accessToken, id) => {
   try {
     const response = await request.deleteRe(`${PRODUCT_URL}/delete-product/${id}`, {
       headers: {
@@ -107,6 +105,24 @@ export const deleteProduct = async ({ accessToken, id }) => {
       response: response.data,
       statusCode: response.status,
     };
+  } catch (error) {
+    toast.error(error?.response?.data?.message ?? error?.message);
+
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+
+export const deleteImageProduct = async (accessToken, id) => {
+  try {
+    const response = await request.deleteRe(`${PRODUCT_URL}/delete-image/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response
   } catch (error) {
     toast.error(error?.response?.data?.message ?? error?.message);
 

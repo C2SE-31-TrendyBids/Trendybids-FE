@@ -11,6 +11,8 @@ export { default as LoginGoogleSuccess } from "./LoginGoogleSuccess/LoginGoogleS
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
 export { default as ManagementPost } from "./UserProfile/ManagementPost/ManagementPost";
+export { default as ChangePassword } from "./UserProfile/ChangePassword/ChangePassword";
+
 export { default as AboutUS } from "./AboutUS/AboutUS";
 //Admin
 export { default as Admin } from "./Admin/Admin";
@@ -30,7 +32,9 @@ export { default as AuctionLive } from "./ProductAuction/AuctionLive"
 export { default as PostAuction } from "./Censor/PostAuctionSession/PostAuction"
 export { default as ApproveProduct } from "./Censor/ApproveProduct/ApproveProduct"
 export { default as AuctionSession } from "./AuctionSession/AuctionSession"
+export { default as DashboardCensor } from "./Censor/DashboardCensor/DashboardCensor"
 
 // Message
 export { default as Message } from "./Message/Message"
+export { default as NewMessage } from "./Message/NewMessage"
 

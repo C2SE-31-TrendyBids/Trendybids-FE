@@ -37,6 +37,16 @@ const conversationSlice = createSlice({
             console.log('addConversation')
             state.conversations.unshift(action.payload);
         },
+        updateConversation: (state, action) => {
+            console.log('updateConversation')
+            const {conversationId, message} = action.payload;
+            const conversationIndex = state.conversations.findIndex((item) => item.id === conversationId);
+            if (conversationIndex > -1) {
+                state.conversations[conversationIndex].latestMessage = message;
+                const updatedConversation = state.conversations.splice(conversationIndex, 1)[0];
+                state.conversations.unshift(updatedConversation);
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -53,6 +63,6 @@ const conversationSlice = createSlice({
     }
 });
 
-export const {addConversation} = conversationSlice.actions
+export const { addConversation, updateConversation, filterConversation} = conversationSlice.actions
 
 export default conversationSlice;

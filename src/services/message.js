@@ -2,7 +2,7 @@ import * as request from "../ultils/request";
 
 export const createConversation = async (accessToken, body) => {
     try {
-        const response = await request.post("/conversation", body, {
+        const response = await request.post("/conversation/create", body, {
             headers: {Authorization: `Bearer ${accessToken}`}
         });
         return {
@@ -34,9 +34,10 @@ export const getConversations = async (accessToken) => {
     }
 };
 
-export const getConversationMessage = async (accessToken, conversationId) => {
+export const getConversationMessage = async (accessToken, conversationId, query) => {
     try {
         const response = await request.get(`/message/messages/${conversationId}`, {
+            params: {...query},
             headers: {Authorization: `Bearer ${accessToken}`}
         });
         return {
@@ -53,7 +54,7 @@ export const getConversationMessage = async (accessToken, conversationId) => {
 
 export const createMessage = async (accessToken, body) => {
     try {
-        const response = await request.post("/message", body, {
+        const response = await request.post("/message/create", body, {
             headers: {Authorization: `Bearer ${accessToken}`}
         });
         return {

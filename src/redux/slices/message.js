@@ -3,8 +3,8 @@ import * as messageService from "../../services/message";
 
 export const fetchMessagesThunk = createAsyncThunk(
     'message/fetch',
-    async ({accessToken, conversationId}, thunkApi) => {
-        return messageService.getConversationMessage(accessToken, conversationId)
+    async ({accessToken, conversationId, page, limit}, thunkApi) => {
+        return messageService.getConversationMessage(accessToken, conversationId, {page, limit})
     }
 )
 
@@ -27,9 +27,15 @@ const messageSlice = createSlice({
     },
     reducers: {
         addMessage: (state, action) => {
-            console.log('addMessage')
+            console.log('setMessage')
             state.messages.unshift(action.payload);
         },
+        setMoreMessage: (state, action) => {
+            state.messages = [...state.messages, ...action.payload];
+        },
+        setMessage: (state, action) => {
+            state.messages = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -46,6 +52,6 @@ const messageSlice = createSlice({
     }
 });
 
-export const {addMessage} = messageSlice.actions
+export const {setMessage, setMoreMessage, addMessage} = messageSlice.actions
 
 export default messageSlice;

@@ -173,7 +173,7 @@ const ApproveCensor = () => {
                                             className="py-2 w-full rounded-lg text-black text-sm tracking-wider border-2 border-blue-600 hover:bg-blue-400 hover:text-white"
                                         >View Detail</button>
                                         {
-                                            modalOpenView && <CensorDetail modalOpen={setModalOpenView} product={censorView} accessToken={accessToken} change={change} setChange={setChange} index={1} />
+                                            modalOpenView && <CensorDetail modalOpen={setModalOpenView} censor={censorView} accessToken={accessToken} change={change} setChange={setChange} index={1} />
                                         }
                                     </td>
                                 </tr>
