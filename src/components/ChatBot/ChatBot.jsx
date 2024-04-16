@@ -45,9 +45,13 @@ const ChatBot = () => {
             setMessage('');
         }
     }
+
     useEffect(() => {
         console.log(messages);
     }, [messages])
+    const msgChoose = () => {
+
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         onSendButton();
@@ -66,9 +70,9 @@ const ChatBot = () => {
                         </div>
                     </div>
                     <div className=" bg-gray-100 w-full h-96 overflow-scroll no-scrollbar">
-                        {mesExample?.map((item) => (
+                        {mesExample?.map((item, index) => (
                             <div>
-                                <button className='text-[10px] border p-2 '>{item}</button>
+                                <button className='text-[12px] border p-2 text-blue-500 m-1 rounded-lg hover:text-white hover:bg-blue-500'>{index + 1}. {item}</button>
                             </div>
                         ))}
                         {messages?.map((item) => (
