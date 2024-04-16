@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
@@ -7,6 +7,9 @@ import * as authServices from "../../services/auth";
 import { toast } from "sonner";
 import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
+import {BiMessageDetail} from "react-icons/bi";
+import {motion} from "framer-motion";
+import Tooltip from "@mui/material/Tooltip";
 
 const Header = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -14,6 +17,7 @@ const Header = () => {
     const { auth, isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
+    const location = useLocation();
     const [activeButton, setActiveButton] = useState(null);
 
     const handleLogout = async () => {
@@ -54,7 +58,14 @@ const Header = () => {
                 <div className="flex items-center lg:order-2">
                     {/*not login*/}
                     {token && isLogin ? (
-                        <div className="relative">
+                        <div className="relative flex items-center">
+                            <Tooltip title="Messages">
+                                <motion.span whileHover={{scale: '1.3'}} className="transition-all">
+                                    <Link to='/messages'>
+                                        <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                    </Link>
+                                </motion.span>
+                            </Tooltip>
                             <button
                                 id="dropdownDefaultButton"
                                 data-dropdown-toggle="dropdown"
@@ -95,7 +106,7 @@ const Header = () => {
                                 id="dropdown"
                                 className={`${
                                     isDropdown ? "hidden" : "block"
-                                } absolute top-18 left-0 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
+                                } absolute top-16 left-6 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
                             >
                                 <ul
                                     className="py-2 px-2 text-sm text-gray-700 font-semibold"

@@ -133,4 +133,42 @@ const searchUser = async (keyword) => {
     }
 };
 
-export {getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser};
+
+const getBidPrices = async (accessToken, sessionId, paramObject) => {
+    try {
+        const response = await request.get(`/user/get-all-auction-price/${sessionId}`, {
+            params: paramObject,
+            headers: {Authorization: `Bearer ${accessToken}`}
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};
+
+
+const getSummaryAuctionSession = async (accessToken, sessionId) => {
+    try {
+        const response = await request.get(`/user/get-summary-auction-price/${sessionId}`, {
+            headers: {Authorization: `Bearer ${accessToken}`}
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};
+
+export {getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession};
+
