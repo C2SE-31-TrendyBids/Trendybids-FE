@@ -16,7 +16,7 @@ const Reveal = ({children, maxWidth = "1230px"}) => {
     }, [isInView])
 
     return (
-        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto" , padding: maxWidth === "100%" ? "0" : "0 30px" }}>
+        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto" , padding: maxWidth === "100%" ? "0" : "0 30px", overflowX:"hidden" }}>
             <motion.div
                 variants={
                     {

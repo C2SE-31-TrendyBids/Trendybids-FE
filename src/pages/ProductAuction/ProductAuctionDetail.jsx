@@ -33,11 +33,6 @@ const ProductAuctionDetail = () => {
             setIsLoading(false)
         }
         productAuctionId && fetchProductAuction();
-        // auto scroll on top
-        window.onload = function () {
-            window.scrollTo(0, 0);
-        }
-
     }, [productAuctionId])
 
     useEffect(() => {
@@ -74,6 +69,8 @@ const ProductAuctionDetail = () => {
         }
     }
 
+
+    console.log(auctionSessionDetail)
     return (
         <div className="max-w-[1230px] px-[30px] mx-auto mb-10 mt-10">
             <div className="grid grid-cols-12 gap-5">
@@ -102,7 +99,7 @@ const ProductAuctionDetail = () => {
                                 <div className="">
                                     <h4 className="text-xm font-semibold text-center">Countdown to the auction</h4>
                                     <div className="relative mt-4 py-8">
-                                        <CountdownTimer targetDate={"2024-04-08 10:00:00"}/>
+                                        <CountdownTimer targetDate={auctionSessionDetail?.startTime}/>
                                     </div>
                                 </div>
                                 <button

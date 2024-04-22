@@ -4,11 +4,11 @@ import * as censorServices from "../../services/censor";
 
 const UpcomingAuction = () => {
 
-    const [auctionSessions , setAuctionSession] = useState([])
+    const [auctionSessions, setAuctionSession] = useState([])
 
     useEffect(() => {
         const fetchAPI = async () => {
-            const responseCensor = await censorServices.getAuctionSession({limit:4 , order:[["startTime", "DESC"]]})
+            const responseCensor = await censorServices.getAuctionSession({limit: 4, order: [["startTime", "DESC"]]})
             responseCensor?.status === 200 && setAuctionSession(responseCensor?.data?.productAuctions)
         }
         fetchAPI()
@@ -22,11 +22,11 @@ const UpcomingAuction = () => {
             <div className="max-w-[1200px] mx-auto px-10 mt-14 -translate-y-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
                     {
-                        auctionSessions.map((item) => {
-                            return (
+                        auctionSessions
+                            .filter(item => item.status !== "ended" && item.status !== "ongoing") // Filter out items with status not equal to "ended"
+                            .map(item => (
                                 <ProductItem key={item?.id} infoAuction={item}/>
-                            )
-                        })
+                            ))
                     }
                 </div>
             </div>

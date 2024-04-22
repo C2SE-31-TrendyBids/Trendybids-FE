@@ -14,7 +14,7 @@ const Slide = ({children, maxWidth  = "1200px" , directionOfOperation = "right"}
     }, [isInView])
 
     return (
-        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto" }}>
+        <div ref={ref} style={{position: "relative", maxWidth, margin: "0 auto", overflowX:"hidden", overflowY:"hidden" }}>
             <motion.div
                 variants={
                     {
