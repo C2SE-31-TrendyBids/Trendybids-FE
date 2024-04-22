@@ -6,9 +6,11 @@ import { IoMdSend } from "react-icons/io";
 const ChatBot = () => {
     const [showChatbox, setShowChatbox] = useState(false);
     const [message, setMessage] = useState('');
+    const [change, setChange] = useState(false);
+
     const [messages, setMessages] = useState([]);
     const mesExample = ['How to register as an auction organization?',
-        'How can I list a product for auction?',
+        'How can I post a product for auction?',
         'How many auction organizations are there currently?',
         'How many products are currently being auctioned?',
         'How many upcoming products will be auctioned?',
@@ -16,43 +18,75 @@ const ChatBot = () => {
     const toggleChatbox = () => {
         setShowChatbox(!showChatbox);
     }
-    const onSendButton = async () => {
-        try {
-            if (message === '') {
-                return;
+    useEffect(() => {
+        const onSendButton = async () => {
+            try {
+                if (message === '') {
+                    return;
+                }
+                if (message === 'clear') {
+                    setMessage('')
+                    return setMessages([])
+                }
+
+                let msg1 = { name: 'User', messages: message }
+                const newMessages = [...messages, msg1]
+                const SERVER_ADDRESS = 'http://localhost:4000'
+                const response = await fetch(`${SERVER_ADDRESS}/predict`, {
+                    method: 'POST',
+                    body: JSON.stringify({ message: message }),
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch');
+                }
+                const data = await response.json();
+                console.log(data);
+                let msg2 = { name: "TrendyBids", messages: data.answer };
+                const updatedMessages = [...newMessages, msg2];
+                setMessages(updatedMessages);
+                setMessage('');
+            } catch (error) {
+                console.error('Error:', error);
+                setMessage('');
             }
-            let msg1 = { name: 'User', messages: message }
-            const newMessages = [...messages, msg1]
-            const SERVER_ADDRESS = 'http://localhost:4000'
-            const response = await fetch(`${SERVER_ADDRESS}/predict`, {
-                method: 'POST',
-                body: JSON.stringify({ message: message }),
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch');
-            }
-            const data = await response.json();
-            let msg2 = { name: "TrendyBids", messages: data.answer };
-            const updatedMessages = [...newMessages, msg2];
-            setMessages(updatedMessages);
-            setMessage('');
-        } catch (error) {
-            console.error('Error:', error);
-            setMessage('');
         }
-    }
+        onSendButton()
+    }, [change])
+
+
     useEffect(() => {
         console.log(messages);
     }, [messages])
+
+    const msgChoose = async (item) => {
+        console.log(item);
+        await setMessage(item)
+        setChange(!change)
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSendButton();
+        setChange(!change)
     };
+    const handleReset = async () => {
+        try {
+            const response = await fetch('http://localhost:4000/restart', {
+                method: 'POST'
+            });
 
+            if (!response.ok) {
+                throw new Error('Failed to restart the program');
+            }
+
+            const data = await response.json();
+            console.log(data.message); // In ra thông báo từ API
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     return (
         <div className="fixed bottom-8 right-8 z-50">
@@ -65,29 +99,37 @@ const ChatBot = () => {
                             <p>Hi. How can I help you?</p>
                         </div>
                     </div>
+
                     <div className=" bg-gray-100 w-full h-96 overflow-scroll no-scrollbar">
-                        {mesExample?.map((item) => (
+                        {mesExample?.map((item, index) => (
                             <div>
-                                <button className='text-[10px] border p-2 '>{item}</button>
+                                <button className='text-[12px] border p-2 text-blue-500 m-1 rounded-lg hover:text-white hover:bg-blue-500 '
+                                    onClick={() => msgChoose(item)}
+                                >{index + 1}. {item}</button>
                             </div>
                         ))}
-                        {messages?.map((item) => (
-                            <div className='w-full'>
+                        {messages?.map((item, index) => (
+                            <div className='w-full' key={index}>
                                 {item?.name === 'TrendyBids' ? (
                                     <div className='flex items-start justify-start'>
                                         <div className='max-w-[60%] text-start bg-gray-600 text-white m-4 p-2 rounded-t-2xl rounded-br-2xl '>
-                                            <h1 className='px-2'>{item?.messages}</h1>
+                                            {item.messages.split('\n').map((line, index) => (
+                                                <p key={index} className='px-2 '>{line}</p>
+                                            ))}
                                         </div>
                                     </div>
                                 ) : (
                                     <div className='flex items-end justify-end'>
-                                        <div className='max-w-[60%] text-end bg-blue-500 text-white m-4 p-2 rounded-t-2xl rounded-bl-2xl '>
-                                            <h1 className='px-2'>{item?.messages}</h1>
+                                        <div className='max-w-[60%] text-start bg-blue-500 text-white m-4 p-2 rounded-t-2xl rounded-bl-2xl '>
+                                            {item.messages.split('\n').map((line, index) => (
+                                                <p key={index} className='px-2'>{line}</p>
+                                            ))}
                                         </div>
                                     </div>
                                 )}
                             </div>
                         ))}
+
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="flex items-center justify-between px-4 py-5 bg-[rgba(14,7,126,1)] shadow-lg rounded-b-xl">
@@ -108,6 +150,7 @@ const ChatBot = () => {
                 <img src={avatar1} alt="name" className="w-16 h-16 rounded-full" />
                 <div className="active bg-green-500 rounded-full w-4 h-4 absolute top-2 right-0 "></div>
             </button>
+            {/* <button className='w-24 h-24 bg-red-400' onClick={() => handleReset()}> </button> */}
         </div>
     );
 }
