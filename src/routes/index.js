@@ -51,7 +51,7 @@ const publicRouter = [
     { path: '/censor', component: Censor },
     { path: '/censor/:censorId', component: CensorDetail },
     { path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive },
-    { path: '/product-auction', layout: Default, component: ProductAuction },
+    // { path: '/product-auction', layout: Default, component: ProductAuction },
 ]
 
 const routerAdmin = [

@@ -1,17 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import background from "../../../public/images/wave_background.png";
 import logo from "../../../public/images/logoTrendy1.jpg";
-import {
-    Checkbox,
-    TextField,
-    FormControl,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    CircularProgress,
-    Button,
-} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
@@ -21,6 +11,7 @@ import * as userApi from "../../../services/user";
 import AuthContext from "../../../context/authProvider";
 import MethodContext from "../../../context/methodProvider";
 import { toast } from "sonner";
+
 
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
@@ -58,10 +49,6 @@ const Login = () => {
             "_blank",
             `width=${width}, height=${height}, left=${left}, top=${top}`
         );
-    };
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
     };
     const handleNavigate = (role) => {
         console.log(role);
@@ -159,9 +146,9 @@ const Login = () => {
                             <div className="w-[120px] h-0.5 bg-gray-300 bg-opacity-60 rounded-[100px] ml-2" />
                         </div>
                         <form onSubmit={handleLogin}>
-                            <div>
-                                <div className="mt-5 flex items-center justify-center">
-                                    <TextField
+                            <div className="flex w-full items-center justify-center">
+                                <div className="w-[90%]">
+                                    <input
                                         onChange={(e) => setEmail(e.target.value)}
                                         type="email"
                                         value={email}
@@ -170,64 +157,47 @@ const Login = () => {
                                         variant="outlined"
                                         error={Boolean(emailError)}
                                         helperText={emailError}
-                                        className="w-[90%]"
+                                        className="w-full px-4 h-12 border my-2 text-black rounded-lg "
                                     />
-                                </div>
-                                <FormControl
-                                    sx={{ m: 2.5, width: "90%" }}
-                                    variant="outlined"
-                                >
-                                    <InputLabel htmlFor="outlined-adornment-password">
-                                        Password
-                                    </InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-password"
-                                        value={password}
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
-                                        type={showPassword ? "text" : "password"}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                    style={{
-                                                        backgroundColor: "transparent",
-                                                    }} >
-                                                    {showPassword ? (
-                                                        <MdOutlineVisibility />
-                                                    ) : (
-                                                        <MdOutlineVisibilityOff />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Password"
-                                        style={{ background: "transparent" }}
-                                    />
-                                </FormControl>
-                                <div className="mx-2 flex items-center justify-between">
-                                    <div>
-                                        <Checkbox
-                                            checked={rememberMe}
-                                            onClick={(e) =>
-                                                setRememberMe(e.target.checked)
+                                    <div className="relative">
+                                        <input
+                                            value={password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
                                             }
+                                            type={showPassword ? "text" : "password"}
+                                            className="w-full px-4 h-12 border my-2 text-black rounded-lg "
                                         />
-                                        <span className="text-[16px] font-normal">
-                                            Remember password
+                                        <span className="absolute right-2 text-3xl top-5">
+                                            {showPassword ? (
+                                                <MdOutlineVisibility onClick={() => setShowPassword(false)} />
+                                            ) : (
+                                                <MdOutlineVisibilityOff onClick={() => setShowPassword(true)} />
+                                            )}
                                         </span>
                                     </div>
-                                    <div className="mr-2 font-medium text-blue-500 hover:opacity-80">
-                                        <Link
-                                            href="/forgot-password"
-                                            underline="hover"
-                                        >
-                                            {"Forgot password"}
-                                        </Link>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center justify-center">
+                                            <input
+                                                checked={rememberMe}
+                                                className="w-4 h-4 border mr-2"
+                                                type="checkbox"
+                                                onClick={(e) =>
+                                                    setRememberMe(e.target.checked)
+                                                }
+                                            />
+                                            <span className="text-[16px] font-normal">
+                                                Remember password
+                                            </span>
+                                        </div>
+                                        <div className="mr-2 font-medium text-blue-500 hover:opacity-80">
+                                            <Link
+                                                href="/forgot-password"
+                                                underline="hover"
+                                            >
+                                                {"Forgot password"}
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -236,25 +206,12 @@ const Login = () => {
                                 {loading ? (
                                     <CircularProgress />
                                 ) : (
-                                    <Button
-                                        style={{
-                                            fontWeight: "bold",
-                                            width: "100%",
-                                            fontSize: "1.25rem",
-                                            padding: "0.5rem 1.rem",
-                                            borderRadius: "1rem",
-                                            backgroundColor: "#3B82F6",
-                                            transition: "opacity 0.3s ease",
-                                            "&:hover": {
-                                                opacity: 0.8,
-                                            },
-                                        }}
-                                        variant="contained"
-                                        size="large"
+                                    <button
+                                        className="w-full font-semibold p-3 rounded-lg bg-[#3B82F6] hover:opacity-80 text-2xl text-white"
                                         onClick={(e) => { handleLogin(e) }}
                                     >
                                         Login
-                                    </Button>
+                                    </button>
                                 )}
                             </div>
                         </form>
@@ -267,8 +224,8 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
