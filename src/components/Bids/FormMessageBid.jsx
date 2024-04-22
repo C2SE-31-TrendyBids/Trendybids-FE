@@ -17,6 +17,7 @@ const FormMessageBid = ({sessionId}) => {
     const accessToken = localStorage.getItem('access-token')
     const bidsContainerRef = useRef(null);
     const [showScrollDownArrow, setShowScrollDownArrow] = useState(false);
+    const [scrollTop, setScrollTop] = useState(false);
 
     const handleFetchPreviousBids = () => {
         // Call action fetchPreviousBidPricesThunk và dispatch it
@@ -26,16 +27,20 @@ const FormMessageBid = ({sessionId}) => {
             page: currentPage + 1,
             limit: 8
         }));
+        scrollToTop();
+        setScrollTop(true);
     };
 
     useEffect(() => {
         const container = bidsContainerRef.current;
         // auto scroll to bottom when new bid is added
-        if (container) {
-            container.scrollTo({
-                top: container.scrollHeight,
-                behavior: 'smooth'
-            });
+        if (!scrollTop) {
+            if (container) {
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
         }
         const handleScroll = () => {
             const bottomOfContainer = container.scrollHeight - container.scrollTop === container.clientHeight;
@@ -46,6 +51,7 @@ const FormMessageBid = ({sessionId}) => {
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
+            setScrollTop(false);
         };
     }, [bidsContainerRef, bidPrices]);
 
@@ -54,6 +60,16 @@ const FormMessageBid = ({sessionId}) => {
         if (container) {
             container.scrollTo({
                 top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const scrollToTop = () => {
+        const container = bidsContainerRef.current;
+        if (container) {
+            container.scrollTo({
+                top: 0, // scroll to top
                 behavior: 'smooth'
             });
         }

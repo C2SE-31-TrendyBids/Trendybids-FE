@@ -2,10 +2,13 @@ import React, {useEffect, useState} from "react";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import ImageGallery from "../ImageGallery/ImageGallery";
 
 const ImagesComp = ({images = []}) => {
-    console.log(images);
-    console.log(images.length);
+    const [showGallery, setShowGallery] = useState(false)
+    const [selectedImg, setSelectedImg] = useState({})
+    const [thisImage, setThisImage] = useState({})
+    const [listImg, setListImg] = useState([])
 
     const settings = {
         dots: false,
@@ -51,17 +54,31 @@ const ImagesComp = ({images = []}) => {
         ],
     };
 
-    const [thisImage, setThisImage] = useState({})
+
     useEffect(() => {
         if (images.length > 0) {
             setThisImage(images[0])
         }
     }, [images])
 
+
+    const handleShowGallery = () => {
+        const imagesCustom = images.map(image => {
+                return {
+                    id: image.id,
+                    url: image.prdImageURL
+                }
+            }
+        );
+        setListImg(imagesCustom)
+        setShowGallery(true);
+    }
+
     return (
         <div className="w-full">
             <div className="rounded w-full h-[500px] shadow overflow-hidden">
                 <img className="rounded w-full h-full object-cover transition-all hover:cursor-pointer hover:scale-110"
+                     onClick={handleShowGallery}
                      src={thisImage?.prdImageURL}
                      alt={thisImage?.id}/>
             </div>
@@ -80,6 +97,8 @@ const ImagesComp = ({images = []}) => {
                     }
                 </Slider>
             </div>
+            {showGallery && <ImageGallery images={listImg} selectedImg={selectedImg}
+                                          setShowGallery={setShowGallery}/>}
         </div>
     )
 }
