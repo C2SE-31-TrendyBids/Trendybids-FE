@@ -102,7 +102,7 @@ const ImageGallery = ({images = [], selectedImg = {}, setShowGallery}) => {
                     <GrNext size='25px'/>
                 </button>
             </div>
-            <div className='flex justify-center items-center py-2 px-auto'>
+            <div className='h-[10%] flex justify-center items-center py-2 px-auto'>
                     {imgPreview.map((image, index) => {
                         return (
                             <div key={image.id} className={`mr-3`}>

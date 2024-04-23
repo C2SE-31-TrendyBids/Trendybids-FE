@@ -23,6 +23,7 @@ const MessageChannel = ({conversation}) => {
         result: [],
         currentIndex: -1
     })
+
     const [isAllPage, setIsAllPage] = useState(false);
     const messageRef = useRef({});
 

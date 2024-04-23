@@ -10,6 +10,7 @@ import {setMoreMessage} from "../../redux/slices/message";
 import * as messageService from "../../services/message";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import {IoDocumentTextOutline} from "react-icons/io5";
+moment.locale('en');
 
 const MessageContainer = ({messageRef, isAllPage, searchValue}) => {
     const {auth} = useContext(AuthContext)
@@ -28,7 +29,7 @@ const MessageContainer = ({messageRef, isAllPage, searchValue}) => {
         const handleScroll = async (e) => {
             if (isLoadingMore) return;
             const { scrollTop, scrollHeight, clientHeight } = e.target;
-            if ((Math.round(Math.abs(scrollTop)) === scrollHeight- clientHeight - 1) && isAllPage === false) {
+            if (Math.abs((Math.round(Math.abs(scrollTop)) - (scrollHeight - clientHeight - 1))) <= 1 && isAllPage === false) {
                 setIsLoadingMore(true);
                 const moreMessage = await messageService.getConversationMessage(accessToken, conversationId, {page: nextPage, limit: 10})
                 if (moreMessage.response.data.length !== 0) {
@@ -47,27 +48,40 @@ const MessageContainer = ({messageRef, isAllPage, searchValue}) => {
         return () => {
             messageListElement.removeEventListener('scroll', handleScroll);
         };
-    }, [nextPage, isLoadingMore]);
+    }, [conversationId, nextPage, isLoadingMore]);
 
     useEffect(() => {
         setNextPage(2)
     }, [conversationId])
 
-    const handleShowGallery = (item) => {
-        const arrImg = messages.reduce((acc, message) => {
+    const extractImages = (messages) => {
+        console.log(messages)
+        return messages.reduce((acc, message) => {
             const images = message.filesAttach.filter(file => file.type.split('/')[0] === 'image').map(file => ({
                 id: file.id,
                 url: file.url
             }));
             return [...acc, ...images];
         }, []);
-        setSelectedImg(item);
+    }
+
+    const handleShowGallery = async (item) => {
+        let arrImg;
+        if (isAllPage) {
+            arrImg = extractImages(messages);
+        } else {
+            const allMessage = await messageService.getConversationMessage(accessToken, conversationId);
+            arrImg = extractImages(allMessage.response.data);
+        }
+
+        const selectedImg = arrImg.find(img => img.id === item.id) || arrImg[0];
+        setSelectedImg(selectedImg);
         setListImg(arrImg);
         setShowGallery(true);
     }
 
     return (
-        <div className="flex flex-1 flex-col-reverse overflow-y-scroll py-[5px] px-6" ref={messageListRef}>
+        <div className="flex flex-1 flex-col-reverse overflow-y-auto py-[5px] px-6" ref={messageListRef}>
             {loading ? (
                 <CircularProgress className="h-12 w-12 m-auto"/>
             ) : (
@@ -143,7 +157,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searc
                         <div className={`flex flex-wrap flex-row gap-x-1 w-[50%] ${justifyContent}`}>
                             {filesAttach.map((item, index) => (
                                 <TimeTooltip key={index} item={item} placement={placement}>
-                                    {imageTypes.includes(item.name.split('.').pop()) ? (
+                                    {imageTypes.includes(item?.name?.split('.').pop()) ? (
                                         <div key={index} className={`${filesAttach.length > 1 && "w-[calc(33%-10px)]"} m-1`}>
                                             <img src={item.url} alt="image" onClick={() => handleShowGallery(item)} className="w-full h-auto rounded-lg shadow-sm hover:opacity-85"/>
                                         </div>
