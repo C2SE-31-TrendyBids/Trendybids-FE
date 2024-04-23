@@ -46,10 +46,10 @@ const MessageInputField = ({sendCreateNew, handleStartTyping, handleStopTyping})
         const { id, fullName, avatarUrl } = auth;
         // Create temporary object and dispatch the setMessage action
         const messageData = {
-            id: Math.random(),
+            id: Math.random().toString(36).substr(2, 9),
             content: content || null,
             filesAttach: filesAttach.length > 0 ? filesAttach.map(item => ({
-                id: Math.random(),
+                id: Math.random().toString(36).substr(2, 9),
                 name: item.name,
                 type: item.type,
                 url: URL.createObjectURL(item)
