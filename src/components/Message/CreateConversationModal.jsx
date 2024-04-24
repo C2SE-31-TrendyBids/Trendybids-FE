@@ -105,7 +105,7 @@ const CreateConversationModal = ({openModal, setOpenModal}) => {
                                 searchResult.length > 0) && searchResult.map((item, index) => (
                                     item.id !== auth.id && (
                                         <li key={item.id} className="flex items-center gap-x-2 hover:bg-blue-100 transition-all p-2 rounded-md cursor-pointer" onClick={() => handleSelectUser(item)}>
-                                            <img src={item.avatarUrl || "https://www.w3schools.com/howto/img_avatar.png"} alt="avatar" className="h-10 w-10 rounded-full"/>
+                                            <img src={item.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"} alt="avatar" className="h-10 w-10 rounded-full object-cover border"/>
                                             <div className="flex flex-col">
                                                 <span className="text-sm">{item.fullName}</span>
                                                 <span className="text-sm opacity-50">{item.email}</span>

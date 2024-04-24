@@ -29,7 +29,8 @@ const Register = () => {
     const handleHiddenConfirmPassword = () => {
         showConfirmPassword ? setShowConfirmPassword(false) : setShowConfirmPassword(true);
     };
-    const handleRedgister = async (e) => {
+    const handleRegister = async (e) => {
+        e.preventDefault();
         setLoading(true)
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
@@ -62,7 +63,7 @@ const Register = () => {
                     <img src={logo} alt="" className='max-lg:w-36 max-lg:h-36 lg:hidden' />
                 </div>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-2'>
-                    <div className=''>
+                    <form onSubmit={handleRegister}>
                         <div className='text-4xl font-bold lg:mt-12 mt-4 text-center'> REGISTER </div>
                         <div className='w-full'>
                             <div className='mt-4 flex items-center justify-center'>
@@ -146,12 +147,15 @@ const Register = () => {
                                 <CircularProgress />
 
                             ) : (
-                                <Button variant="contained" size="large" onClick={(e) => { handleRedgister(e) }}>
+                                <button
+                                    className="w-[80%] font-semibold p-3 rounded-lg bg-[#3B82F6] hover:opacity-80 text-2xl text-white"
+                                    onClick={(e) => { handleRegister(e) }}
+                                >
                                     REGISTER
-                                </Button>
+                                </button>
                             )}
                         </div>
-                    </div>
+                    </form>
                     <div className='lg:m-6 mb-4'>
                         <img src={logo} alt="" className='max-lg:w-36 max-lg:h-36 max-lg:hidden' />
                         <div className='lg:border-t border-t-gray-500'>

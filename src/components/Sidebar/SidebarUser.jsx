@@ -22,6 +22,7 @@ import {
     AccordionBody,
     Alert,
 } from "@material-tailwind/react";
+import { MdDashboard } from "react-icons/md";
 
 export default function SidebarUser() {
     const [open, setOpen] = React.useState(0);
@@ -58,12 +59,28 @@ export default function SidebarUser() {
                     icon={
                         <FaChevronDown
                             strokeWidth={2.5}
-                            className={`mx-auto h-4 w-4 transition-transform ${
-                                open === 1 ? "rotate-180" : ""
-                            }`}
+                            className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""
+                                }`}
                         />
                     }
                 >
+                    <Accordion>
+                        <Link to="/dashboard">
+                            <ListItem className="p-0">
+                                <AccordionHeader className="border-b-0 p-3">
+                                    <ListItemPrefix>
+                                        <MdDashboard className="h-5 w-5 font-bold" />
+                                    </ListItemPrefix>
+                                    <Typography
+                                        color="blue-gray"
+                                        className="mr-auto font-normal"
+                                    >
+                                        DashBoard
+                                    </Typography>
+                                </AccordionHeader>
+                            </ListItem>
+                        </Link>
+                    </Accordion>
                     <ListItem className="p-0" selected={open === 1}>
                         <AccordionHeader
                             onClick={() => handleOpen(1)}
@@ -80,6 +97,7 @@ export default function SidebarUser() {
                             </Typography>
                         </AccordionHeader>
                     </ListItem>
+
                     <AccordionBody className="py-1 ml-8">
                         <List className="p-0">
                             <Link to="/profile">
@@ -112,7 +130,7 @@ export default function SidebarUser() {
                         <ListItem className="p-0">
                             <AccordionHeader className="border-b-0 p-3">
                                 <ListItemPrefix>
-                                    <FaWpforms  className="h-5 w-5 font-bold" />
+                                    <FaWpforms className="h-5 w-5 font-bold" />
                                 </ListItemPrefix>
                                 <Typography
                                     color="blue-gray"

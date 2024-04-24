@@ -19,7 +19,7 @@ const TrendingAuction = () => {
     }, [])
 
     return (
-        <div className="px-10 mx-auto mt-28 mb-24">
+        <div className="px-10 mx-auto mt-20 mb-4">
             <h2 className="text-[#0B1133] text-2xl font-bold">Trending Auctions</h2>
             <p className="text-[#5F5F5F] text-xm font-thin">See what's popular across thousands of
                 items.</p>

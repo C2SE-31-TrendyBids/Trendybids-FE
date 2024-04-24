@@ -6,7 +6,7 @@ import messageSvg from "../../assets/vectors/message.svg";
 import {useNavigate, useParams} from 'react-router-dom';
 import {fetchConversationsThunk, addConversation, updateConversation} from "../../redux/slices/conversation";
 import {toast} from "sonner";
-import {fetchMessagesThunk, setMessage} from "../../redux/slices/message";
+import {addMessage, fetchMessagesThunk} from "../../redux/slices/message";
 import SocketContext from "../../context/socketProvider";
 
 
@@ -23,12 +23,13 @@ const Message = () => {
     useEffect(() => {
         socket.on('connected', (data) => console.log('Connected', data))
         socket.on('onMessage', (data) => {
-            dispatch(setMessage(data));
-            dispatch(updateConversation({conversationId: data.conversationId, message: data}))
+            const receiveConvId = data?.conversationId;
+            receiveConvId === conversationId ? dispatch(addMessage(data)) : toast.info(`New message from: ${data?.user?.fullName.split(' ')[0]}`)
+            dispatch(updateConversation({conversationId: data?.conversationId, message: data}))
         })
         socket.on('onConversation', (data) => {
             dispatch(addConversation(data));
-            toast.info(`New message from stranger: ${data.latestMessage.user.fullName.split(' ')[0]}`)
+            toast.info(`New message from stranger: ${data?.latestMessage?.user?.fullName.split(' ')[0]}`)
         })
         return () => {
             socket.off('connected')
@@ -53,15 +54,21 @@ const Message = () => {
                     navigate(`/messages/${curConvId}`);
                 }
                 setConversation(curConv || data.response.conversations[0]);
-                dispatch(fetchMessagesThunk({accessToken, conversationId: curConvId, page: 1, limit: 10}))
             }
         })
     }, []);
 
     useEffect(() => {
-        const curConv = conversations.find((item) => item.id === conversationId);
-        setConversation(curConv);
-        conversationId && dispatch(fetchMessagesThunk({accessToken, conversationId}))
+        if (conversationId) {
+            const curConv = conversations.find((item) => item.id === conversationId);
+            setConversation(curConv);
+            dispatch(fetchMessagesThunk({accessToken, conversationId, page: 1, limit: 10}))
+            socket.emit('onConversationJoin', {conversationId})
+        }
+
+        return () => {
+            socket.emit('onConversationLeave', { conversationId });
+        }
     }, [conversationId])
 
     return (

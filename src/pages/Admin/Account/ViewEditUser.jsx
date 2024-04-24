@@ -70,9 +70,9 @@ const ViewEditUser = ({ modalOpen, user, accessToken, change, setChange }) => {
                 newError.address = "Please enter a valid address (at least 5 characters)";
             }
         }
-        if (roleId !== user?.role?.id) {
-            body.roleId = roleId
-        }
+        // if (roleId !== user?.role?.id) {
+        body.roleId = roleId
+        // }
         if (Object.keys(newError).length === 0) {
             console.log(body);
             const response = await adminApi.editUser(accessToken, id, body)
