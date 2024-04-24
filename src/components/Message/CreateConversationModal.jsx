@@ -53,7 +53,8 @@ const CreateConversationModal = ({openModal, setOpenModal}) => {
             !location.pathname.includes(existedConversation.id) && navigate(`/messages/${existedConversation.id}`)
             setOpenModal(false)
         } else {
-            navigate(`/messages/new?to=${selectedUser.fullName}`, { state: { selectedUser }})
+            localStorage.setItem('new-recipient', JSON.stringify(selectedUser));
+            navigate(`/messages/new?to=${selectedUser.fullName}`)
         }
     }
     return (

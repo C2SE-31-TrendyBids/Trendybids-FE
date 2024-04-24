@@ -69,9 +69,9 @@ export const createMessage = async (accessToken, body) => {
     }
 };
 
-export const createMessageWithImage = async (accessToken, body) => {
+export const getUnseenConvCount = async (accessToken) => {
     try {
-        const response = await request.post("/message/upload-image", body, {
+        const response = await request.get("/conversation/unseen-count", {
             headers: {Authorization: `Bearer ${accessToken}`}
         });
         return {

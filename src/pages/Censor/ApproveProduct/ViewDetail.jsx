@@ -10,11 +10,13 @@ import { MdOutlineCategory } from "react-icons/md";
 import { IoPersonOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { BsCalendarDate } from "react-icons/bs";
+import SummaryUserModal from "../../../components/SummaryUserModal/SummaryUserModal";
 
 const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index }) => {
     const [currentIndex, setCurrentIndex] = useState(1);
     const images = product?.prdImages
     const id = product?.id
+    const owner = product?.owner
 
     const back = () => {
         if (currentIndex > 1) {
@@ -109,7 +111,11 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                 <div className='col-span-3'>
                                     <div className=' text-red-500 my-1'> $ {product?.startingPrice}</div>
                                     <div className='my-1'>{product?.category.name}</div>
-                                    <div className='my-1'>{product?.owner.fullName}</div>
+                                        <div className='my-1 cursor-pointer hover:underline'>
+                                            <SummaryUserModal owner={owner}>
+                                                <span>{product?.owner.fullName}</span>
+                                            </SummaryUserModal>
+                                        </div>
                                     <div className='my-1 whitespace-nowrap'>{product?.owner.email}</div>
                                     <div className='my-1'>{moment(product?.createdAt).format('DD - MM - YYYY')}</div>
                                 </div>
@@ -122,18 +128,18 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 {index === 0 ? (
                     <div className="border-t flex justify-end pt-6 space-x-4">
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                            onClick={(e) => handleAction(false)}>Reject</button>
+                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                                onClick={(e) => handleAction(false)}>Reject</button>
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
-                            onClick={(e) => handleAction(true)}
+                                className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
+                                onClick={(e) => handleAction(true)}
                         >Accept</button>
                     </div>
                 ) : (
                     <div className='flex justify-end pt-6 space-x-4'>
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                            onClick={(e) => modalOpen(false)}>Cance</button>
+                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                                onClick={(e) => modalOpen(false)}>Cancel</button>
                     </div>
                 )}
             </div>
