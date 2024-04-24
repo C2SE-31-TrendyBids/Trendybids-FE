@@ -91,12 +91,30 @@ export const MethodProvider = ({children}) => {
         return timeLeft;
     };
 
+    const anonymizeFullName = (fullName) => {
+        const maxLength = 12; // Maximum length allowed
+        const anonymizedLength = 4; // Number of characters to be displayed for longer names
+
+        if (fullName.length > maxLength) {
+            // If the length of the name exceeds maxLength, anonymize it
+            const visiblePart = fullName.substring(0, 8); // Get the first 8 characters of the name
+            const asterisks = '*'.repeat(anonymizedLength); // Create a string of asterisks
+            return visiblePart + asterisks; // Combine the visible part and asterisks
+        } else {
+            // If the length of the name doesn't exceed maxLength, keep the name as it is
+            const visiblePart = fullName.substring(0, fullName.length - 4); // Get the name excluding the last 4 characters
+            const asterisks = '*'.repeat(4); // Create a string of asterisks
+            return visiblePart + asterisks; // Combine the visible part and asterisks
+        }
+    }
+
 
     return <MethodContext.Provider value={{
         fetchUserDetails,
         convertToLowerCase,
         validateEmail,
-        calculateTimeLeft
+        calculateTimeLeft,
+        anonymizeFullName
     }}>{children}</MethodContext.Provider>;
 
 };

@@ -6,7 +6,7 @@ import CountdownAuctionLive from "../../components/CountdownTimer/CountdownAucti
 import FormBid from "../../components/Bids/FormBid";
 import SocketContext from "../../context/socketProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchBidPricesThunk, updateUserJoin} from "../../redux/slices/bidPrice";
+import {addPriceFrom, fetchBidPricesThunk, updateUserJoin} from "../../redux/slices/bidPrice";
 import FormMessageBid from "../../components/Bids/FormMessageBid";
 
 const AuctionLive = () => {
@@ -14,9 +14,11 @@ const AuctionLive = () => {
     const [auctionSessionDetail, setAuctionSessionDetail] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const socket = useContext(SocketContext)
-    const {highestPrice, numberOfParticipants, currentUserJoin, currentPage} = useSelector((state) => state.bidPrice)
+    const {highestPrice, currentUserJoin, currentPage} = useSelector((state) => state.bidPrice)
     const dispatch = useDispatch()
     const accessToken = localStorage.getItem('access-token')
+    const [isParticipation, setIsParticipation] = useState(false)
+    const userId = JSON.parse(localStorage.getItem('auth')).id
 
     useEffect(() => {
         // fetch data when get productAuctionId
@@ -27,6 +29,8 @@ const AuctionLive = () => {
             if (responseProductAuction?.status === 200 && responseProductAuction?.data?.productAuctions?.length === 1) {
                 const productAuction = responseProductAuction?.data?.productAuctions[0]
                 setAuctionSessionDetail(productAuction)
+                // handle set highest price when starting price
+                dispatch(addPriceFrom({priceFrom: productAuction.product?.startingPrice}));
             }
             setIsLoading(false)
         }
@@ -39,10 +43,11 @@ const AuctionLive = () => {
         const fetchBidPrices = async () => {
             // Emit onSessionJoin event when productAuctionId change
             socket.emit('onSessionJoin', {sessionId: productAuctionId});
-            dispatch(fetchBidPricesThunk({accessToken, sessionId: productAuctionId, page: currentPage + 1, limit: 8}));
+            dispatch(fetchBidPricesThunk({accessToken, sessionId: productAuctionId, page: 1, limit: 8}));
             socket.on('onUserParticipation', (data) => {
-                console.log("data: " + JSON.stringify(data));
                 // handle update user join session
+                if (data.userId === userId)
+                    setIsParticipation(data?.isParticipation)
                 dispatch(updateUserJoin(data));
             });
         }
@@ -51,6 +56,11 @@ const AuctionLive = () => {
         return () => {
             // Cleanup function, disconnection when component unmount
             socket.off('onSessionJoin')
+            socket.emit('onSessionLeave', {sessionId: productAuctionId});
+            socket.on('onUserParticipation', (data) => {
+                // handle update user join session
+                dispatch(updateUserJoin(data));
+            });
         };
     }, [productAuctionId]);
 
@@ -111,7 +121,7 @@ const AuctionLive = () => {
                     </div>
                     <div className="">
                         <p className="block text-xm font-semibold text-gray-400 mb-1">Auctions Ends in</p>
-                        <CountdownAuctionLive targetDate={"2024-04-16 23:24:25.381 +0700"}/>
+                        <CountdownAuctionLive targetDate={auctionSessionDetail?.endTime}/>
                     </div>
                 </div>
                 {/*info bids*/}
@@ -120,14 +130,18 @@ const AuctionLive = () => {
                         className="inline px-6 py-2 bg-gray-300 text-gray-400 rounded-full font-semibold">From <span
                         className="font-semibold text-black">${auctionSessionDetail?.product?.startingPrice}</span>
                     </div>
-                    <p className="text-gray-300 font-normal">{currentUserJoin} of {numberOfParticipants} available</p>
-                    <p className="text-blue-500 font-semibold text-lg">Highest Bid ${highestPrice}</p>
+                    <p className="text-gray-300 font-normal">{currentUserJoin} available</p>
+                    <p className="text-blue-500 font-semibold text-lg">Highest Bid ${highestPrice || auctionSessionDetail?.product?.startingPrice}</p>
                 </div>
 
                 {/*Form bids*/}
                 <FormMessageBid sessionId={productAuctionId}/>
-                {/*form bid*/}
-                <FormBid sessionId={productAuctionId}/>
+                {
+                    isParticipation && <>
+                        {/*form bid*/}
+                        <FormBid sessionId={productAuctionId} startingPrice={auctionSessionDetail?.product?.startingPrice}/>
+                    </>
+                }
             </div>
         </div>
     </div>;

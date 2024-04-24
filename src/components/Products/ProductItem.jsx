@@ -63,7 +63,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                     <div
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     {/*Countdown*/}
-                    {infoAuction?.status === "not_started" && <CountdownTimer endTime={infoAuction?.startTime}/>}
+                    {infoAuction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
                     {/*auction session starting*/}
                     {infoAuction?.status === "ongoing" &&
                         <p className="absolute left-2 top-2 bg-green-400 text-xm rounded px-4 py-1  text-white font-normal">ongoing</p>}
