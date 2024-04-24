@@ -7,7 +7,7 @@ import {
     ChangePassword,
     NotFound,
     Admin as AdminPage
-    ,
+    , Dashboard,
     RegisterCensor,
     ProductAuction,
     Contact,
@@ -64,6 +64,8 @@ const routerUser = [
     { path: '/register-censor', layout: User, component: RegisterCensor },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
     { path: '/changepassword', layout: User, component: ChangePassword },
+    { path: '/dashboard', layout: User, component: Dashboard },
+
 ]
 
 const routerCensor = [
