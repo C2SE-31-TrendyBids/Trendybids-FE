@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Map from "../../components/Map/Map";
 import { motion } from 'framer-motion'
+import Paypal from "../../components/Payment/Paypal";
 
 const Contact = () => {
     const submitForm = () => {
@@ -9,6 +10,7 @@ const Contact = () => {
     };
     return (
         <div className=" mx-auto">
+            <Paypal />
             <div className="relative w-full ">
                 <img
                     src="https://cdn.pixabay.com/photo/2021/04/15/11/52/office-desk-6180921_1280.jpg"

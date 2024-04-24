@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect} from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -10,6 +10,11 @@ import ImageLogo from "../../assets/images/logo.jpg";
 import {BiMessageDetail} from "react-icons/bi";
 import {motion} from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
+import Badge from '@mui/joy/Badge';
+import {useDispatch, useSelector} from "react-redux";
+import * as messageServices from "../../services/message";
+import {setUnseenCount} from "../../redux/slices/conversation";
+import SocketContext from "../../context/socketProvider";
 
 const Header = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -19,6 +24,7 @@ const Header = () => {
     const token = localStorage.getItem("access-token");
     const location = useLocation();
     const [activeButton, setActiveButton] = useState(null);
+    const {unseenConv} = useSelector((state) => state.conversation)
 
     const handleLogout = async () => {
         try {
@@ -61,9 +67,11 @@ const Header = () => {
                         <div className="relative flex items-center">
                             <Tooltip title="Messages">
                                 <motion.span whileHover={{scale: '1.3'}} className="transition-all">
-                                    <Link to='/messages'>
-                                        <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
-                                    </Link>
+                                    <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
+                                        <Link to='/messages'>
+                                            <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                        </Link>
+                                    </Badge>
                                 </motion.span>
                             </Tooltip>
                             <button

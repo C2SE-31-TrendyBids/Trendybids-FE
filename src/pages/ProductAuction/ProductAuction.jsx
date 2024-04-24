@@ -18,7 +18,6 @@ function valuetext(value) {
 const ProductAuction = () => {
     const location = useLocation();
     const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
-
     const [productAuctions, setProductAuctions] = useState([])
     const [totalPage, setTotalPage] = useState(1)
     const [pageNumber, setPageNumber] = useState(1)
@@ -30,7 +29,6 @@ const ProductAuction = () => {
     const [comingSoon, setComingSoon] = useState([])
     const [auctionEnded, setAuctionEnded] = useState([])
     const [value, setValue] = useState([0, 10000]);
-
     const [priceFrom, setPriceFrom] = useState(0)
     const [priceTo, setPriceTo] = useState(0)
 
@@ -40,7 +38,6 @@ const ProductAuction = () => {
     const handleTypeChange = (event) => {
         setType(event.target.value);
     };
-
     useEffect(() => {
         try {
             const fetchApi = async () => {
@@ -63,6 +60,7 @@ const ProductAuction = () => {
                     setIsChangeFilter(true)
                 }
                 const productAuctionData = await censorApi.getProductAuction(params);
+                console.log(productAuctionData);
                 setProductAuctions(productAuctionData?.data);
                 setTotalPage(productAuctionData?.totalPages);
             };

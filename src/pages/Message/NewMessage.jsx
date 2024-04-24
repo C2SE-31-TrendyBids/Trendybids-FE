@@ -8,8 +8,7 @@ import {fetchConversationsThunk} from "../../redux/slices/conversation";
 
 const NewMessage = () => {
     const {conversations} = useSelector((state) => state.conversation)
-    const location = useLocation();
-    const selectedUser = location.state.selectedUser;
+    const newRecipient = JSON.parse(localStorage.getItem('new-recipient'));
     const formData = new FormData();
     const accessToken = localStorage.getItem('access-token');
     const navigate = useNavigate();
@@ -24,13 +23,14 @@ const NewMessage = () => {
     const sendCreateNew = async (e, content, filesAttach) => {
         e.preventDefault();
         // Create a form data object
-        formData.append('recipientId', selectedUser.id)
+        formData.append('recipientId', newRecipient.id)
         content !== '' && formData.append('content', content)
         filesAttach.length > 0 && filesAttach.forEach((file) => formData.append('filesAttach', file));
 
         try {
             const newConversation = await messageService.createConversation(accessToken, formData)
             navigate(`/messages/${newConversation.response.responseData.id}`)
+            localStorage.removeItem('new-recipient')
         } catch (error) {
             console.error(error);
         }
@@ -41,13 +41,13 @@ const NewMessage = () => {
             <MessageSidebar/>
             <div className="h-full lg:w-msg-channel-lg md:w-msg-channel-md flex flex-col overflow-hidden relative">
                 <header className="text-start border-b-[1.5px] w-full h-[62px] px-[32px] shadow-sm">
-                    {Object.keys(selectedUser).length !== 0 && (
+                    {Object.keys(newRecipient).length !== 0 && (
                         <div className="h-full flex justify-between items-center">
                             <div className="flex items-center justify-start gap-x-[12px]">
                                 <img className="bg-primaryColor h-[40px] w-[40px] rounded-full object-cover"
-                                     src={selectedUser.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
+                                     src={newRecipient.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
                                      alt="avatar"/>
-                                <span className="font-bold">{selectedUser?.fullName}</span>
+                                <span className="font-bold">{newRecipient?.fullName}</span>
                             </div>
                         </div>
                     )}

@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {motion} from "framer-motion";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import AuthContext from "../../context/authProvider";
+import { updateSeenConversation } from "../../redux/slices/conversation";
 import Tooltip from '@mui/material/Tooltip';
 import { FaPenToSquare } from "react-icons/fa6";
 import {FaSearch} from "react-icons/fa";
-import {BsDot} from "react-icons/bs";
 import { TiMessages } from "react-icons/ti";
 import CreateConversationModal from "./CreateConversationModal";
 import {useDebounce} from "@uidotdev/usehooks";
+import { GoDotFill } from "react-icons/go";
 
 const MessageSidebar = () => {
     const navigate = useNavigate()
@@ -25,6 +26,7 @@ const MessageSidebar = () => {
         result: []
     })
     const searchDebounce = useDebounce(search.value, 500)
+    const dispatch = useDispatch()
 
     const getName = (fullName) => {
         if (fullName) {
@@ -58,13 +60,14 @@ const MessageSidebar = () => {
         }
     }, [searchDebounce])
 
-    const handleNavigateMessage = (id) => {
+    const handleNavigateMessage = (item) => {
         setSearch({
             open: false,
             value: '',
             result: []
         })
-        navigate(`/messages/${id}`)
+        dispatch(updateSeenConversation(item))
+        navigate(`/messages/${item.id}`)
     }
 
     return (
@@ -95,7 +98,7 @@ const MessageSidebar = () => {
                                 <li
                                     className={`flex items-center justify-center gap-x-[15px] py-[5px] px-[10px] rounded-lg box-border cursor-pointer ${item.id === conversationId ? "bg-blue-50" : "hover:bg-gray-100"}`}
                                     key={item.id}
-                                    onClick={() => handleNavigateMessage(item.id)}
+                                    onClick={() => handleNavigateMessage(item)}
                                 >
                                     <img className="h-[40px] w-[40px] rounded-full object-cover"
                                          src={item?.recipient?.avatarUrl || "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"}
@@ -127,26 +130,24 @@ const MessageSidebar = () => {
                             <li
                                 className={`flex items-center justify-center gap-x-[15px] py-[10px] lg:px-[10px] px-[5px] mx-2 rounded-lg box-border cursor-pointer ${item.id === conversationId ? "bg-blue-50" : "hover:bg-gray-100"}`}
                                 key={item.id}
-                                onClick={() => navigate(`/messages/${item.id}`)}
+                                onClick={() => handleNavigateMessage(item)}
                             >
                                 <img className="lg:h-[40px] lg:w-[40px] md:h-[35px] md:w-[35px] h-[25px] w-[25px] rounded-full object-cover border"
                                      src={item?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
                                      alt="avatar"/>
-                                <div className="hidden lg:flex lg:flex-col w-full">
+                                <div className="hidden lg:flex lg:flex-col w-full relative">
                                     <span className="w-full font-medium truncate text-start">{item?.recipient?.fullName}</span>
                                     <div className="flex items-center justify-between flex-wrap">
                                         {item?.latestMessage?.filesAttach.length !== 0 ? (
                                             <span
-                                                className="text-[14px] truncate text-start text-gray-800 max-w-[185px]">{auth.id === item?.latestMessage?.user?.id ? "Bạn đã gửi một ảnh" : `${getName(item?.latestMessage?.user?.fullName)} đã gửi một ảnh`}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? "Bạn đã gửi một ảnh" : `${getName(item?.latestMessage?.user?.fullName)} đã gửi một ảnh`}</span>
                                         ) : (
                                             <span
-                                                className="text-[14px] truncate text-start text-gray-800 max-w-[185px]">{auth.id === item?.latestMessage?.user?.id ? `Bạn: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? `Bạn: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
                                         )}
                                         {/* Change the separator here */}
-                                        <div className="flex items-center">
-                                            <span className=""><BsDot size="20px"/></span>
-                                            <span className="text-[12px] font-light">{item.latestMessage && <span>{calculateDateDifference(new Date(item.latestMessage.createdAt), currentTime)}</span>}</span>
-                                        </div>
+                                        {(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) && (<span className="absolute right-0 bottom-[24px]"><GoDotFill color="#007afe"/></span>)}
+                                        <span className="text-[12px] font-light">{item.latestMessage && <span>{calculateDateDifference(new Date(item.latestMessage.createdAt), currentTime)}</span>}</span>
                                     </div>
                                 </div>
                             </li>

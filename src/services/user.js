@@ -138,7 +138,7 @@ const getBidPrices = async (accessToken, sessionId, paramObject) => {
     try {
         const response = await request.get(`/user/get-all-auction-price/${sessionId}`, {
             params: paramObject,
-            headers: {Authorization: `Bearer ${accessToken}`}
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
         return {
             response: response.data,
@@ -156,7 +156,39 @@ const getBidPrices = async (accessToken, sessionId, paramObject) => {
 const getSummaryAuctionSession = async (accessToken, sessionId) => {
     try {
         const response = await request.get(`/user/get-summary-auction-price/${sessionId}`, {
-            headers: {Authorization: `Bearer ${accessToken}`}
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};
+const getSummaryAuctionSessionUser = async (accessToken) => {
+    try {
+        const response = await request.get(`/statistical/auction-user-participant`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};
+const getSummaryAuctionSessionDetailUser = async (accessToken, productAuctionId) => {
+    try {
+        const response = await request.get(`/statistical/auction-detail-user?productAuctionId=${productAuctionId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
         return {
             response: response.data,
@@ -170,5 +202,5 @@ const getSummaryAuctionSession = async (accessToken, sessionId) => {
     }
 };
 
-export {getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession};
+export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession, getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser };
 

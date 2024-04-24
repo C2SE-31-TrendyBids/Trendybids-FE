@@ -1,10 +1,10 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as messageService from "../../services/message";
 
 export const fetchMessagesThunk = createAsyncThunk(
     'message/fetch',
-    async ({accessToken, conversationId, page, limit}, thunkApi) => {
-        return messageService.getConversationMessage(accessToken, conversationId, {page, limit})
+    async ({ accessToken, conversationId, page, limit }, thunkApi) => {
+        return messageService.getConversationMessage(accessToken, conversationId, { page, limit })
     }
 )
 
@@ -52,6 +52,6 @@ const messageSlice = createSlice({
     }
 });
 
-export const {setMessage, setMoreMessage, addMessage} = messageSlice.actions
+export const { setMessage, setMoreMessage, addMessage } = messageSlice.actions
 
 export default messageSlice;

@@ -10,6 +10,8 @@ export { default as LoginGoogleSuccess } from "./LoginGoogleSuccess/LoginGoogleS
 
 
 export { default as EditProfile } from "./UserProfile/EditProfile/EditProfile";
+export { default as Dashboard } from "./UserProfile/Dashboard/Dashboard";
+
 export { default as ManagementPost } from "./UserProfile/ManagementPost/ManagementPost";
 export { default as ChangePassword } from "./UserProfile/ChangePassword/ChangePassword";
 
