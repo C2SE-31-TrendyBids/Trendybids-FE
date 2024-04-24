@@ -162,7 +162,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searc
                                             <img src={item.url} alt="image" onClick={() => handleShowGallery(item)} className="w-full h-auto rounded-lg shadow-sm hover:opacity-85"/>
                                         </div>
                                     ) : (
-                                        <a key={index} href={item.url} download="filename.extension" className="h-14 px-2 rounded-lg flex items-center gap-x-2 bg-gray-100 m-1">
+                                        <a key={index} href={item.url} className="h-14 px-2 rounded-lg flex items-center gap-x-2 bg-gray-100 m-1">
                                         <span className="p-2 bg-gray-200 rounded-full">
                                             <IoDocumentTextOutline size="20px" color="blue"/>
                                         </span>
