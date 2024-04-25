@@ -51,7 +51,7 @@ const Home = () => {
                                         <ImSearch className="rotate-90" size={30} />
                                         <input
                                             className="w-full py-2 px-2 text-black outline-none bg-gray-200 placeholder-gray-300::placeholder focus:placeholder-black::placeholder rounded"
-                                            type="text" placeholder="I'am lookinh for..." />
+                                            type="text" placeholder="I'am looking for..." />
                                         <button className="px-6 py-2 bg-black text-white rounded-lg font-medium hover:opacity-90">Search
                                         </button>
                                     </div>
