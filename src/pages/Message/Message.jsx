@@ -28,9 +28,7 @@ const Message = () => {
     useEffect(() => {
         socket.on('connected', (data) => console.log('Connected', data))
         socket.on('onMessage', (data) => {
-            const receiveConvId = data?.conversationId;
-            console.log(conversationId, receiveConvId)
-            conversationId === receiveConvId && dispatch(addMessage(data));
+            dispatch(addMessage(data));
             dispatch(fetchUnseenConversationsThunk(accessToken))
             dispatch(updateConversation({conversationId: data?.conversationId, message: data}))
         })
