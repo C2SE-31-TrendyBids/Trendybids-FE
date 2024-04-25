@@ -11,6 +11,7 @@ import RecentNew from "../../components/HomeComponent/RecentNew";
 import ProductPick from "../../components/HomeComponent/ProductPick";
 import { useEffect, useState } from "react";
 import * as censorServices from "../../services/censor"
+import {Helmet} from "react-helmet";
 
 const Home = () => {
     const [auctionSessions, setAuctionSession] = useState([])
@@ -34,6 +35,9 @@ const Home = () => {
 
     return (
         <>
+            <Helmet>
+                <title>TrendyBids</title>
+            </Helmet>
             <div className="relative h-[460px] w-full mb-10">
                 <img className="h-full w-full object-cover"
                     src="https://1.bp.blogspot.com/-YR-sT7AVJFY/YT3KpuJRPBI/AAAAAAAAH0A/b8NdXw-1c4oKH1BODi-rCIBvmE3BY8MnQCLcBGAsYHQ/s0-rw/bo-hinh-nen-phong-canh-chat-luong-cao-full-hd-dep-nhat-34.jpg"

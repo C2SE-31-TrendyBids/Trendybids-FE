@@ -129,13 +129,14 @@ const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searc
     const marginLeftStyle = !isUserLogin && !showAvatar ? "ml-10" : "";
     const roundedStyle = isUserLogin ? "rounded-tl-lg" : "rounded-tr-lg";
     const justifyContent = isUserLogin ? "justify-end" : "justify-start"
+    const paddingContent = isUserLogin ? "pl-[50%]" : "pr-[50%]"
 
     // Determine the files attached to the message
     const filesAttach = item.filesAttach;
     const imageTypes = ['png', 'jpeg', 'jpg'];
 
     return (
-        <div key={item.id} className={`flex flex-col my-0.5 ${alignItem} ${marginLeftStyle}`} ref={el => messageRef.current[item.id] = el}>
+        <div key={item.id} className={`flex flex-col my-0.5 ${alignItem} ${marginLeftStyle} ${paddingContent}`} ref={el => messageRef.current[item.id] = el}>
             <div className="flex items-start gap-x-2">
                 {showAvatar && !isUserLogin && (
                     <img src={item.user.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"} alt="avatar" className="h-8 w-8 rounded-full object-cover border"/>
@@ -143,7 +144,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searc
                 <div className={`flex flex-col gap-y-1 ${alignItem}`}>
                     <TimeTooltip item={item} placement={placement}>
                         {item.content !== null &&
-                            <span className={`py-1.5 px-4 rounded-b-lg ${bgColor} ${roundedStyle}`}>
+                            <span className={`py-1.5 px-4 rounded-b-lg break-all ${bgColor} ${roundedStyle}`}>
                                 <Highlighter
                                     highlightClassName="YourHighlightClass"
                                     searchWords={searchValue}
@@ -162,7 +163,7 @@ const Message = ({item, userId, showAvatar, handleShowGallery, messageRef, searc
                                             <img src={item.url} alt="image" onClick={() => handleShowGallery(item)} className="w-full h-auto rounded-lg shadow-sm hover:opacity-85"/>
                                         </div>
                                     ) : (
-                                        <a key={index} href={item.url} download="filename.extension" className="h-14 px-2 rounded-lg flex items-center gap-x-2 bg-gray-100 m-1">
+                                        <a key={index} href={item.url} className="h-14 px-2 rounded-lg flex items-center gap-x-2 bg-gray-100 m-1">
                                         <span className="p-2 bg-gray-200 rounded-full">
                                             <IoDocumentTextOutline size="20px" color="blue"/>
                                         </span>

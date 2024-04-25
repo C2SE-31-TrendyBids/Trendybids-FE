@@ -28,7 +28,8 @@ const messageSlice = createSlice({
     reducers: {
         addMessage: (state, action) => {
             console.log('setMessage')
-            state.messages.unshift(action.payload);
+            const firstMessage = state.messages[0]
+            firstMessage.conversationId === action.payload.conversationId && state.messages.unshift(action.payload);
         },
         setMoreMessage: (state, action) => {
             state.messages = [...state.messages, ...action.payload];
