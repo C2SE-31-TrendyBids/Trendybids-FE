@@ -71,7 +71,7 @@ const conversationSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchConversationsThunk.fulfilled, (state, action) => {
-                state.conversations = action.payload.response.conversations;
+                state.conversations = action.payload?.response?.conversations;
                 state.loading = false;
             })
             .addCase(fetchConversationsThunk.rejected, (state) => {
@@ -81,7 +81,7 @@ const conversationSlice = createSlice({
                 state.loading = true
             })
             .addCase(fetchUnseenConversationsThunk.fulfilled, (state, action) => {
-                state.unseenConv = action.payload.response.unseenConv;
+                state.unseenConv = action.payload?.response?.unseenConv;
             })
             .addCase(fetchUnseenConversationsThunk.rejected, (state) => {
                 state.unseenConv = 0;

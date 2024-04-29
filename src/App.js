@@ -29,12 +29,12 @@ const App = () => {
                 toast.info(`New message from stranger: ${data?.latestMessage?.user?.fullName.split(' ')[0]}`);
                 dispatch(fetchUnseenConversationsThunk(accessToken));
             });
-        }
 
-        return () => {
-            socket.off('onMessage');
-            socket.off('onConversation');
-        };
+            return () => {
+                socket.off('onMessage');
+                socket.off('onConversation');
+            };
+        }
     }, [accessToken, socket, location]);
 
     useEffect(() => {
