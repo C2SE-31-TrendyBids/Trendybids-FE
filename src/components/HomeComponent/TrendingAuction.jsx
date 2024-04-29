@@ -3,11 +3,15 @@ import {FaPlus} from "react-icons/fa";
 import ProductItem from "../Products/ProductItem";
 import {useEffect, useState} from "react";
 import * as censorServices from "../../services/censor";
-
+import * as userServices from "../../services/user";
+import {toast} from "sonner";
+import {useNavigate} from "react-router-dom";
+import logo from "../../assets/images/logo.jpg";
 const TrendingAuction = () => {
 
     const [auctionSessions , setAuctionSession] = useState([])
     const [firstSessions , setFirstSessions] = useState({})
+    const navigator = useNavigate()
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -18,6 +22,26 @@ const TrendingAuction = () => {
         fetchAPI()
     }, [])
 
+    const handleJoinAuction = async (sessionId) => {
+        const accessToken = localStorage.getItem("access-token");
+        if (accessToken) {
+            const responseJoin = await userServices.joinSession(accessToken, sessionId)
+            if (responseJoin?.status === 200) {
+                toast.success("Join to auction session successfully!");
+            } else {
+                const errorMessage = responseJoin?.error?.response?.data?.message
+                if (errorMessage === "The user has participated in this auction") {
+                    toast.error("You already to join this session!");
+                } else
+                    toast.error("Join to auction session fail!");
+            }
+        } else {
+            toast.error("Required login to join auction session!");
+            navigator("/login");
+        }
+    }
+
+
     return (
         <div className="px-10 mx-auto mt-20 mb-4">
             <h2 className="text-[#0B1133] text-2xl font-bold">Trending Auctions</h2>
@@ -25,17 +49,24 @@ const TrendingAuction = () => {
                 items.</p>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-7">
                 <div className="w-full h-full grid grid-rows-6">
-                    <div className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
+                    <div className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden min-h-[400px]">
                         <img
-                            className="w-full h-full rounded-t-lg object-cover group-hover:scale-125 transition-all duration-500"
+                            className="w-full h-full rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
                             src={firstSessions?.prdImages?.[0]?.prdImageURL || ""}
                             alt={firstSessions?.title || ""}
+                            onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
                         />
                         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                         {/* Countdown */}
                         <CountdownTimer targetDate={firstSessions?.startTime || ""} />
                         <div className="absolute left-1/2 -translate-x-1/2 opacity-0 -bottom-10 bg-[#1972F5] rounded group-hover:opacity-100 group-hover:bottom-3 transition-all duration-300">
-                            <button className="px-6 py-2 flex items-center gap-3 font-bold text-[16px] text-white">
+                            <button className="px-6 py-2 flex items-center gap-3 font-bold text-[16px] text-white"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleJoinAuction(firstSessions?.id);
+                                    }}
+                            >
                                 <FaPlus size={18} />
                                 Join Auction
                             </button>

@@ -4,6 +4,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import * as userServices from '../../services/user'
 import {toast} from "sonner";
 import {Link, useNavigate} from "react-router-dom";
+import logo from "../../assets/images/logo.jpg";
 
 const ProductItem = ({infoAuction = {}, type = "item"}) => {
     const divRef = useRef(null);
@@ -57,9 +58,12 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                 <div
                     className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
                     <img
-                        className="w-full min-h-[200px] rounded-t-lg object-cover group-hover:scale-125 transition-all duration-500"
-                        src={infoAuction?.product?.prdImages[0]?.prdImageURL}
-                        alt={infoAuction?.product?.productName}/>
+                        className="w-full min-h-[200px] rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
+                        src={infoAuction?.product?.prdImages[0]?.prdImageURL || ""}
+                        alt={infoAuction?.product?.productName}
+                        onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
+                    />
+
                     <div
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     {/*Countdown*/}
@@ -75,7 +79,11 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                         <div
                             className="absolute left-1/2 -translate-x-1/2 opacity-0 -bottom-10 bg-[#1972F5] rounded group-hover:opacity-100 group-hover:bottom-3 transition-all duration-300">
                             <button
-                                onClick={() => handleJoinAuction(infoAuction?.id)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleJoinAuction(infoAuction?.id);
+                                }}
                                 className={`${width < 300 ? "gap-1 px-2 text-[12px]" : "gap-3 px-6 text-[10px] sm:text-[16px]"} py-2 flex items-center font-bold text-white`}>
                                 <FaPlus size={width < 300 ? 12 : 18}/>
                                 Join Auction
