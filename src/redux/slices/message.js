@@ -44,7 +44,7 @@ const messageSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchMessagesThunk.fulfilled, (state, action) => {
-                state.messages = action.payload.response.data;
+                state.messages = action.payload?.response?.data;
                 state.loading = false;
             })
             .addCase(fetchMessagesThunk.rejected, (state) => {
