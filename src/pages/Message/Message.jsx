@@ -81,8 +81,8 @@ const Message = () => {
             <MessageSidebar/>
             {(conversations.length > 0 && conversationId) ? <MessageChannel conversation={conversation}/> : (
                 <div className="h-full w-full lg:w-msg-channel-lg md:w-msg-channel-md flex flex-col items-center justify-center">
-                    <img src={messageSvg} alt="messageSvg" className="h-72 w-72"/>
-                    <h1 className="text-2xl text-gray-700">No chats selected</h1>
+                    <img src={messageSvg} alt="messageSvg" className="lg:h-96 lg:w-96 md:h-80 md:w-80 h-52 w-52"/>
+                    <h1 className="lg:text-2xl md:text-xl text-lg text-gray-700">No chats selected</h1>
                 </div>
             )}
         </div>

@@ -42,7 +42,13 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         if (isAccept) {
             const verify = await censorAPI.verifyProduct(id, accessToken)
             if (verify?.status === 200) {
-                socket.emit('product.verify', { censor: product?.censor, recipientId: product?.owner?.id, content: `${product?.productName} has been successfully approved by censor` })
+                socket.emit('product.updateStatus', {
+                    title: `Censor - ${product?.censor?.name}: Verify product`,
+                    content: `${product?.productName} has been successfully approved by censor`,
+                    linkAttach: "/profile/management-post",
+                    recipientId: product?.owner?.id,
+                    thumbnail: product?.prdImages[0]?.prdImageURL,
+                })
                 toast.success(verify?.data?.message)
             } else {
                 toast(verify?.data?.message)
@@ -62,7 +68,13 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
             // Call API to send reason reject
             const reject = await censorAPI.rejectProduct(id, accessToken, reasonReject.value)
             if (reject?.status === 200) {
-                socket.emit('product.reject', { censor: product?.censor, recipientId: product?.owner?.id, content: `${product?.productName} has been rejected by censor` })
+                socket.emit('product.updateStatus', {
+                    title: `Censor - ${product?.censor?.name}: Reject product`,
+                    content: `${product?.productName} has been rejected by censor`,
+                    linkAttach: "/profile/management-post",
+                    recipientId: product?.owner?.id,
+                    thumbnail: product?.prdImages[0]?.prdImageURL,
+                })
                 toast.success(reject?.data?.message)
                 setChange(!change)
                 modalOpen(false)
