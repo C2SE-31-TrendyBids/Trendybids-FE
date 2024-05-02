@@ -40,3 +40,12 @@ export { default as DashboardCensor } from "./Censor/DashboardCensor/DashboardCe
 export { default as Message } from "./Message/Message"
 export { default as NewMessage } from "./Message/NewMessage"
 
+//payment
+export { default as PaymentSuccess } from "./Payment/PaymentSuccess"
+export { default as PaymentCancel } from "./Payment/PaymentCancel"
+export { default as Checkout } from "./Payment/Checkout"
+export { default as EWallet } from "./Payment/EWallet"
+
+
+
+

@@ -37,6 +37,7 @@ const Dashboard = () => {
                 const prices = [];
                 const name = [];
                 const productAuctionData = await getSummaryAuctionSessionUser(accessToken);
+                console.log(productAuctionData);
                 if (productAuctionData && productAuctionData?.response && productAuctionData?.response?.productAuction) {
                     const productAuctions = productAuctionData?.response?.productAuction;
                     productAuctions.forEach(productAuction => {

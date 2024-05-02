@@ -5,12 +5,16 @@ import { motion } from 'framer-motion'
 import Paypal from "../../components/Payment/Paypal";
 
 const Contact = () => {
+    const accessToken = localStorage.getItem('access-token');
+    const amount = 1200
+    const index = 1
     const submitForm = () => {
         console.log("Submit Success!");
     };
+
     return (
         <div className=" mx-auto">
-            <Paypal />
+            <Paypal accessToken={accessToken} amount={amount} index={index} />
             <div className="relative w-full ">
                 <img
                     src="https://cdn.pixabay.com/photo/2021/04/15/11/52/office-desk-6180921_1280.jpg"
