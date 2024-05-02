@@ -88,6 +88,7 @@ const MessageChannel = ({conversation}) => {
             result: [],
             currentIndex: -1
         })
+        setIsTyping(false)
     }, [conversationId])
 
     return (

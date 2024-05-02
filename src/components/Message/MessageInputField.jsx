@@ -55,6 +55,7 @@ const MessageInputField = ({sendCreateNew, handleStartTyping, handleStopTyping})
                 url: URL.createObjectURL(item)
             })) : [],
             createdAt: new Date(),
+            conversationId: conversationId,
             user: { id, fullName, avatarUrl }
         }
         dispatch(addMessage(messageData))

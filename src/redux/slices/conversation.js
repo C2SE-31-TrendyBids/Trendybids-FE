@@ -8,6 +8,13 @@ export const fetchConversationsThunk = createAsyncThunk(
     }
 )
 
+export const fetchUnseenConversationsThunk = createAsyncThunk(
+    'conversation/unseen',
+    async (accessToken, thunkApi) => {
+        return messageService.getUnseenConvCount(accessToken)
+    }
+)
+
 const conversationSlice = createSlice({
     name: 'conversation',
     initialState: {
@@ -31,6 +38,7 @@ const conversationSlice = createSlice({
             },
         }],
         loading: false,
+        unseenConv: 0
     },
     reducers: {
         addConversation: (state, action) => {
@@ -46,7 +54,16 @@ const conversationSlice = createSlice({
                 const updatedConversation = state.conversations.splice(conversationIndex, 1)[0];
                 state.conversations.unshift(updatedConversation);
             }
-        }
+        },
+        updateSeenConversation: (state, action) => {
+            const conversation = action.payload
+            const conversationIndex = state.conversations.findIndex((item) => item.id === conversation.id);
+            if (!state.conversations[conversationIndex].latestMessage.isSeen) {
+                state.conversations[conversationIndex].latestMessage.isSeen = true;
+                state.conversations[conversationIndex].latestMessage.seenAt = new Date();
+                state.unseenConv -= 1;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -54,15 +71,25 @@ const conversationSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchConversationsThunk.fulfilled, (state, action) => {
-                state.conversations = action.payload.response.conversations;
+                state.conversations = action.payload?.response?.conversations;
                 state.loading = false;
             })
             .addCase(fetchConversationsThunk.rejected, (state) => {
                 state.loading = false;
             })
+            .addCase(fetchUnseenConversationsThunk.pending, (state, action) => {
+                state.loading = true
+            })
+            .addCase(fetchUnseenConversationsThunk.fulfilled, (state, action) => {
+                state.unseenConv = action.payload?.response?.unseenConv;
+            })
+            .addCase(fetchUnseenConversationsThunk.rejected, (state) => {
+                state.unseenConv = 0;
+                state.loading = false;
+            })
     }
 });
 
-export const { addConversation, updateConversation, filterConversation} = conversationSlice.actions
+export const { addConversation, updateConversation, updateSeenConversation} = conversationSlice.actions
 
 export default conversationSlice;

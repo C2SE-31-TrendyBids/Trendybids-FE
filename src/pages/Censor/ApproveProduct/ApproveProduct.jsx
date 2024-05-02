@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import * as productApi from '../../../services/product'
 import ViewDetal from './ViewDetail';
@@ -106,7 +106,7 @@ const ApproveProduct = () => {
                 </div>
 
             </div>
-            <div className="h-[600px] max-w-full overflow-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 border bg-white p-2 rounded-md no-scrollbar">
+            <div className="h-[590px] max-w-full overflow-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 border bg-white p-2 rounded-md no-scrollbar">
                 {products?.map((item, index) => (
                     <div key={index} className="bg-white shadow-[0_8px_12px_-6px_rgba(0,0,0,0.2)] border p-2 w-full max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
                         <div className='w-full flex items-center justify-center'>
@@ -126,7 +126,7 @@ const ApproveProduct = () => {
                     </div>
                 ))}
             </div>
-            <div className='flex items-center justify-center mt-4'>
+            <div className='flex items-center justify-center mt-2'>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
             {

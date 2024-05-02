@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import { IoMdClose } from "react-icons/io";
 import * as censorAPI from "../../../services/censor"
 import { toast } from "sonner";
@@ -10,11 +10,20 @@ import { MdOutlineCategory } from "react-icons/md";
 import { IoPersonOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { BsCalendarDate } from "react-icons/bs";
+import SummaryUserModal from "../../../components/SummaryUserModal/SummaryUserModal";
+import SocketContext from "../../../context/socketProvider";
+import {Button, Textarea} from "@mui/joy";
 
 const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index }) => {
+    const socket = useContext(SocketContext)
     const [currentIndex, setCurrentIndex] = useState(1);
     const images = product?.prdImages
     const id = product?.id
+    const owner = product?.owner
+    const [reasonReject, setReasonReject] = useState({
+        isOpen: false,
+        value: "",
+    })
 
     const back = () => {
         if (currentIndex > 1) {
@@ -33,21 +42,36 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         if (isAccept) {
             const verify = await censorAPI.verifyProduct(id, accessToken)
             if (verify?.status === 200) {
+                socket.emit('product.verify', { censor: product?.censor, recipientId: product?.owner?.id, content: `${product?.productName} has been successfully approved by censor` })
                 toast.success(verify?.data?.message)
             } else {
                 toast(verify?.data?.message)
             }
+            setChange(!change)
+            modalOpen(false)
         } else {
-            const reject = await censorAPI.rejectProduct(id, accessToken)
+            setReasonReject({ ...reasonReject, isOpen: true })
+        }
+    }
+
+    const handleSendReasonReject = async (e, isReject) => {
+        e.preventDefault()
+        if (isReject) {
+            if (reasonReject.value === "") return
+
+            // Call API to send reason reject
+            const reject = await censorAPI.rejectProduct(id, accessToken, reasonReject.value)
             if (reject?.status === 200) {
+                socket.emit('product.reject', { censor: product?.censor, recipientId: product?.owner?.id, content: `${product?.productName} has been rejected by censor` })
                 toast.success(reject?.data?.message)
+                setChange(!change)
+                modalOpen(false)
             } else {
                 toast(reject?.data?.message)
             }
+        } else {
+            setReasonReject({ value: "", isOpen: false })
         }
-        setChange(!change)
-        modalOpen(false)
-
     }
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear ">
@@ -109,7 +133,11 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                 <div className='col-span-3'>
                                     <div className=' text-red-500 my-1'> $ {product?.startingPrice}</div>
                                     <div className='my-1'>{product?.category.name}</div>
-                                    <div className='my-1'>{product?.owner.fullName}</div>
+                                        <div className='my-1 cursor-pointer hover:underline'>
+                                            <SummaryUserModal owner={owner}>
+                                                <span>{product?.owner.fullName}</span>
+                                            </SummaryUserModal>
+                                        </div>
                                     <div className='my-1 whitespace-nowrap'>{product?.owner.email}</div>
                                     <div className='my-1'>{moment(product?.createdAt).format('DD - MM - YYYY')}</div>
                                 </div>
@@ -122,21 +150,39 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 {index === 0 ? (
                     <div className="border-t flex justify-end pt-6 space-x-4">
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                            onClick={(e) => handleAction(false)}>Reject</button>
+                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                                onClick={() => handleAction(false)}>Reject</button>
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
-                            onClick={(e) => handleAction(true)}
+                                className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
+                                onClick={() => handleAction(true)}
                         >Accept</button>
                     </div>
                 ) : (
                     <div className='flex justify-end pt-6 space-x-4'>
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                            onClick={(e) => modalOpen(false)}>Cance</button>
+                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                                onClick={() => modalOpen(false)}>Cancel</button>
                     </div>
                 )}
             </div>
+            {reasonReject.isOpen && (
+                <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear">
+                    <div className="w-full max-w-xl bg-white shadow-lg rounded-md p-4 relative">
+                        <label className="block mb-2 text-xl font-bold text-blue-600 text-center">Reason for reject</label>
+                        <Textarea
+                            placeholder="Type something..."
+                            minRows={6}
+                            variant="soft"
+                            value={reasonReject.value}
+                            onChange={(e) => setReasonReject({ ...reasonReject, value: e.target.value })}
+                        />
+                        <div className="flex justify-end items-center gap-x-3 mt-4">
+                            <Button variant="outlined" onClick={(e) => handleSendReasonReject(e, false)} color="danger">Cancel</Button>
+                            <Button sx={{paddingX: "35px"}} onClick={(e) => handleSendReasonReject(e, true)} color="primary">Send</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
