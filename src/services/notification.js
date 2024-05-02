@@ -35,3 +35,20 @@ export const seenNotification = async (accessToken, notificationId) => {
         };
     }
 };
+
+export const getCountUnseen = async (accessToken) => {
+    try {
+        const response = await request.get("/notification/count-unseen", {
+            headers: {Authorization: `Bearer ${accessToken}`}
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};

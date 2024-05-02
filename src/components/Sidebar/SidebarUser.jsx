@@ -143,23 +143,6 @@ export default function SidebarUser() {
                     </Link>
                 </Accordion>
                 <Accordion>
-                    <Link to="">
-                        <ListItem className="p-0">
-                            <AccordionHeader className="border-b-0 p-3">
-                                <ListItemPrefix>
-                                    <IoChatboxEllipses className="h-5 w-5" />
-                                </ListItemPrefix>
-                                <Typography
-                                    color="blue-gray"
-                                    className="mr-auto font-normal"
-                                >
-                                    Chat
-                                </Typography>
-                            </AccordionHeader>
-                        </ListItem>
-                    </Link>
-                </Accordion>
-                <Accordion>
                     <Link to="/profile/management-post">
                         <ListItem className="p-0">
                             <AccordionHeader className="border-b-0 p-3">

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, {useState, useCallback, useEffect, useRef, useContext} from "react";
 import { IoIosSearch } from "react-icons/io";
 import { CiCircleRemove } from "react-icons/ci";
 import { FaCloudUploadAlt, FaTimes } from "react-icons/fa";
@@ -18,10 +18,14 @@ import { useNavigate } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
 import Swal from "sweetalert2";
 import Tooltip from '@mui/material/Tooltip';
+import SocketContext from "../../../context/socketProvider";
+import AuthContext from "../../../context/authProvider";
 
 const PRODUCT_URL = "/product";
 
 const ManagementPost = () => {
+    const {auth} = useContext(AuthContext)
+    const socket = useContext(SocketContext)
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [change, setChange] = useState(true);
@@ -160,7 +164,7 @@ const ManagementPost = () => {
 
         const { response, error } = await (data?.id
             ? updateProduct(token, {...data, status: "Processing"})
-            : addProduct(token, data));
+            : addProduct(token, {...data, status: "Processing"}));
 
         if (error?.response?.data?.message === "Access Token invalid") {
             setLoading(false);
@@ -175,6 +179,26 @@ const ManagementPost = () => {
                     ? `Product Update Successfully`
                     : "Add Product Successfully"
             );
+
+            let title, content, thumbnail;
+            // Emit event to socket
+            if (data?.id) {
+                title = `Update product by ${auth?.fullName}`;
+                content = `${auth?.fullName} has updated ${data?.productName}'s information`;
+                thumbnail = images[0]?.prdImageURL;
+            } else {
+                title = `New product by ${auth?.fullName}`;
+                content = `${auth?.fullName} has posted a new product for your organization to review`;
+                thumbnail = response?.thumbnail?.url;
+            }
+            socket.emit('product.createOrUpdate', {
+                title,
+                content,
+                linkAttach: "/all-product",
+                thumbnail,
+                censorId: data?.censorId,
+            });
+
             setShowForm(false);
             setValues({
                 productName: "",
@@ -184,6 +208,7 @@ const ManagementPost = () => {
                 censorId: "",
                 status: ""
             });
+            setLoading(false)
             await getData(token, { page: pagination.page, productName: "" });
         }
         setChange(!change)
