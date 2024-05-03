@@ -17,12 +17,12 @@ const Admin = ({ children }) => {
     const location = useLocation();
 
     const sidebarItems = [
-        { icon: <IoIosHome size={20} />, text: "Home", active: false },
-        { icon: <LuLayoutDashboard size={20} />, text: "Dashboard", active: false },
-        { icon: <CgShutterstock size={20} />, text: "Account", active: false, alert: true },
-        { icon: <FaStoreAlt size={20} />, text: "Auction", active: false },
-        { icon: <FaStoreAlt size={20} />, text: "Approve-Censor", active: false },
-        { icon: <IoSettingsSharp size={20} />, text: "Settings", active: false },
+        { icon: <IoIosHome size={20} />, text: "Home", active: false, role: "admin"},
+        { icon: <LuLayoutDashboard size={20} />, text: "Dashboard", active: false, role: "admin" },
+        { icon: <CgShutterstock size={20} />, text: "Account", active: false, alert: true, role: "admin" },
+        { icon: <FaStoreAlt size={20} />, text: "Auction", active: false, role: "admin" },
+        { icon: <FaStoreAlt size={20} />, text: "Approve-Censor", active: false, role: "admin" },
+        { icon: <IoSettingsSharp size={20} />, text: "Settings", active: false, role: "admin" },
     ];
     const [listSidebarItem, setListSidebarItem] = useState(sidebarItems);
 
@@ -51,6 +51,7 @@ const Admin = ({ children }) => {
                             icon={item?.icon}
                             text={item?.text}
                             active={item?.active}
+                            role={item?.role}
                         />
                     ))}
                 </Sidebar >
