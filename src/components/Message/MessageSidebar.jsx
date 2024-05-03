@@ -140,10 +140,10 @@ const MessageSidebar = () => {
                                     <div className="flex items-center justify-between flex-wrap">
                                         {item?.latestMessage?.filesAttach.length !== 0 ? (
                                             <span
-                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? "Bạn đã gửi một ảnh" : `${getName(item?.latestMessage?.user?.fullName)} đã gửi một ảnh`}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? "You have sent the file" : `${getName(item?.latestMessage?.user?.fullName)} have sent the file`}</span>
                                         ) : (
                                             <span
-                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? `Bạn: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? `You: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
                                         )}
                                         {/* Change the separator here */}
                                         {(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) && (<span className="absolute right-0 bottom-[24px]"><GoDotFill color="#007afe"/></span>)}
@@ -155,7 +155,7 @@ const MessageSidebar = () => {
                     ))
                 ) : (
                     <div className="h-sidebar-item flex flex-col items-center justify-center">
-                        <TiMessages color="blue" className="lg:w-[100px] lg:h-[100px] md:w-[50px] md:h-[50px]"/>
+                        <TiMessages color="#007AFE" className="lg:w-[100px] lg:h-[100px] md:w-[50px] md:h-[50px]"/>
                         <p className="text-center text-gray-700 hidden lg:block">No messages yet</p>
                     </div>
                 )}

@@ -20,8 +20,8 @@ const AuctionSession = () => {
     const [change, setChange] = useState(true);
     const [filter, setFilter] = useState({
         page: 1,
-        limit: 8,
-        // status: ""
+        limit: 7,
+        status: null
     });
     const [sessionSelected, setSessionSelected] = useState({
         title: "",
@@ -130,7 +130,7 @@ const AuctionSession = () => {
                         }}
                         onChange={(e, newValue) => handleChangeStatus(newValue)}
                     >
-                        <Option value="">Status: All</Option>
+                        <Option value={null}>Status: All</Option>
                         <Option value="not_started">Not Started</Option>
                         <Option value="ongoing">On Going</Option>
                         <Option value="ended">Ended</Option>

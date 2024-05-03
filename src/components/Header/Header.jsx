@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -12,19 +12,24 @@ import {motion} from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
 import Badge from '@mui/joy/Badge';
 import {useDispatch, useSelector} from "react-redux";
-import * as messageServices from "../../services/message";
-import {setUnseenCount} from "../../redux/slices/conversation";
+import { MdOutlineNotificationsNone } from "react-icons/md";
+import NotificationPopup from "../NotificationPopup/NotificationPopup";
 import SocketContext from "../../context/socketProvider";
+import {clearNotifications, fetchUnseenNotificationThunk} from "../../redux/slices/notification";
 
 const Header = () => {
+    const socket = useContext(SocketContext)
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isDropdown, setIsDropdown] = useState(true);
     const { auth, isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
     const location = useLocation();
-    const [activeButton, setActiveButton] = useState(null);
     const {unseenConv} = useSelector((state) => state.conversation)
+    const {unseenCount} = useSelector((state) => state.notification)
+    const [isOpenNotification, setIsOpenNotification] = useState(false)
+    const iconNotificationRef = useRef();
+    const dispatch = useDispatch()
 
     const handleLogout = async () => {
         try {
@@ -49,12 +54,16 @@ const Header = () => {
         }
     };
 
+    useEffect(() => {
+        if (token) dispatch(fetchUnseenNotificationThunk(token))
+    }, [])
+
     return (
         <header className="shadow-md sm:px-10 py-1 bg-white font-[sans-serif]   min-h-[40px] sticky top-0 z-10 ">
             <div className="flex flex-wrap items-center justify-between gap-5 relative max-w-[1200px] mx-auto">
                 <Link to="/" className="">
                     <div className="flex items-center ml-2">
-                        <img src={ImageLogo} alt="logo" className="w-16 " />
+                        <img src={ImageLogo} alt="logo" className="w-16"/>
                         <h2 className="ml-2 font-bold text-[22px] tracking-wide">
                             <span className="text-black">Trendy</span>
                             <span className="text-[#007bff]">Bids</span>
@@ -65,15 +74,33 @@ const Header = () => {
                     {/*not login*/}
                     {token && isLogin ? (
                         <div className="relative flex items-center">
-                            <Tooltip title="Messages">
-                                <motion.span whileHover={{scale: '1.3'}} className="transition-all">
-                                    <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
-                                        <Link to='/messages'>
-                                            <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
-                                        </Link>
-                                    </Badge>
-                                </motion.span>
-                            </Tooltip>
+                            <div className="flex items-center gap-x-2">
+                                <Tooltip title="Notification" enterDelay={1000}>
+                                    <motion.span whileHover={{scale: 1.1}}  className="transition-all p-2 rounded-full bg-gray-100" onClick={(e) => {
+                                        setIsOpenNotification(!isOpenNotification); // Close the popup
+                                        dispatch(clearNotifications())
+                                    }}>
+                                        <Badge size="sm" badgeContent={unseenCount < 0 ? 0 : unseenCount} max={9} showZero={false}>
+                                            <span ref={iconNotificationRef}>
+                                                <MdOutlineNotificationsNone size='27px' className={`${isOpenNotification ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                            </span>
+                                        </Badge>
+                                    </motion.span>
+                                </Tooltip>
+                                <Tooltip title="Message">
+                                    <motion.span whileHover={{scale: 1.1}} className="transition-all p-2 rounded-full bg-gray-100">
+                                        <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
+                                            <Link to='/messages'>
+                                                <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                            </Link>
+                                        </Badge>
+                                    </motion.span>
+                                </Tooltip>
+                            </div>
+
+                            {/*Notification popup*/}
+                            {isOpenNotification && <NotificationPopup setIsOpenNotification={setIsOpenNotification} iconNotificationRef={iconNotificationRef}/>}
+
                             <button
                                 id="dropdownDefaultButton"
                                 data-dropdown-toggle="dropdown"
@@ -85,10 +112,10 @@ const Header = () => {
                                     {auth?.fullName}
                                 </span>
                                 <img
-                                    className="w-[40px] h-[40px] rounded-full mx-3"
+                                    className="w-[40px] h-[40px] rounded-full mx-3 object-cover border"
                                     src={
                                         auth?.avatarUrl ||
-                                        "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
+                                        "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
                                     }
                                     alt={auth?.fullName || "customer"}
                                 ></img>
@@ -114,7 +141,7 @@ const Header = () => {
                                 id="dropdown"
                                 className={`${
                                     isDropdown ? "hidden" : "block"
-                                } absolute top-16 left-6 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
+                                } absolute w-[180px] top-16 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
                             >
                                 <ul
                                     className="py-2 px-2 text-sm text-gray-700 font-semibold"
@@ -199,41 +226,37 @@ const Header = () => {
                 >
                      <li
                         className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            activeButton === "home"
+                            location.pathname === "/"
                                 ? "text-[#007bff] border-[#007bff] "
                                 : "text-black"
                         }`}
-                        onClick={() => setActiveButton("home")}
                     >
                         <Link to="/">Home</Link>
                     </li>
                     <li
                         className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            activeButton === "productAuction"
+                            location.pathname === "/product-auction"
                                 ? "text-[#007bff] border-[#007bff] "
                                 : "text-black"
                         }`}
-                        onClick={() => setActiveButton("productAuction")}
                     >
                         <Link to="/product-auction">Product Auction</Link>
                     </li>
                     <li
                         className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            activeButton === "about"
+                            location.pathname === "/about"
                                 ? "text-[#007bff] border-[#007bff] "
                                 : "text-black"
                         }`}
-                        onClick={() => setActiveButton("about")}
                     >
                         <Link to="/about">About</Link>
                     </li>
                     <li
                         className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            activeButton === "contact"
+                            location.pathname === "/contact"
                                 ? "text-[#007bff] border-[#007bff] "
                                 : "text-black"
                         }`}
-                        onClick={() => setActiveButton("contact")}
                     >
                         <Link to="/contact">Contact</Link>
                     </li>

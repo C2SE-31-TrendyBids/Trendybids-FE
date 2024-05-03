@@ -155,12 +155,13 @@ const verifyProduct = async (productId, accessToken) => {
     return error;
   }
 };
-const rejectProduct = async (productId, accessToken) => {
+const rejectProduct = async (productId, accessToken, note) => {
   try {
     const reqReject = await request.post(
       "/censor/reject-auction-product",
       {
         productId: productId,
+        note: note
       },
       {
         headers: {
