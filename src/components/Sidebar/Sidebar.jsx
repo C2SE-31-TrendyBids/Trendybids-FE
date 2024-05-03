@@ -1,7 +1,6 @@
-import {FiMoreVertical} from "react-icons/fi";
 import {LuChevronFirst} from "react-icons/lu";
 import {LuChevronLast} from "react-icons/lu";
-import {createContext, useContext, useEffect, useState} from "react"
+import {createContext, useContext, useState} from "react"
 import {Link} from "react-router-dom";
 import logo from "../../public/images/logoTrendy.jpg"
 import MethodContext from "../../context/methodProvider";
@@ -12,7 +11,7 @@ export default function Sidebar({children}) {
     const [expanded, setExpanded] = useState(true)
     return (
         <>
-            <aside className="h-screen">
+            <aside className="h-full">
                 <nav className="h-full flex flex-col bg-white border-r shadow-sm">
                     <div className="p-4 pb-2 flex justify-between items-center">
                         <img src={logo}
@@ -28,32 +27,19 @@ export default function Sidebar({children}) {
                         <ul className="flex-1 px-3">{children}</ul>
                     </SidebarContext.Provider>
 
-                    <div className="border-t flex p-3">
-                        <img
-                            src="https://media.istockphoto.com/id/1313644269/vector/gold-and-silver-circle-star-logo-template.jpg?s=612x612&w=0&k=20&c=hDqCI9qTkNqNcKa6XS7aBim7xKz8cZbnm80Z_xiU2DI="
-                            className="w-10 h-10 rounded-md" alt="sdf"/>
-                        <div
-                            className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"} `}>
-                            <div className="leading-4">
-                                <h4 className="font-semibold">TrendyBids</h4>
-                                <span className="text-xs text-gray-600">TrendyBids@gmail.com</span>
-                            </div>
-                            <FiMoreVertical size={20}/>
-                        </div>
-                    </div>
                 </nav>
             </aside>
         </>
     )
 }
 
-export function SidebarItem({icon, text, alert, active}) {
+export function SidebarItem({icon, text, alert, active, role}) {
     const {expanded} = useContext(SidebarContext)
     const {convertToLowerCase} = useContext(MethodContext);
 
     return (
         <Link
-            to={`${text === "Home" ? "/" : `/${convertToLowerCase(text)}`} `}
+            to={`${text === "Home" ? "/" : role === "admin" && text === "Dashboard" ? `/admin/${convertToLowerCase(text)}` : `/${convertToLowerCase(text)}`} `}
             relative={"route"}>
             <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"}`}>
                 {icon}

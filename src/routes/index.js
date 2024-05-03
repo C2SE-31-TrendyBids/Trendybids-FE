@@ -21,7 +21,7 @@ import {
     LoginGoogleSuccess, AuctionSession,
     Message,
     DashboardCensor,
-    NewMessage
+    NewMessage, RevenueManagement
 
 } from '../pages/index';
 
@@ -58,6 +58,7 @@ const routerAdmin = [
     { path: '/admin', layout: Admin, component: AdminPage },
     { path: '/Approve-Censor', layout: Admin, component: ApproveCensor },
     { path: '/Account', layout: Admin, component: ManagementAccount },
+    { path: '/admin/dashboard', layout: Admin, component: RevenueManagement },
 ]
 
 const routerUser = [

@@ -82,11 +82,77 @@ const getAllRoles = async (accessToken) => {
     }
 };
 
+const getSummary = async (accessToken) => {
+    try {
+        return await request.get(`/admin/get-summary`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getChartProduct = async (accessToken, params) => {
+    try {
+        return await request.get(`/admin/get-summary-product-auction`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getProfit = async (accessToken,params) => {
+    try {
+        return await request.get(`/admin/get-profit`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getTransactionHistory = async (accessToken, params) => {
+    try {
+        return await request.get(`/admin/get-transaction-history`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
 export {
     getAllUsers,
     acceptAndRejectCensor,
     deleteUser,
     editUser,
-    getAllRoles
-
+    getAllRoles,
+    getSummary,
+    getChartProduct,
+    getProfit,
+    getTransactionHistory
 };
