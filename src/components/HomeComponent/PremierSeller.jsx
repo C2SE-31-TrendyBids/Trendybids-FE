@@ -30,7 +30,7 @@ const PremierSeller = ({censorsList = []}) => {
                                 </div>
                             </div>
                             <Link
-                                to={`/censor/${item?.id}`}
+                                to={`/censors/${item?.id}`}
                                 relative={"route"}
                                 className="absolute right-9 -bottom-4 w-8 h-8 rounded-full bg-[#0033FF] flex items-center justify-center group-hover:right-7 transition-all">
                                 <HiChevronRight className="text-white font-bold" size={40}/>

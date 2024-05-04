@@ -16,13 +16,12 @@ const CensorLayout = ({children}) => {
     const location = useLocation();
 
     const sidebarItems = [
-        {icon: <IoIosHome size={20}/>, text: "Home", active: false},
-        {icon: <AiOutlineStock size={20}/>, text: "Dashboard Censor", active: false},
-        {icon: <FaPeopleGroup size={20}/>, text: "Member", active: false},
-        {icon: <CgShutterstock size={20}/>, text: "All Product", active: false, alert: false},
-        {icon: <MdOutlineProductionQuantityLimits size={20}/>, text: "Product Approve", active: false},
-        {icon: <RiAuctionLine size={20}/>, text: "Auction Session", active: false},
-        {icon: <IoSettingsSharp size={20}/>, text: "Settings", active: false},
+        {icon: <IoIosHome size={20}/>, text: "Home", to: '/', active: false},
+        {icon: <FaPeopleGroup size={20}/>, text: "Member", to: '/censor/all-member',active: false},
+        {icon: <CgShutterstock size={20}/>, text: "All Product", to: '/censor/all-product', active: false, alert: false},
+        {icon: <MdOutlineProductionQuantityLimits size={20}/>, text: "Product Approve", to: '/censor/product-approve',active: false},
+        {icon: <RiAuctionLine size={20}/>, text: "Auction Session", to: '/censor/auction-session',active: false},
+        {icon: <AiOutlineStock size={20}/>, text: "Auction Summary", to: '/censor/auction-summary', active: false},
     ];
     const [listSidebarItem, setListSidebarItem] = useState(sidebarItems);
 
@@ -36,7 +35,7 @@ const CensorLayout = ({children}) => {
         const lastPart = urlParts[urlParts.length - 1];
         const updatedSidebarItems = listSidebarItem.map((item) => ({
             ...item,
-            active: convertToLowerCase(item.text.toUpperCase()) === lastPart,
+            active: item.to.includes(lastPart),
         }));
         setListSidebarItem(updatedSidebarItems);
     }, [location]);
@@ -52,6 +51,7 @@ const CensorLayout = ({children}) => {
                             icon={item?.icon}
                             text={item?.text}
                             active={item?.active}
+                            to={item?.to}
                         />
                     ))}
                 </Sidebar>
