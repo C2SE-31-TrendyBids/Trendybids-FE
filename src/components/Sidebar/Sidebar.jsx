@@ -33,13 +33,12 @@ export default function Sidebar({children}) {
     )
 }
 
-export function SidebarItem({icon, text, alert, active, role}) {
+export function SidebarItem({icon, text, alert, active, to}) {
     const {expanded} = useContext(SidebarContext)
-    const {convertToLowerCase} = useContext(MethodContext);
 
     return (
         <Link
-            to={`${text === "Home" ? "/" : role === "admin" && text === "Dashboard" ? `/admin/${convertToLowerCase(text)}` : `/${convertToLowerCase(text)}`} `}
+            to={to}
             relative={"route"}>
             <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"}`}>
                 {icon}

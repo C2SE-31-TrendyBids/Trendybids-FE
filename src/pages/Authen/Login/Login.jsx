@@ -16,7 +16,6 @@ import { toast } from "sonner";
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
     const { validateEmail } = useContext(MethodContext)
-    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -52,11 +51,12 @@ const Login = () => {
     };
     const handleNavigate = (role) => {
         console.log(role);
-        if (role === "Admin") navigate("/admin");
-        else if (role === "Censor") navigate("/all-product")
-        else navigate("/");
+        if (role === "Admin") window.location.href = "/admin/dashboard";
+        else if (role === "Censor") window.location.href = "/censor/all-product"
+        else window.location.href = "/";
     };
     const handleLogin = async (e) => {
+        e.preventDefault()
         setLoading(true);
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
@@ -81,9 +81,7 @@ const Login = () => {
                 localStorage.setItem("access-token", accessToken);
                 localStorage.setItem("refresh-token", refreshToken);
                 handleNavigate(role);
-                toast.success(loginResponse?.response?.message);
                 setLoading(false);
-                console.log(accessToken);
             }
         } else {
             console.log(loginResponse);

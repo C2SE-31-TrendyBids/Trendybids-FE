@@ -48,33 +48,31 @@ const publicRouter = [
     { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
     { path: '/product-auction', layout: Default, component: ProductAuction },
     { path: '/product-auction/:productAuctionId', layout: Default, component: ProductAuctionDetail },
-    { path: '/censor', component: Censor },
-    { path: '/censor/:censorId', component: CensorDetail },
+    { path: '/censors', component: Censor },
+    { path: '/censors/:censorId', component: CensorDetail },
     { path: '/auction-live/:productAuctionId', layout: Default, component: AuctionLive },
     // { path: '/product-auction', layout: Default, component: ProductAuction },
 ]
 
 const routerAdmin = [
     { path: '/admin', layout: Admin, component: AdminPage },
-    { path: '/Approve-Censor', layout: Admin, component: ApproveCensor },
-    { path: '/Account', layout: Admin, component: ManagementAccount },
+    { path: '/admin/approve-censor', layout: Admin, component: ApproveCensor },
+    { path: '/admin/account', layout: Admin, component: ManagementAccount },
     { path: '/admin/dashboard', layout: Admin, component: RevenueManagement },
 ]
 
 const routerUser = [
     { path: '/register-censor', layout: User, component: RegisterCensor },
     { path: '/profile/management-post', layout: User, component: ManagementPost },
-    { path: '/changepassword', layout: User, component: ChangePassword },
+    { path: '/change-password', layout: User, component: ChangePassword },
     { path: '/dashboard', layout: User, component: Dashboard },
-
 ]
 
 const routerCensor = [
-    { path: '/dashboard-censor', layout: CensorLayout, component: DashboardCensor },
-    { path: '/product-approve', layout: CensorLayout, component: PostAuction },
-    { path: '/profile', layout: User, component: EditProfile },
-    { path: '/all-product', layout: CensorLayout, component: ApproveProduct },
-    { path: '/auction-session', layout: CensorLayout, component: AuctionSession },
+    { path: '/censor/auction-summary', layout: CensorLayout, component: DashboardCensor },
+    { path: '/censor/product-approve', layout: CensorLayout, component: PostAuction },
+    { path: '/censor/all-product', layout: CensorLayout, component: ApproveProduct },
+    { path: '/censor/auction-session', layout: CensorLayout, component: AuctionSession },
 ]
 
 const routerAllRole = [

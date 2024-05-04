@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import { IoMdClose } from "react-icons/io";
 import { acceptAndRejectCensor } from "../../../services/admin"
 import { toast } from "sonner";
@@ -7,8 +7,10 @@ import { BsCalendarDate } from "react-icons/bs";
 import { TbDeviceLandlinePhone } from "react-icons/tb";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaQrcode } from "react-icons/fa";
+import SocketContext from "../../../context/socketProvider";
 
 const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => {
+    const socket = useContext(SocketContext)
     const id = censor?.id
     const [loadingReject, setLoadingReject] = useState(false)
     const [loadingAccept, setLoadingAccept] = useState(false)
@@ -19,8 +21,15 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
         const accept = await acceptAndRejectCensor(accessToken, id, type)
         if (accept?.status === 200) {
             toast.success(accept?.data?.message)
+            socket.emit('censor.updateStatus', {
+                title: "Approve censor",
+                content: "The organization you registered has been accepted by the administrator",
+                linkAttach: "/censor/all-product",
+                thumbnail: censor?.avatarUrl,
+                recipientId: censor?.userId
+            })
         } else {
-            toast(accept?.data?.message)
+            toast(accept?.error?.response?.data?.message)
         }
         setChange(!change)
         setLoadingAccept(false)
@@ -32,16 +41,24 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
         const reject = await acceptAndRejectCensor(accessToken, id, type)
         if (reject?.status === 200) {
             toast.success(reject?.data?.message)
+            socket.emit('censor.updateStatus', {
+                title: "Reject censor",
+                content: "The organization you registered has been rejected by the administrator",
+                linkAttach: null,
+                thumbnail: censor?.avatarUrl,
+                recipientId: censor?.userId
+            })
         } else {
-            toast(reject?.data?.message)
+            toast(reject?.error?.response?.data?.message)
         }
+        console.log(reject)
         setChange(!change)
         setLoadingReject(false)
         modalOpen(false)
     }
     return (
-        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(56,56,56,0.5)] overflow-auto font-[sans-serif]">
-            <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
+        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full backdrop-blur-[2px] backdrop-opacity-45 backdrop-brightness-90 overflow-auto font-[sans-serif]">
+            <div className="w-full max-w-4xl bg-white rounded-md p-6 relative border">
                 <div className="flex items-center pb-3 border-b text-[#007bff]">
                     <h3 className="text-xl font-bold flex-1">CENSOR DETAIL</h3>
                     <button onClick={() => modalOpen(false)}>
@@ -141,7 +158,7 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
                     <div className="flex gap-2 flex-wrap justify-center p-4 ">
                         <button type="button"
                             className="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center"
-                            onClick={(e) => modalOpen(false)}>Cance</button>
+                            onClick={(e) => modalOpen(false)}>Cancel</button>
                     </div>
                 </div>
 

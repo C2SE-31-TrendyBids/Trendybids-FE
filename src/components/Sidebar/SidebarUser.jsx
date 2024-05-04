@@ -111,7 +111,7 @@ export default function SidebarUser() {
                                     Edit Profile
                                 </ListItem>
                             </Link>
-                            <Link to="/changepassword">
+                            <Link to="/change-password">
                                 <ListItem>
                                     <ListItemPrefix>
                                         <FaLock
