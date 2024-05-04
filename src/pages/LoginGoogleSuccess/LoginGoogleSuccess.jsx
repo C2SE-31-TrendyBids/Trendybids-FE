@@ -22,7 +22,9 @@ const LoginGoogleSuccess = () => {
                 localStorage.setItem("refresh-token", refreshToken )
                 window.opener && window.close()
                 if (role === "Admin")
-                    window.opener.location.href = '/admin';
+                    window.opener.location.href = '/admin/dashboard';
+                else if (role === "Censor")
+                    window.opener.location.href = '/censor/all-product';
                 else
                     window.opener.location.href = '/';
             }

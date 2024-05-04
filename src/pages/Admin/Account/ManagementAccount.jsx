@@ -6,6 +6,7 @@ import { LiaUserCheckSolid } from "react-icons/lia";
 import noDataSvg from "../../../assets/vectors/no data.svg";
 import Swal from "sweetalert2";
 import ViewEditUser from './ViewEditUser';
+import HeaderAdmin from "../../../components/Header/HeaderAdmin";
 const ManagementAccount = () => {
     const accessToken = localStorage.getItem('access-token');
     const [accounts, setAccounts] = useState([])
@@ -92,11 +93,12 @@ const ManagementAccount = () => {
 
     return (
         <div className='w-[1230px] px-[30px] mx-auto h-screen relative'>
-            <div className='grid grid-cols-12 gap-2 mb-2 pt-4 '>
+            <HeaderAdmin pageName={"Account"}/>
+            <div className='grid grid-cols-12 gap-2 mb-2'>
                 <div className='col-span-7'>
                     <div className='grid grid-cols-3 gap-4'>
-                        <div className='col-span-1 mt-4 '>
-                            <div className="p-2 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
+                        <div className='col-span-1'>
+                            <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <AiOutlineUsergroupAdd className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
                                     <p className="text-xl font-bold">{totalUser}</p>
@@ -104,8 +106,8 @@ const ManagementAccount = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-span-1 mt-4'>
-                            <div className="p-2 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
+                        <div className='col-span-1'>
+                            <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <LiaUserCheckSolid className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
                                     <p className="text-xl font-bold">{totalActive}</p>
@@ -115,9 +117,9 @@ const ManagementAccount = () => {
                         </div>
                     </div>
                 </div>
-                <div className='col-span-5 '>
-                    <form className="grid place-items-end mt-4 ">
-                        <div className="flex w-[90%] bg-white rounded-lg border-[0.5px] border-gray-400 p-1">
+                <div className='col-span-5'>
+                    <form className="grid place-items-end">
+                        <div className="flex w-[90%] bg-white rounded-lg border-[0.5px] border-gray-400">
                             <input
                                 type="search"
                                 className="w-full border-none bg-transparent px-4 py-1 text-gray-900 focus:outline-none rounded-lg"
@@ -140,7 +142,6 @@ const ManagementAccount = () => {
                 <table className="min-w-full bg-white font-[sans-serif]">
                     <thead className="whitespace-nowrap">
                         <tr>
-
                             <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                                 Name
                             </th>
@@ -162,9 +163,9 @@ const ManagementAccount = () => {
                         {accounts && accounts.length > 0 ? (
                             accounts?.map((item) => (
                                 <tr className="odd:bg-blue-50">
-                                    <td className="px-6 py-3 text-sm">
+                                    <td className="px-6 py-2.5 text-sm">
                                         <div className="flex items-center cursor-pointer">
-                                            <img src={item?.avatarUrl} alt='' className='w-16 h-16' />
+                                            <img src={item?.avatarUrl} alt='' className='w-16 h-16 rounded-lg' />
                                             <div className="ml-4">
                                                 <p className="text-sm text-black">{item?.fullName}</p>
                                                 <p className="text-xs text-gray-400">{item?.email}</p>
@@ -239,7 +240,7 @@ const ManagementAccount = () => {
                     </tbody>
                 </table>
             </div>
-            <div className={`absolute bottom-4 left-0 right-0 ${accounts && accounts.length > 0 ? "grid place-items-center" : "hidden"}`}>
+            <div className={`absolute bottom-2.5 left-0 right-0 ${accounts && accounts.length > 0 ? "grid place-items-center" : "hidden"}`}>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
         </div >

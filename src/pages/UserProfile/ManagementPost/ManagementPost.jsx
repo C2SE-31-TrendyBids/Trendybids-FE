@@ -194,7 +194,7 @@ const ManagementPost = () => {
             socket.emit('product.createOrUpdate', {
                 title,
                 content,
-                linkAttach: "/all-product",
+                linkAttach: "/censor/all-product",
                 thumbnail,
                 censorId: data?.censorId,
             });

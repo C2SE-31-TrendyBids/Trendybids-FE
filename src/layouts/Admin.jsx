@@ -17,7 +17,6 @@ const Admin = ({ children }) => {
         { icon: <IoIosHome size={20} />, text: "Home", to: '/', active: false },
         { icon: <LuLayoutDashboard size={20} />, text: "Dashboard", to: '/admin/dashboard', active: false },
         { icon: <PiUserListBold size={20} />, text: "Account", to: '/admin/account', active: false, alert: true },
-        { icon: <GiFlatHammer size={20} />, text: "Auction", to: '/admin/auction', active: false },
         { icon: <GrOrganization size={20} />, text: "Censor", to: '/admin/approve-censor', active: false },
     ];
     const [listSidebarItem, setListSidebarItem] = useState(sidebarItems);
