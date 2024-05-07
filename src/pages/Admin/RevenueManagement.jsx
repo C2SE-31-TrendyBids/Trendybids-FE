@@ -7,7 +7,7 @@ import HeaderAdmin from "../../components/Header/HeaderAdmin";
 const RevenueManagement = () => {
 
     return (
-        <div className="px-4 mt-2">
+        <div className="px-4 mt-2 mb-4">
             <HeaderAdmin pageName={"Dashboard"}/>
             {/*summary info*/}
             <SummaryAdmin/>

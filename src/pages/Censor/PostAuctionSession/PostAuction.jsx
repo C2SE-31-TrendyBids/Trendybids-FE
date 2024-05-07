@@ -45,7 +45,7 @@ const PostAuction = () => {
                 setIsChangeFilter(true)
             }
             const fetchDataProduct = async () => {
-                const dataProduct = await productApi.getAllProduct(accessToken, params)
+                const dataProduct = await productApi.getProductForCensor(accessToken, params)
                 setProducts(dataProduct?.response?.products)
                 setTotalPage(dataProduct?.totalPages)
             }

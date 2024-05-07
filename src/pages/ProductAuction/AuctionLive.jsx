@@ -64,6 +64,7 @@ const AuctionLive = () => {
         };
     }, [productAuctionId]);
 
+    console.log(auctionSessionDetail?.product?.prdImages)
 
     return <div className="max-w-[1230px] px-[30px] mx-auto mb-10 mt-10">
         <div className="grid grid-cols-12 gap-5">

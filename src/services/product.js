@@ -3,9 +3,31 @@ import { toast } from "sonner";
 
 const PRODUCT_URL = "/product";
 
-export const getAllProduct = async (accessToken, params = {}) => {
+export const getProductForOwner = async (accessToken, params = {}) => {
   try {
-    const response = await request.get(`${PRODUCT_URL}/get-all`, {
+    const response = await request.get(`${PRODUCT_URL}/get-product-owner`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params,
+    });
+
+    return {
+      totalPages: response.data.totalPages,
+      response: response.data,
+      statusCode: response.status,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+
+export const getProductForCensor = async (accessToken, params = {}) => {
+  try {
+    const response = await request.get(`${PRODUCT_URL}/get-product-censor`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
