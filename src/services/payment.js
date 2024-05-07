@@ -85,6 +85,79 @@ const getWallet = async (accessToken) => {
         };
     }
 }
+const getWalletById = async (accessToken, id) => {
+    try {
+        const response = await request.get(`/payment/get-wallet-by-id?id=${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        return response
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
+const qrSuccess = async (accessToken, body) => {
+    try {
+        const response = await request.post(`/payment/qr-success`,
+            body,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        return response
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
+const otpTranferMoney = async (accessToken) => {
+    try {
+        const response = await request.post(`/payment/otp-tranfer`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        return response
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
+const verifyOtp = async (accessToken, otp) => {
+    try {
+        const response = await request.post(`/payment/verify-otp`, { otp },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        return response
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
 export {
-    createPaymentPaypal, paypalSuccess, paymentWithQr, getWallet, paymentWallet
+    createPaymentPaypal,
+    paypalSuccess,
+    paymentWithQr,
+    getWallet,
+    paymentWallet,
+    qrSuccess,
+    otpTranferMoney,
+    verifyOtp,
+    getWalletById
 };

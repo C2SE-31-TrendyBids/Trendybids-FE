@@ -1,12 +1,18 @@
 import React from 'react'
 import { createPaymentPaypal } from '../../services/payment'
+import { toast } from 'sonner'
 
-const Paypal = ({ accessToken, amount, index }) => {
+const Paypal = ({ accessToken, amount, receiverId, auctionId, index }) => {
 
     const SubmitEvent = async () => {
+        if (amount === '') {
+            return toast.error("You have not entered an amount")
+        }
         let body = {
             amount: amount,
-            index: index
+            index: index,
+            receiverId: receiverId,
+            auctionId: auctionId
         }
         try {
             const paymentPaypal = await createPaymentPaypal(accessToken, body)
@@ -33,9 +39,6 @@ const Paypal = ({ accessToken, amount, index }) => {
                 <span className='text-[#009CDE] font-semibold'>Pal</span>
             </span>
         </div>
-
-
-
     )
 }
 

@@ -2,16 +2,17 @@ import React, { useContext, useState } from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
-import { TextField, Button, CircularProgress } from '@mui/material';
+import { TextField, CircularProgress, Modal, Box } from '@mui/material';
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
-import CodeOtp from '../InputOtp/CodeOtp';
+import OtpInput from '../../../components/Payment/Otp';
 import { toast } from "sonner";
 import MethodContext from '../../../context/methodProvider';
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [email, setEmail] = useState('')
     const [fullName, setFullName] = useState('')
     const [password, setPassword] = useState('')
@@ -22,6 +23,9 @@ const Register = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(true)
     const [loading, setLoading] = useState(false);
     const { validateEmail } = useContext(MethodContext)
+    const [openModalOtp, setOpenModalOtp] = useState(false);
+    const handleOpenModalOtp = () => setOpenModalOtp(true);
+    const handleCloseModalOtp = () => setOpenModalOtp(false);
 
     const handleHiddenPassword = () => {
         showPassword ? setShowPassword(false) : setShowPassword(true);
@@ -43,9 +47,9 @@ const Register = () => {
             return
         }
         const registerReq = await authApi.register(email, password, fullName)
-        console.log(registerReq?.response);
+
         if (registerReq?.statusCode === 201) {
-            setModalOpen(true)
+            handleOpenModalOtp()
             setLoading(false)
             toast.success(registerReq?.response?.message)
         }
@@ -55,6 +59,35 @@ const Register = () => {
         else toast.error(registerReq?.response?.message);
         setLoading(false)
     }
+    const style = {
+        position: 'absolute',
+        borderRadius: 5,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+    const onOtpSubmit = async (otp) => {
+        try {
+            const verifyOtp = await authApi.verifyEmail(email, otp)
+            if (verifyOtp?.statusCode === 200) {
+                console.log('Đăng kí thành công');
+                toast.success('Register Successfully')
+                navigate('/login');
+                setLoading(false)
+            }
+            else {
+                toast.error("The OTP you entered is incorrect")
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div className=' max-w-screen h-screen' >
             <img src={background} alt="" className='w-full h-full object-cover' />
@@ -137,9 +170,6 @@ const Register = () => {
                                     )}
                                 </div>
                             </div>
-                            {
-                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={null} index={"register"} />
-                            }
                         </div>
 
                         <div className='flex items-center justify-center mt-6 pb-4'>
@@ -169,6 +199,17 @@ const Register = () => {
 
                 </div>
             </div>
+            <Modal
+                open={openModalOtp}
+                onClose={handleCloseModalOtp}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <OtpInput length={6}
+                        onOtpSubmit={onOtpSubmit} />
+                </Box>
+            </Modal>
         </div >
     )
 }

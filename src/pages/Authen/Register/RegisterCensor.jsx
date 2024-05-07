@@ -380,7 +380,12 @@ const RegisterCensor = () => {
                                 )}
                                 <span>You must pay a deposit for organizational registration of 2000.00 USD</span>
                             </div>
-                            <span className="border border-solid border-green-600 text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-2 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            {statusPayment === true ? (
+                                <span className="border border-solid border-green-600 text-blue-600  ml-2 px-4 py-2 rounded-lg " disabled >Payment</span>
+
+                            ) : (
+                                <span className="border border-solid border-green-600 text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-2 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            )}
                             {
                                 openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={6} />
                             }

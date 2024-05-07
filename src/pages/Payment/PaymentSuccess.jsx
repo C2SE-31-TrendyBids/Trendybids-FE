@@ -22,6 +22,9 @@ const PaymentSuccess = () => {
         const returnData = async () => {
             try {
                 const data = await paypalSuccess(accessToken, body);
+                if (data.status === 200) {
+                    localStorage.setItem("payment-success", true);
+                }
                 console.log(data);
             } catch (error) {
                 console.log(error);

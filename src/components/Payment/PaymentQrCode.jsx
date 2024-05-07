@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { paymentWithQr } from '../../services/payment'
+import { paymentWithQr, qrSuccess } from '../../services/payment'
 import { Link } from "react-router-dom";
 import logo from "../../public/images/logoTrendy1.jpg";
 
-const PaymentQrCode = ({ amount, setStatus, setOpen }) => {
+const PaymentQrCode = ({ amount, setStatus, setOpen, receiverId, auctionId, index }) => {
     const accessToken = localStorage.getItem('access-token');
     const [data, setData] = useState('')
     useEffect(() => {
@@ -19,13 +19,25 @@ const PaymentQrCode = ({ amount, setStatus, setOpen }) => {
         };
         returnData();
     }, [amount]);
-    const handlePayment = () => {
-        setStatus(true)
-        setOpen(false)
+    const handlePayment = async () => {
+        let body = {
+            index: index,
+            amount: amount,
+            receiverId: receiverId,
+            auctionId: auctionId
+        }
+        try {
+            const qrSuccessfully = await qrSuccess(accessToken, body)
+            if (qrSuccessfully.status === 200) {
+                setStatus(true)
+                setOpen(false)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
     }
-    useEffect(() => {
-        console.log(data);
-    }, [data])
+
     return (
         <div className="bg-gray-100 h-auto flex items-center justify-center">
             <div className="bg-white p-6 w-[600px]  md:mx-auto text-center">

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -7,17 +7,17 @@ import * as authServices from "../../services/auth";
 import { toast } from "sonner";
 import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
-import {BiMessageDetail} from "react-icons/bi";
-import {motion} from "framer-motion";
+import { BiMessageDetail } from "react-icons/bi";
+import { motion } from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
 import Badge from '@mui/joy/Badge';
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import NotificationPopup from "../NotificationPopup/NotificationPopup";
 import * as notificationServices from "../../services/notification";
 import SocketContext from "../../context/socketProvider";
 import PushNotification from "../NotificationPopup/PushNotification";
-
+import { IoWalletOutline } from "react-icons/io5";
 const Header = () => {
     const socket = useContext(SocketContext)
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -26,7 +26,7 @@ const Header = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
     const location = useLocation();
-    const {unseenConv} = useSelector((state) => state.conversation)
+    const { unseenConv } = useSelector((state) => state.conversation)
     const [notification, setNotification] = useState({
         data: [],
         isOpen: false,
@@ -78,17 +78,17 @@ const Header = () => {
         if (token) {
             socket.on('onProductVerify', (data) => {
                 setNotification(prevState => {
-                    return {...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1}
+                    return { ...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1 }
                 });
-                toast(<PushNotification item={data}/>, {position: "bottom-right"})
+                toast(<PushNotification item={data} />, { position: "bottom-right" })
             })
 
             socket.on('onProductReject', (data) => {
                 console.log(data)
                 setNotification(prevState => {
-                    return {...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1}
+                    return { ...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1 }
                 });
-                toast(<PushNotification item={data}/>, {position: "bottom-right"})
+                toast(<PushNotification item={data} />, { position: "bottom-right" })
             })
 
             return () => {
@@ -115,18 +115,27 @@ const Header = () => {
                     {token && isLogin ? (
                         <div className="relative flex items-center">
                             <div className="flex items-center gap-x-2">
-                                <motion.span whileHover={{scale: '1.1'}} className="transition-all p-2 rounded-full bg-gray-100">
+                                <Tooltip title="Wallet">
+                                    <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
+                                        <Badge size="sm" badgeContent={notification.unseenCount < 0 ? 0 : notification.unseenCount} max={9} showZero={false}>
+                                            <Link to='/e-wallet'>
+                                                <IoWalletOutline size='25px' className={`${location.pathname.includes('/e-wallet') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
+                                            </Link>
+                                        </Badge>
+                                    </motion.span>
+                                </Tooltip>
+                                <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
                                     <Badge size="sm" badgeContent={notification.unseenCount < 0 ? 0 : notification.unseenCount} max={9} showZero={false}>
-                                    <span ref={iconNotificationRef} onClick={(e) => setNotification({...notification, isOpen: !notification.isOpen})}>
-                                        <MdOutlineNotificationsNone size='27px' className={`${notification.isOpen ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
-                                    </span>
+                                        <span ref={iconNotificationRef} onClick={(e) => setNotification({ ...notification, isOpen: !notification.isOpen })}>
+                                            <MdOutlineNotificationsNone size='27px' className={`${notification.isOpen ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
+                                        </span>
                                     </Badge>
                                 </motion.span>
                                 <Tooltip title="Message">
-                                    <motion.span whileHover={{scale: '1.1'}} className="transition-all p-2 rounded-full bg-gray-100">
+                                    <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
                                         <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
                                             <Link to='/messages'>
-                                                <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                                <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
                                             </Link>
                                         </Badge>
                                     </motion.span>
@@ -134,7 +143,7 @@ const Header = () => {
                             </div>
 
                             {/*Notification popup*/}
-                            {notification.isOpen && <NotificationPopup notification={notification} setNotification={setNotification} isOpenNotification={notification.isOpenNotification} iconNotificationRef={iconNotificationRef}/>}
+                            {notification.isOpen && <NotificationPopup notification={notification} setNotification={setNotification} isOpenNotification={notification.isOpenNotification} iconNotificationRef={iconNotificationRef} />}
 
                             <button
                                 id="dropdownDefaultButton"
@@ -174,9 +183,8 @@ const Header = () => {
                             {/*<!-- Dropdown menu -->*/}
                             <div
                                 id="dropdown"
-                                className={`${
-                                    isDropdown ? "hidden" : "block"
-                                } absolute w-[180px] top-16 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
+                                className={`${isDropdown ? "hidden" : "block"
+                                    } absolute w-[180px] top-16 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
                             >
                                 <ul
                                     className="py-2 px-2 text-sm text-gray-700 font-semibold"
@@ -259,39 +267,35 @@ const Header = () => {
                     id="collapseMenu"
                     className="lg:!flex lg:space-x-5 max-lg:space-y-2 max-lg:hidden max-lg:py-4 max-lg:w-full"
                 >
-                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                    <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/">Home</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/product-auction"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/product-auction"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/product-auction">Product Auction</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/about"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/about"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/about">About</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/contact"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/contact"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/contact">Contact</Link>
                     </li>
