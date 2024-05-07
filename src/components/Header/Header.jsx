@@ -3,8 +3,6 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
-import * as authServices from "../../services/auth";
-import { toast } from "sonner";
 import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
 import {BiMessageDetail} from "react-icons/bi";
@@ -14,15 +12,14 @@ import Badge from '@mui/joy/Badge';
 import {useDispatch, useSelector} from "react-redux";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import NotificationPopup from "../NotificationPopup/NotificationPopup";
-import SocketContext from "../../context/socketProvider";
 import {clearNotifications, fetchUnseenNotificationThunk} from "../../redux/slices/notification";
+import MethodProvider from "../../context/methodProvider";
+import {LuLayoutDashboard} from "react-icons/lu";
 
 const Header = () => {
-    const socket = useContext(SocketContext)
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isDropdown, setIsDropdown] = useState(true);
     const { auth, isLogin } = useContext(AuthContext);
-    const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
     const location = useLocation();
     const {unseenConv} = useSelector((state) => state.conversation)
@@ -30,29 +27,7 @@ const Header = () => {
     const [isOpenNotification, setIsOpenNotification] = useState(false)
     const iconNotificationRef = useRef();
     const dispatch = useDispatch()
-
-    const handleLogout = async () => {
-        try {
-            const fetchLogout = await authServices.logOut(token);
-            if (fetchLogout?.status === 200) {
-                localStorage.removeItem("auth");
-                localStorage.removeItem("refresh-token");
-                localStorage.removeItem("access-token");
-                navigate("/login", {
-                    state: {
-                        toastMessage: "Log Out Successfully!",
-                        statusMessage: "success",
-                    },
-                });
-            } else {
-                console.log(fetchLogout?.response);
-                toast.error("Sign Out Failed!");
-            }
-        } catch (error) {
-            console.error("Logout error:", error);
-            toast.error("Sign Out Failed!");
-        }
-    };
+    const { handleLogout } = useContext(MethodProvider);
 
     useEffect(() => {
         if (token) dispatch(fetchUnseenNotificationThunk(token))
@@ -156,6 +131,28 @@ const Header = () => {
                                             Profile
                                         </Link>
                                     </li>
+                                    {auth?.role?.name === "Admin" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/admin/dashboard"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
+                                    {auth?.role?.name === "Censor" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/censor/all-product"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
                                         <MdLogout className="mx-3 text-xl" />
                                         <button

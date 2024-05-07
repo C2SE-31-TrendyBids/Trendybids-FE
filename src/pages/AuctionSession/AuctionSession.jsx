@@ -10,6 +10,7 @@ import EditSessionModal from "../../components/EditSessionModal/EditSessionModal
 import noDataSvg from "../../assets/vectors/no data.svg";
 import {useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
+import logo from "../../assets/images/logo.jpg";
 
 const AuctionSession = () => {
     const accessToken = localStorage.getItem("access-token");
@@ -21,7 +22,8 @@ const AuctionSession = () => {
     const [filter, setFilter] = useState({
         page: 1,
         limit: 7,
-        status: null
+        status: null,
+        order: ["createdAt", "DESC"],
     });
     const [sessionSelected, setSessionSelected] = useState({
         title: "",
@@ -174,10 +176,11 @@ const AuctionSession = () => {
                                     <img
                                         src={
                                             item?.product?.prdImages[0]?.prdImageURL ||
-                                            "https://lh3.googleusercontent.com/proxy/isoli79kvQ3rAEkQZ0LdfZiqKvjkDl2-ZptWZypSU-ws3Y6UpnNrBlmxBAWukMwaJBuiecMlJuOMpMcXoc-h3DO4jFTHr_orhAOugIM3rQ"
+                                            ""
                                         }
+                                        onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
                                         alt={item?.product?.productName}
-                                        className="w-14 h-14"
+                                        className="w-14 h-14 object-cover rounded-md"
                                     />
                                 </td>
                                 <td className="px-6 py-2 text-sm truncate max-w-2xl">

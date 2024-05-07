@@ -92,7 +92,7 @@ const ManagementAccount = () => {
     };
 
     return (
-        <div className='w-[1230px] px-[30px] mx-auto h-screen relative'>
+        <div className='w-[1230px] px-1.5 mx-auto h-screen relative'>
             <HeaderAdmin pageName={"Account"}/>
             <div className='grid grid-cols-12 gap-2 mb-2'>
                 <div className='col-span-7'>
@@ -138,7 +138,7 @@ const ManagementAccount = () => {
                     </form>
                 </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto border rounded-md">
                 <table className="min-w-full bg-white font-[sans-serif]">
                     <thead className="whitespace-nowrap">
                         <tr>

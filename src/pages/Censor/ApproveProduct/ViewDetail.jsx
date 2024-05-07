@@ -13,6 +13,8 @@ import { BsCalendarDate } from "react-icons/bs";
 import SummaryUserModal from "../../../components/SummaryUserModal/SummaryUserModal";
 import SocketContext from "../../../context/socketProvider";
 import {Button, Textarea} from "@mui/joy";
+import logo from "../../../assets/images/logo.jpg";
+import {Spinner} from "@material-tailwind/react";
 
 const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index }) => {
     const socket = useContext(SocketContext)
@@ -24,6 +26,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         isOpen: false,
         value: "",
     })
+    const [loadingReject, setLoadingReject] = useState(false)
 
     const back = () => {
         if (currentIndex > 1) {
@@ -64,13 +67,14 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         e.preventDefault()
         if (isReject) {
             if (reasonReject.value === "") return
+            setLoadingReject(true)
 
             // Call API to send reason reject
             const reject = await censorAPI.rejectProduct(id, accessToken, reasonReject.value)
             if (reject?.status === 200) {
                 socket.emit('product.updateStatus', {
                     title: `Censor - ${product?.censor?.name}: Reject product`,
-                    content: `${product?.productName} has been rejected by censor`,
+                    content: `${product?.productName} has been rejected by censor: ${reasonReject.value}`,
                     linkAttach: "/profile/management-post",
                     recipientId: product?.owner?.id,
                     thumbnail: product?.prdImages[0]?.prdImageURL,
@@ -78,13 +82,16 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 toast.success(reject?.data?.message)
                 setChange(!change)
                 modalOpen(false)
+                setLoadingReject(false)
             } else {
                 toast(reject?.data?.message)
             }
         } else {
             setReasonReject({ value: "", isOpen: false })
+            setLoadingReject(false)
         }
     }
+
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full backdrop-blur-[2px] backdrop-opacity-95 backdrop-brightness-75 overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear ">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
@@ -105,7 +112,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
 
                                 {images.map((image, index) => (
                                     <div key={index} className={` h-64 ${currentIndex === index + 1 ? '' : 'hidden'}`} style={{ transition: 'opacity 0.3s' }}>
-                                        <img src={image.prdImageURL} alt="Imaget" className="absolute inset-0 z-10 h-full w-full object-cover" />
+                                        <img src={image?.prdImageURL || ""} onError={(e) => { e.target.onerror = null; e.target.src = logo; }} alt="Imaget" className="absolute inset-0 z-10 h-full w-full object-cover" />
                                     </div>
                                 ))}
                                 <button onClick={back} className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex justify-center items-center rounded-full shadow-md z-10 bg-gray-100 hover:bg-gray-200">
@@ -190,7 +197,16 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                         />
                         <div className="flex justify-end items-center gap-x-3 mt-4">
                             <Button variant="outlined" onClick={(e) => handleSendReasonReject(e, false)} color="danger">Cancel</Button>
-                            <Button sx={{paddingX: "35px"}} onClick={(e) => handleSendReasonReject(e, true)} color="primary">Send</Button>
+                            <Button sx={{paddingX: "35px"}} onClick={(e) => handleSendReasonReject(e, true)} color="primary">
+                                {loadingReject ? (
+                                    <div className="flex gap-2 flex-wrap justify-center items-center">
+                                        <Spinner className="w-4 h-4"></Spinner>
+                                        Loading...
+                                    </div>
+                                ) : (
+                                    <span>Send</span>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </div>

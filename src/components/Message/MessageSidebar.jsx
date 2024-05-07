@@ -11,6 +11,7 @@ import { TiMessages } from "react-icons/ti";
 import CreateConversationModal from "./CreateConversationModal";
 import {useDebounce} from "@uidotdev/usehooks";
 import { GoDotFill } from "react-icons/go";
+import logo from "../../assets/images/logo.jpg";
 
 const MessageSidebar = () => {
     const navigate = useNavigate()
@@ -122,7 +123,8 @@ const MessageSidebar = () => {
                         item.id === 'create' ? (
                             <li key={item.id} className="flex items-center justify-center gap-x-[15px] py-[10px] px-[10px] mx-2 rounded-lg box-border cursor-pointer bg-blue-50">
                                 <img className="lg:h-[40px] lg:w-[40px] md:h-[20px] md:w-[20px] h-[20px] w-[20px] rounded-full object-cover border"
-                                     src={item?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
+                                     src={item?.recipient?.avatarUrl || ""}
+                                     onError={(e) => { e.target.onerror = null; e.target.src = "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"; }}
                                      alt="avatar"/>
                                 <span className="w-full font-medium truncate text-start">{item?.content}</span>
                             </li>

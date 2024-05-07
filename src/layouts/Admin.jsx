@@ -3,14 +3,14 @@ import { IoIosHome } from "react-icons/io";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { useContext, useEffect, useState } from "react";
 import MethodProvider from "../context/methodProvider";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { GrOrganization } from "react-icons/gr";
-import { GiFlatHammer } from "react-icons/gi";
 import { PiUserListBold } from "react-icons/pi";
+import { MdLogout } from "react-icons/md";
 
 let count = 0;
 const Admin = ({ children }) => {
-    const { fetchUserDetails, convertToLowerCase } = useContext(MethodProvider);
+    const { fetchUserDetails, convertToLowerCase, handleLogout } = useContext(MethodProvider);
     const location = useLocation();
 
     const sidebarItems = [
@@ -50,6 +50,14 @@ const Admin = ({ children }) => {
                             to={item?.to}
                         />
                     ))}
+                    <span onClick={handleLogout}>
+                        <li className="relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group hover:bg-indigo-50 text-gray-600">
+                            <MdLogout size={20} />
+                            <p className={`w-52 ml-3 overflow-hidden transition-all`}>
+                                Log Out
+                            </p>
+                        </li>
+                    </span>
                 </Sidebar >
             </div >
             <div className="fill-available">{children}</div>

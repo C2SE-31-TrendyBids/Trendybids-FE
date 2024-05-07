@@ -59,7 +59,7 @@ const ApproveCensor = () => {
         setModalOpenView(true)
     }
     return (
-        <div className="h-screen max-w-[1230px] px-[30px] mx-auto relative ">
+        <div className="h-screen max-w-[1230px] px-1.5 mx-auto relative ">
             <HeaderAdmin pageName={"Censor"}/>
             <div className='grid grid-cols-12 gap-2 mb-2 '>
                 <div className='col-span-7'>
