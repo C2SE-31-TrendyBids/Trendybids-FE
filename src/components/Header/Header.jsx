@@ -3,107 +3,42 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
-import * as authServices from "../../services/auth";
-import { toast } from "sonner";
 import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
 import { BiMessageDetail } from "react-icons/bi";
 import { motion } from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
 import Badge from '@mui/joy/Badge';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import NotificationPopup from "../NotificationPopup/NotificationPopup";
-import * as notificationServices from "../../services/notification";
-import SocketContext from "../../context/socketProvider";
-import PushNotification from "../NotificationPopup/PushNotification";
+import { clearNotifications, fetchUnseenNotificationThunk } from "../../redux/slices/notification";
+import MethodProvider from "../../context/methodProvider";
+import { LuLayoutDashboard } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";
 const Header = () => {
-    const socket = useContext(SocketContext)
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isDropdown, setIsDropdown] = useState(true);
     const { auth, isLogin } = useContext(AuthContext);
-    const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
     const location = useLocation();
     const { unseenConv } = useSelector((state) => state.conversation)
-    const [notification, setNotification] = useState({
-        data: [],
-        isOpen: false,
-        unseenCount: 0,
-        isSeen: null,
-    })
+    const { unseenCount } = useSelector((state) => state.notification)
+    const [isOpenNotification, setIsOpenNotification] = useState(false)
     const iconNotificationRef = useRef();
-
-    const handleLogout = async () => {
-        try {
-            const fetchLogout = await authServices.logOut(token);
-            if (fetchLogout?.status === 200) {
-                localStorage.removeItem("auth");
-                localStorage.removeItem("refresh-token");
-                localStorage.removeItem("access-token");
-                navigate("/login", {
-                    state: {
-                        toastMessage: "Log Out Successfully!",
-                        statusMessage: "success",
-                    },
-                });
-            } else {
-                console.log(fetchLogout?.response);
-                toast.error("Sign Out Failed!");
-            }
-        } catch (error) {
-            console.error("Logout error:", error);
-            toast.error("Sign Out Failed!");
-        }
-    };
+    const dispatch = useDispatch()
+    const { handleLogout } = useContext(MethodProvider);
 
     useEffect(() => {
-        if (token) {
-            (async () => {
-                const res = await notificationServices.getNotifications(token, { isSeen: notification.isSeen })
-                const unseenNotification = res?.response?.data.filter(item => item.isSeen === false)
-                if (res?.statusCode === 200) {
-                    setNotification({
-                        ...notification,
-                        data: res?.response?.data,
-                        unseenCount: unseenNotification.length
-                    })
-                }
-            })()
-        }
-    }, [notification.isSeen]);
-
-    useEffect(() => {
-        if (token) {
-            socket.on('onProductVerify', (data) => {
-                setNotification(prevState => {
-                    return { ...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1 }
-                });
-                toast(<PushNotification item={data} />, { position: "bottom-right" })
-            })
-
-            socket.on('onProductReject', (data) => {
-                console.log(data)
-                setNotification(prevState => {
-                    return { ...prevState, data: [data, ...prevState.data], unseenCount: prevState.unseenCount + 1 }
-                });
-                toast(<PushNotification item={data} />, { position: "bottom-right" })
-            })
-
-            return () => {
-                socket.off('onProductVerify')
-                socket.off('onProductReject')
-            }
-        }
-    }, [socket])
+        if (token) dispatch(fetchUnseenNotificationThunk(token))
+    }, [])
 
     return (
         <header className="shadow-md sm:px-10 py-1 bg-white font-[sans-serif]   min-h-[40px] sticky top-0 z-10 ">
             <div className="flex flex-wrap items-center justify-between gap-5 relative max-w-[1200px] mx-auto">
                 <Link to="/" className="">
                     <div className="flex items-center ml-2">
-                        <img src={ImageLogo} alt="logo" className="w-16 " />
+                        <img src={ImageLogo} alt="logo" className="w-16" />
                         <h2 className="ml-2 font-bold text-[22px] tracking-wide">
                             <span className="text-black">Trendy</span>
                             <span className="text-[#007bff]">Bids</span>
@@ -115,24 +50,30 @@ const Header = () => {
                     {token && isLogin ? (
                         <div className="relative flex items-center">
                             <div className="flex items-center gap-x-2">
+                                {/* wallet of account */}
                                 <Tooltip title="Wallet">
-                                    <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
-                                        <Badge size="sm" badgeContent={notification.unseenCount < 0 ? 0 : notification.unseenCount} max={9} showZero={false}>
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100">
+                                        <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
                                             <Link to='/e-wallet'>
                                                 <IoWalletOutline size='25px' className={`${location.pathname.includes('/e-wallet') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
                                             </Link>
                                         </Badge>
                                     </motion.span>
                                 </Tooltip>
-                                <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
-                                    <Badge size="sm" badgeContent={notification.unseenCount < 0 ? 0 : notification.unseenCount} max={9} showZero={false}>
-                                        <span ref={iconNotificationRef} onClick={(e) => setNotification({ ...notification, isOpen: !notification.isOpen })}>
-                                            <MdOutlineNotificationsNone size='27px' className={`${notification.isOpen ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
-                                        </span>
-                                    </Badge>
-                                </motion.span>
+                                <Tooltip title="Notification" enterDelay={1000}>
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100" onClick={(e) => {
+                                        setIsOpenNotification(!isOpenNotification); // Close the popup
+                                        dispatch(clearNotifications())
+                                    }}>
+                                        <Badge size="sm" badgeContent={unseenCount < 0 ? 0 : unseenCount} max={9} showZero={false}>
+                                            <span ref={iconNotificationRef}>
+                                                <MdOutlineNotificationsNone size='27px' className={`${isOpenNotification ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
+                                            </span>
+                                        </Badge>
+                                    </motion.span>
+                                </Tooltip>
                                 <Tooltip title="Message">
-                                    <motion.span whileHover={{ scale: '1.1' }} className="transition-all p-2 rounded-full bg-gray-100">
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100">
                                         <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
                                             <Link to='/messages'>
                                                 <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
@@ -143,7 +84,7 @@ const Header = () => {
                             </div>
 
                             {/*Notification popup*/}
-                            {notification.isOpen && <NotificationPopup notification={notification} setNotification={setNotification} isOpenNotification={notification.isOpenNotification} iconNotificationRef={iconNotificationRef} />}
+                            {isOpenNotification && <NotificationPopup setIsOpenNotification={setIsOpenNotification} iconNotificationRef={iconNotificationRef} />}
 
                             <button
                                 id="dropdownDefaultButton"
@@ -199,6 +140,28 @@ const Header = () => {
                                             Profile
                                         </Link>
                                     </li>
+                                    {auth?.role?.name === "Admin" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/admin/dashboard"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
+                                    {auth?.role?.name === "Censor" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/censor/all-product"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
                                         <MdLogout className="mx-3 text-xl" />
                                         <button

@@ -20,6 +20,10 @@ const PaymentQrCode = ({ amount, setStatus, setOpen, receiverId, auctionId, inde
         returnData();
     }, [amount]);
     const handlePayment = async () => {
+        console.log(receiverId);
+        console.log(auctionId);
+        console.log(amount);
+        console.log(index);
         let body = {
             index: index,
             amount: amount,

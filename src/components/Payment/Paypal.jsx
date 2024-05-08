@@ -26,18 +26,15 @@ const Paypal = ({ accessToken, amount, receiverId, auctionId, index }) => {
     }
 
     return (
-        <div>
-            <button className='w-full p-1 text-xl border bg-[#FFC439] rounded-lg font-semibold italic hover:bg-[#F8B20F]' onClick={() => SubmitEvent()} >
+        <div >
+            <button className='w-full py-2  border bg-[#FFC439] rounded-lg font-semibold italic hover:bg-[#F8B20F] block' onClick={() => SubmitEvent()} >
                 <span className='text-[#003087]'>Pay</span>
                 <span className='text-[#009CDE]'>Pal</span>
             </button>
-            <button className='mt-2 w-full p-2 text-sm border bg-gray-900 rounded-lg font-semibold text-gray-300 hover:text-white' onClick={() => SubmitEvent()} >
+
+            <button className='w-full py-2 mt-2 border bg-gray-900 rounded-lg font-semibold text-gray-300 hover:text-white block' onClick={() => SubmitEvent()} >
                 <span>Debit or credit card</span>
             </button>
-            <span className='text-xs mt-2'>Supported by
-                <span className='text-[#003087] font-semibold'>Pay</span>
-                <span className='text-[#009CDE] font-semibold'>Pal</span>
-            </span>
         </div>
     )
 }

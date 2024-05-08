@@ -74,6 +74,8 @@ const ImagesComp = ({images = []}) => {
         setShowGallery(true);
     }
 
+    console.log(images)
+
     return (
         <div className="w-full">
             <div className="rounded w-full h-[500px] shadow overflow-hidden">
@@ -82,21 +84,23 @@ const ImagesComp = ({images = []}) => {
                      src={thisImage?.prdImageURL}
                      alt={thisImage?.id}/>
             </div>
-            <div className="my-5">
-                <Slider {...settings}>
-                    {
-                        images.map((image, index) => {
-                            return (
-                                <div key={image.id} className="pr-5">
-                                    <img onMouseOver={() => setThisImage(image)}
-                                         className="w-full h-[110px] object-cover rounded transition-all hover:border-2 hover:border-primaryColor hover:cursor-pointer"
-                                         src={image.prdImageURL} alt={image.id}/>
-                                </div>
-                            )
-                        })
-                    }
-                </Slider>
-            </div>
+            {images.length > 1 &&
+                <div className="my-5">
+                    <Slider {...settings}>
+                        {
+                            images.map((image, index) => {
+                                return (
+                                    <div key={image.id} className="pr-5">
+                                        <img onMouseOver={() => setThisImage(image)}
+                                             className="w-full h-[110px] object-cover rounded transition-all hover:border-2 hover:border-primaryColor hover:cursor-pointer"
+                                             src={image.prdImageURL} alt={image.id}/>
+                                    </div>
+                                )
+                            })
+                        }
+                    </Slider>
+                </div>
+            }
             {showGallery && <ImageGallery images={listImg} selectedImg={selectedImg}
                                           setShowGallery={setShowGallery}/>}
         </div>

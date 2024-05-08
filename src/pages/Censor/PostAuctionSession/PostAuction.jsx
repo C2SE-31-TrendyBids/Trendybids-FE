@@ -5,6 +5,7 @@ import ModalPost from './ModalPost';
 import ViewDetail from '../ApproveProduct/ViewDetail';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { Pagination } from '@mui/material';
+import logo from "../../../assets/images/logo.jpg";
 
 
 const PostAuction = () => {
@@ -44,7 +45,7 @@ const PostAuction = () => {
                 setIsChangeFilter(true)
             }
             const fetchDataProduct = async () => {
-                const dataProduct = await productApi.getAllProduct(accessToken, params)
+                const dataProduct = await productApi.getProductForCensor(accessToken, params)
                 setProducts(dataProduct?.response?.products)
                 setTotalPage(dataProduct?.totalPages)
             }
@@ -120,7 +121,7 @@ const PostAuction = () => {
                 {products?.map((item, index) => (
                     <div key={index} className="bg-white shadow-[0_8px_12px_-6px_rgba(0,0,0,0.2)] border p-2 w-full max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
                         <div className='w-full flex items-center justify-center'>
-                            <img src={item?.prdImages[0]?.prdImageURL} alt={item?.productName} className="w-3/4 h-32 rounded-lg" />
+                            <img src={item?.prdImages[0]?.prdImageURL || ""} onError={(e) => { e.target.onerror = null; e.target.src = logo; }} alt={item?.productName} className="w-3/4 h-32 rounded-lg" />
                         </div>
                         <div className="px-4 my-4 text-center">
                             <h3 className="text-base font-semibold">{item?.productName}</h3>

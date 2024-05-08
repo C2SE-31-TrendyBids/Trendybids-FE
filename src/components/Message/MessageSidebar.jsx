@@ -11,6 +11,7 @@ import { TiMessages } from "react-icons/ti";
 import CreateConversationModal from "./CreateConversationModal";
 import {useDebounce} from "@uidotdev/usehooks";
 import { GoDotFill } from "react-icons/go";
+import logo from "../../assets/images/logo.jpg";
 
 const MessageSidebar = () => {
     const navigate = useNavigate()
@@ -122,7 +123,8 @@ const MessageSidebar = () => {
                         item.id === 'create' ? (
                             <li key={item.id} className="flex items-center justify-center gap-x-[15px] py-[10px] px-[10px] mx-2 rounded-lg box-border cursor-pointer bg-blue-50">
                                 <img className="lg:h-[40px] lg:w-[40px] md:h-[20px] md:w-[20px] h-[20px] w-[20px] rounded-full object-cover border"
-                                     src={item?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
+                                     src={item?.recipient?.avatarUrl || ""}
+                                     onError={(e) => { e.target.onerror = null; e.target.src = "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"; }}
                                      alt="avatar"/>
                                 <span className="w-full font-medium truncate text-start">{item?.content}</span>
                             </li>
@@ -140,10 +142,10 @@ const MessageSidebar = () => {
                                     <div className="flex items-center justify-between flex-wrap">
                                         {item?.latestMessage?.filesAttach.length !== 0 ? (
                                             <span
-                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? "Bạn đã gửi một ảnh" : `${getName(item?.latestMessage?.user?.fullName)} đã gửi một ảnh`}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? "You have sent the file" : `${getName(item?.latestMessage?.user?.fullName)} have sent the file`}</span>
                                         ) : (
                                             <span
-                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? `Bạn: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
+                                                className={`${(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) ? "font-medium" : "text-gray-800"} text-[14px] truncate text-start max-w-[185px]`}>{auth.id === item?.latestMessage?.user?.id ? `You: ${item?.latestMessage?.content}` : item?.latestMessage?.content}</span>
                                         )}
                                         {/* Change the separator here */}
                                         {(item?.latestMessage?.user.id !== auth.id && !item?.latestMessage?.isSeen) && (<span className="absolute right-0 bottom-[24px]"><GoDotFill color="#007afe"/></span>)}
@@ -155,7 +157,7 @@ const MessageSidebar = () => {
                     ))
                 ) : (
                     <div className="h-sidebar-item flex flex-col items-center justify-center">
-                        <TiMessages color="blue" className="lg:w-[100px] lg:h-[100px] md:w-[50px] md:h-[50px]"/>
+                        <TiMessages color="#007AFE" className="lg:w-[100px] lg:h-[100px] md:w-[50px] md:h-[50px]"/>
                         <p className="text-center text-gray-700 hidden lg:block">No messages yet</p>
                     </div>
                 )}

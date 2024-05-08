@@ -14,7 +14,7 @@ import { getWallet } from '../../services/payment';
 import money from '../../assets/images/money.png'
 import { toast } from 'sonner';
 
-const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) => {
+const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index, receiverId, auctionId }) => {
     const [open, setOpen] = useState(false);
     const [openEWallet, setOpenEWallet] = useState(false);
     const [openTopUp, setOpenTopUp] = useState(false);
@@ -119,6 +119,7 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) 
                                         ) : (
                                             <button className='border rounded-lg w-[90%] font-semibold py-2 bg-blue-500 text-white hover:bg-blue-700' disabled>PAYMENT</button>
                                         )}
+                                        <br />
                                         <button className='border rounded-lg w-[90%] font-semibold py-2 mt-2 bg-gray-200 hover:bg-gray-700 hover:text-white' onClick={handleOpenTopUp}>RECHARGE</button>
                                         <Modal
                                             open={openEWallet}
@@ -127,7 +128,7 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) 
                                             aria-describedby="modal-modal-description"
                                         >
                                             <Box sx={style}>
-                                                <PayEWallet amount={amount} setOpen={setOpenEWallet} accessToken={accessToken} setStatus={setStatus} index={index} receiverId={null} auctionId={null} />
+                                                <PayEWallet amount={amount} setOpen={setOpenEWallet} accessToken={accessToken} setStatus={setStatus} index={index} receiverId={receiverId} auctionId={auctionId} />
                                             </Box>
                                         </Modal>
                                         <Modal
@@ -148,8 +149,8 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) 
                                     </div>
                                     <span className='font-bold text-2xl text-[#007bff]'>PAY</span>
                                     <span className='font-bold text-2xl text-orange-500'>PAL</span>
-                                    <div className='mt-16 mx-2'>
-                                        <Paypal accessToken={accessToken} amount={amount} index={index} receiverId={null} auctionId={null} />
+                                    <div className='mt-[75px] mx-2'>
+                                        <Paypal accessToken={accessToken} amount={amount} index={index} receiverId={receiverId} auctionId={auctionId} />
                                     </div>
                                 </div>
                                 <div className='col-span-1 py-3 border border-solid border-gray-800 rounded-lg text-center shadow-lg'>
@@ -161,7 +162,7 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) 
                                     <div className='w-full flex items-center justify-center mt-6'>
                                         <img src={logoBank} alt="logo" className=' w-32' />
                                     </div>
-                                    <div className='mt-6'>
+                                    <div className='mt-10'>
                                         <button className='border rounded-lg w-[90%] font-semibold py-2 bg-blue-500 text-white hover:bg-blue-700' onClick={handleOpen}>PAYMENT</button>
                                     </div>
                                     <Modal
@@ -171,7 +172,7 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index }) 
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={style}>
-                                            <PaymentQrCode amount={amount} setOpen={setOpen} setStatus={setStatus} index={index} receiverId={null} auctionId={null} />
+                                            <PaymentQrCode amount={amount} setOpen={setOpen} setStatus={setStatus} index={index} receiverId={receiverId} auctionId={auctionId} />
                                         </Box>
                                     </Modal>
                                 </div>

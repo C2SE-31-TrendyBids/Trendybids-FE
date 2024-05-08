@@ -115,7 +115,7 @@ const RegisterCensor = () => {
                                     },
                                 })}
                                 type="text"
-                                className="w-full border p-2 rounded-md my-2 text-black "
+                                className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                             />
                             <span className="text-red-500 text-xs">
                                 {errors?.nameOrganization?.message}
@@ -133,7 +133,7 @@ const RegisterCensor = () => {
                                                 "Please enter the founding date.",
                                         })}
                                         type="date"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.founding?.message}
@@ -156,7 +156,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold"
+                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.taxCode?.message}
@@ -173,7 +173,7 @@ const RegisterCensor = () => {
                                                 "Please enter the Tax code issuance date.",
                                         })}
                                         type="date"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.dateTaxCode?.message}
@@ -185,7 +185,7 @@ const RegisterCensor = () => {
                                     </span>
                                     <input
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                         value={user?.fullName}
                                         disabled
                                     />
@@ -213,7 +213,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="tel"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                         onChange={handlePhoneNumberChange}
                                     />
                                     <span className="text-red-500 text-xs">
@@ -239,7 +239,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     {errors.placeTaxCode && (
                                         <span className="text-red-500 text-xs">
@@ -266,7 +266,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     {errors.address && (
                                         <span className="text-red-500 text-xs">
@@ -293,7 +293,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold"
+                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold outline-blue-500 transition-all"
                                     />
                                     {errors.position && (
                                         <span className="text-red-500 text-xs">
@@ -371,6 +371,7 @@ const RegisterCensor = () => {
                                 </span>
                             )}
                         </div>
+                        {/* payment for register censor */}
                         <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center">
                                 {statusPayment ? (
@@ -389,9 +390,10 @@ const RegisterCensor = () => {
                             {
                                 openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={6} />
                             }
+
                         </div>
                         <div className="text-center my-4">
-                            <button className="border py-2 px-10 rounded-md bg-blue-500 hover:opacity-75 text-white font-semibold">
+                            <button className="border py-2 px-10 rounded-md bg-blue-500 hover:opacity-75 text-white font-semibold transition-all">
                                 {loading ? (
                                     <div>
                                         <CircularProgress color="secondary" />

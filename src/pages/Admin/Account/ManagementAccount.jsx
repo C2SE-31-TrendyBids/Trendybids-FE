@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import HeaderAdmin from "../../../components/Header/HeaderAdmin";
 const ManagementAccount = () => {
     const accessToken = localStorage.getItem('access-token');
     const [accounts, setAccounts] = useState([])
@@ -104,8 +105,9 @@ const ManagementAccount = () => {
     };
 
     return (
-        <div className='w-[1230px] px-[30px] mx-auto h-screen relative'>
-            <div className='grid grid-cols-12 gap-2 mb-2 pt-4 '>
+        <div className='w-[1230px] px-1.5 mx-auto h-screen relative'>
+            <HeaderAdmin pageName={"Account"} />
+            <div className='grid grid-cols-12 gap-2 mb-2'>
                 <div className='col-span-7'>
                     <div className='grid grid-cols-3 gap-4'>
                         <div className='col-span-1 mt-4 '>
@@ -167,11 +169,10 @@ const ManagementAccount = () => {
                     </form>
                 </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto border rounded-md">
                 <table className="min-w-full bg-white font-[sans-serif]">
                     <thead className="whitespace-nowrap">
                         <tr>
-
                             <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                                 Name
                             </th>
@@ -194,9 +195,9 @@ const ManagementAccount = () => {
                         {accounts && accounts.length > 0 ? (
                             accounts?.map((item) => (
                                 <tr className="odd:bg-blue-50">
-                                    <td className="px-6 py-3 text-sm">
+                                    <td className="px-6 py-2.5 text-sm">
                                         <div className="flex items-center cursor-pointer">
-                                            <img src={item?.avatarUrl} alt='' className='w-16 h-16' />
+                                            <img src={item?.avatarUrl} alt='' className='w-16 h-16 rounded-lg' />
                                             <div className="ml-4">
                                                 <p className="text-sm text-black">{item?.fullName}</p>
                                                 <p className="text-xs text-gray-400">{item?.email}</p>
@@ -271,7 +272,7 @@ const ManagementAccount = () => {
                     </tbody>
                 </table>
             </div>
-            <div className={`absolute bottom-4 left-0 right-0 ${accounts && accounts.length > 0 ? "grid place-items-center" : "hidden"}`}>
+            <div className={`absolute bottom-2.5 left-0 right-0 ${accounts && accounts.length > 0 ? "grid place-items-center" : "hidden"}`}>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
         </div >
