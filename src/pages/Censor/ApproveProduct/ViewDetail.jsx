@@ -95,7 +95,6 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
             setLoadingReject(false)
         }
     }
-    console.log(product);
 
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full backdrop-blur-[2px] backdrop-opacity-95 backdrop-brightness-75 overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear ">

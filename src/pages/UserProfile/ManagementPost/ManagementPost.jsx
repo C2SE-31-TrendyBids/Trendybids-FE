@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { CiCircleRemove } from "react-icons/ci";
@@ -154,7 +155,6 @@ const ManagementPost = () => {
             });
         }
 
-
         const data = { ...values, prdImageURL: images };
 
         if (data.prdImageURL) {
@@ -164,7 +164,7 @@ const ManagementPost = () => {
         if (!data.id) {
             delete data.id;
         }
-        // if (!statusPayment) return toast.error("You have not made a payment yet")
+
         const { response, error } = await (data?.id
             ? updateProduct(token, { ...data, status: "Processing" })
             : addProduct(token, { ...data, status: "Processing" }));
@@ -211,6 +211,7 @@ const ManagementPost = () => {
                 censorId: "",
                 status: ""
             });
+            setLoading(false)
             await getData(token, "");
         }
         setChange(!change)
