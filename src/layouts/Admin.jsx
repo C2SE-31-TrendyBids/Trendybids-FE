@@ -5,8 +5,8 @@ import { useContext, useEffect, useState } from "react";
 import MethodProvider from "../context/methodProvider";
 import { useLocation } from "react-router-dom";
 import { GrOrganization } from "react-icons/gr";
-import { GiFlatHammer } from "react-icons/gi";
 import { PiUserListBold } from "react-icons/pi";
+import {BsFileEarmarkRuled} from "react-icons/bs";
 
 let count = 0;
 const Admin = ({ children }) => {
@@ -18,6 +18,7 @@ const Admin = ({ children }) => {
         { icon: <LuLayoutDashboard size={20} />, text: "Dashboard", to: '/admin/dashboard', active: false },
         { icon: <PiUserListBold size={20} />, text: "Account", to: '/admin/account', active: false, alert: true },
         { icon: <GrOrganization size={20} />, text: "Censor", to: '/admin/approve-censor', active: false },
+        { icon: <BsFileEarmarkRuled size={20} />, text: "Rules", to: '/admin/rule', active: false },
     ];
     const [listSidebarItem, setListSidebarItem] = useState(sidebarItems);
 

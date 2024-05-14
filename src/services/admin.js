@@ -145,6 +145,58 @@ const getTransactionHistory = async (accessToken, params) => {
     }
 };
 
+const getRules = async (accessToken, params) => {
+    try {
+        return await request.get(`/admin/get-rules`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const updateRule = async (accessToken, id, body) => {
+    try {
+        return await request.put(`/admin/update-rule`, body,{
+            params: {id},
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const deleteRule = async (accessToken, id) => {
+    try {
+        return await request.deleteRe(`/admin/delete-rule`, {
+            params: {id},
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const createRule = async (accessToken, body) => {
+    try {
+        return await request.post(`/admin/create-rule`, body,{
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+
 export {
     getAllUsers,
     acceptAndRejectCensor,
@@ -154,5 +206,9 @@ export {
     getSummary,
     getChartProduct,
     getProfit,
-    getTransactionHistory
+    getTransactionHistory,
+    getRules,
+    updateRule,
+    deleteRule,
+    createRule
 };

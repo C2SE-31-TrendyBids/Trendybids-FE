@@ -21,7 +21,7 @@ import {
     LoginGoogleSuccess, AuctionSession,
     Message,
     DashboardCensor,
-    NewMessage, RevenueManagement
+    NewMessage, RevenueManagement,RuleManagement
 
 } from '../pages/index';
 
@@ -59,6 +59,7 @@ const routerAdmin = [
     { path: '/admin/approve-censor', layout: Admin, component: ApproveCensor },
     { path: '/admin/account', layout: Admin, component: ManagementAccount },
     { path: '/admin/dashboard', layout: Admin, component: RevenueManagement },
+    { path: '/admin/rule', layout: Admin, component: RuleManagement },
 ]
 
 const routerUser = [
