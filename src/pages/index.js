@@ -21,6 +21,7 @@ export { default as Admin } from "./Admin/Admin";
 export { default as ApproveCensor } from "./Admin/ApproveCensor/ApproveCensor";
 export { default as ManagementAccount } from "./Admin/Account/ManagementAccount";
 export { default as RevenueManagement } from "./Admin/RevenueManagement";
+export { default as RuleManagement } from "./Admin/RuleManagement";
 
 
 export { default as Censor } from "./Censor/Censor";
