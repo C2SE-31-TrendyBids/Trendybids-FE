@@ -98,7 +98,8 @@ const MessageChannel = ({conversation}) => {
                     <div className="h-full flex justify-between items-center">
                         <div className="flex items-center justify-start gap-x-[12px]">
                             <img className="bg-primaryColor h-[40px] w-[40px] rounded-full object-cover border"
-                                 src={conversation?.recipient?.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"}
+                                 src={conversation?.recipient?.avatarUrl || ""}
+                                 onError={(e) => { e.target.onerror = null; e.target.src = "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"; }}
                                  alt="avatar"/>
                             <span className="font-bold">{conversation?.recipient?.fullName}</span>
                         </div>

@@ -22,6 +22,7 @@ import {
     Message,
     DashboardCensor,
     NewMessage, RevenueManagement,RuleManagement
+    , PaymentCancel, PaymentSuccess, Checkout, EWallet,
 
 } from '../pages/index';
 
@@ -38,7 +39,11 @@ const publicRouter = [
 
     { path: '/', component: Home },
     { path: '/login', layout: NoHeaderAndFooter, component: Login },
+    { path: '/payment-success', layout: NoHeaderAndFooter, component: PaymentSuccess },
+    { path: '/payment-cancel', layout: NoHeaderAndFooter, component: PaymentCancel },
     { path: '/contact', layout: Default, component: Contact },
+    { path: '/checkout', layout: Default, component: Checkout },
+    { path: '/e-wallet', layout: Default, component: EWallet },
     { path: '/login-success', layout: NoHeaderAndFooter, component: LoginGoogleSuccess },
     { path: '/register', layout: NoHeaderAndFooter, component: Register },
     { path: '/forgot-password', layout: NoHeaderAndFooter, component: ForgotPassword },

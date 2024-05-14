@@ -6,12 +6,17 @@ import { TextField, Button, CircularProgress } from '@mui/material';
 import * as authApi from '../../../services/auth'
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { Box, Modal } from '@mui/material';
+import OtpInput from '../../../components/Payment/Otp';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [openModalOtp, setOpenModalOtp] = useState(false);
+    const handleOpenModalOtp = () => setOpenModalOtp(true);
+    const handleCloseModalOtp = () => setOpenModalOtp(false);
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,15 +33,41 @@ const ForgotPassword = () => {
         }
         const fogotReq = await authApi.forgotPassword(email)
         if (fogotReq?.statusCode === 200) {
-            toast.success(fogotReq?.response?.message)
-            navigate(`/reset-password/${email}`)
-            setLoading(false)
+            handleOpenModalOtp()
         }
         else {
             toast.error(fogotReq?.response?.message)
         }
         setLoading(false)
 
+    };
+    const style = {
+        position: 'absolute',
+        borderRadius: 5,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+    const onOtpSubmit = async (otp) => {
+        try {
+            const verify = await authApi.verifyFogot(email, otp)
+            console.log(verify);
+            if (verify.statusCode === 200) {
+                toast.success('OTP Successfully')
+                navigate(`/reset-password/${email}`)
+                setLoading(false)
+            }
+            else {
+                toast.error("The OTP you entered is incorrect")
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -90,6 +121,17 @@ const ForgotPassword = () => {
                     </div>
                 </div>
             </div>
+            <Modal
+                open={openModalOtp}
+                onClose={handleCloseModalOtp}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <OtpInput length={6}
+                        onOtpSubmit={onOtpSubmit} />
+                </Box>
+            </Modal>
         </div >
 
     )

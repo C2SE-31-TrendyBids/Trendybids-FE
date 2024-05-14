@@ -42,7 +42,7 @@ const CensorLayout = ({children}) => {
 
 
     return (<>
-        <div className="flex bg-gray-100">
+        <div className="flex bg-gray-100 h-screen">
             <div className="flex">
                 <Sidebar>
                     {listSidebarItem.map((item, index) => (

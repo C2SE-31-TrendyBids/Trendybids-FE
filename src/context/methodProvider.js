@@ -2,10 +2,12 @@ import {createContext} from 'react';
 import {toast} from "sonner";
 import {useNavigate} from "react-router-dom";
 import * as userServices from "../services/user";
+import * as authServices from "../services/auth";
 
 const MethodContext = createContext({});
 
 export const MethodProvider = ({children}) => {
+    const accessToken = localStorage.getItem('access-token');
     const navigate = useNavigate();
 
     const fetchUser = async (accessToken) => {
@@ -108,13 +110,37 @@ export const MethodProvider = ({children}) => {
         }
     }
 
+    const handleLogout = async () => {
+        try {
+            const logout = await authServices.logOut(accessToken);
+            if (logout?.status === 200) {
+                localStorage.removeItem("auth");
+                localStorage.removeItem("refresh-token");
+                localStorage.removeItem("access-token");
+                navigate("/login", {
+                    state: {
+                        toastMessage: "Log Out Successfully!",
+                        statusMessage: "success",
+                    },
+                });
+            } else {
+                console.log(logout?.response);
+                toast.error("Sign Out Failed!");
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            toast.error("Sign Out Failed!");
+        }
+    };
+
 
     return <MethodContext.Provider value={{
         fetchUserDetails,
         convertToLowerCase,
         validateEmail,
         calculateTimeLeft,
-        anonymizeFullName
+        anonymizeFullName,
+        handleLogout
     }}>{children}</MethodContext.Provider>;
 
 };

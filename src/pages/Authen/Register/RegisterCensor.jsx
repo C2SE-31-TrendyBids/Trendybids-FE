@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "@mui/material/Link";
 import * as censorApi from "../../../services/censor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import ModalPay from "../../Payment/ModalPay";
+import { FaCheckCircle } from "react-icons/fa";
 
 const RegisterCensor = () => {
     const [loading, setLoading] = useState(false);
+    const [statusPayment, setStatusPayment] = useState(false);
+    const [openPayment, setOpenPayment] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const accessToken = localStorage.getItem("access-token");
     const user = JSON.parse(localStorage.getItem("auth"));
@@ -30,6 +34,10 @@ const RegisterCensor = () => {
         setSelectedFile(newImage);
     };
     const onSubmit = async (data) => {
+        if (!statusPayment) {
+            toast.error("You have not paid the deposit")
+            return
+        }
         setLoading(true);
         try {
             const censorReq = await censorApi.registerCensor(
@@ -44,7 +52,6 @@ const RegisterCensor = () => {
                 data.placeTaxCode,
                 selectedFile
             );
-            console.log(censorReq.message);
             if (censorReq.statusCode === 201) {
                 toast.success(censorReq.message);
                 reset({
@@ -58,6 +65,7 @@ const RegisterCensor = () => {
                     position: "",
                     placeTaxCode: "",
                 });
+                setStatusPayment(false)
                 setSelectedFile(null);
             } else {
                 toast.error(censorReq?.message);
@@ -72,6 +80,9 @@ const RegisterCensor = () => {
         const value = e.target.value.replace(/\D/g, "");
         e.target.value = value;
     };
+    useEffect(() => {
+        console.log(statusPayment);
+    }, [statusPayment])
     return (
         <div className="w-full px-[30px] mx-auto mb-10">
             <div className="border shadow-lg rounded-lg bg-white h-auto ">
@@ -359,6 +370,27 @@ const RegisterCensor = () => {
                                     Please check the box to proceed
                                 </span>
                             )}
+                        </div>
+                        {/* payment for register censor */}
+                        <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center">
+                                {statusPayment ? (
+                                    <FaCheckCircle className="w-5 text-green-500 mx-2 " />
+                                ) : (
+                                    <span className="w-4 h-4 rounded-full border mx-2 border-solid border-gray-800"></span>
+                                )}
+                                <span>You must pay a deposit for organizational registration of 2000.00 USD</span>
+                            </div>
+                            {statusPayment === true ? (
+                                <span className="border border-solid border-green-600 text-blue-600  ml-2 px-4 py-2 rounded-lg " disabled >Payment</span>
+
+                            ) : (
+                                <span className="border border-solid border-green-600 text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-2 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            )}
+                            {
+                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={6} />
+                            }
+
                         </div>
                         <div className="text-center my-4">
                             <button className="border py-2 px-10 rounded-md bg-blue-500 hover:opacity-75 text-white font-semibold transition-all">

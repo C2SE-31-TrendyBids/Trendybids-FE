@@ -1,58 +1,33 @@
-import React, {useContext, useEffect, useRef} from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import AuthContext from "../../context/authProvider";
-import * as authServices from "../../services/auth";
-import { toast } from "sonner";
 import { MdLogout } from "react-icons/md";
 import ImageLogo from "../../assets/images/logo.jpg";
-import {BiMessageDetail} from "react-icons/bi";
-import {motion} from "framer-motion";
+import { BiMessageDetail } from "react-icons/bi";
+import { motion } from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
 import Badge from '@mui/joy/Badge';
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import NotificationPopup from "../NotificationPopup/NotificationPopup";
-import SocketContext from "../../context/socketProvider";
-import {clearNotifications, fetchUnseenNotificationThunk} from "../../redux/slices/notification";
-
+import { clearNotifications, fetchUnseenNotificationThunk } from "../../redux/slices/notification";
+import MethodProvider from "../../context/methodProvider";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { IoWalletOutline } from "react-icons/io5";
 const Header = () => {
-    const socket = useContext(SocketContext)
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isDropdown, setIsDropdown] = useState(true);
     const { auth, isLogin } = useContext(AuthContext);
-    const navigate = useNavigate();
     const token = localStorage.getItem("access-token");
     const location = useLocation();
-    const {unseenConv} = useSelector((state) => state.conversation)
-    const {unseenCount} = useSelector((state) => state.notification)
+    const { unseenConv } = useSelector((state) => state.conversation)
+    const { unseenCount } = useSelector((state) => state.notification)
     const [isOpenNotification, setIsOpenNotification] = useState(false)
     const iconNotificationRef = useRef();
     const dispatch = useDispatch()
-
-    const handleLogout = async () => {
-        try {
-            const fetchLogout = await authServices.logOut(token);
-            if (fetchLogout?.status === 200) {
-                localStorage.removeItem("auth");
-                localStorage.removeItem("refresh-token");
-                localStorage.removeItem("access-token");
-                navigate("/login", {
-                    state: {
-                        toastMessage: "Log Out Successfully!",
-                        statusMessage: "success",
-                    },
-                });
-            } else {
-                console.log(fetchLogout?.response);
-                toast.error("Sign Out Failed!");
-            }
-        } catch (error) {
-            console.error("Logout error:", error);
-            toast.error("Sign Out Failed!");
-        }
-    };
+    const { handleLogout } = useContext(MethodProvider);
 
     useEffect(() => {
         if (token) dispatch(fetchUnseenNotificationThunk(token))
@@ -63,7 +38,7 @@ const Header = () => {
             <div className="flex flex-wrap items-center justify-between gap-5 relative max-w-[1200px] mx-auto">
                 <Link to="/" className="">
                     <div className="flex items-center ml-2">
-                        <img src={ImageLogo} alt="logo" className="w-16"/>
+                        <img src={ImageLogo} alt="logo" className="w-16" />
                         <h2 className="ml-2 font-bold text-[22px] tracking-wide">
                             <span className="text-black">Trendy</span>
                             <span className="text-[#007bff]">Bids</span>
@@ -75,23 +50,33 @@ const Header = () => {
                     {token && isLogin ? (
                         <div className="relative flex items-center">
                             <div className="flex items-center gap-x-2">
+                                {/* wallet of account */}
+                                <Tooltip title="Wallet">
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100">
+                                        <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
+                                            <Link to='/e-wallet'>
+                                                <IoWalletOutline size='25px' className={`${location.pathname.includes('/e-wallet') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
+                                            </Link>
+                                        </Badge>
+                                    </motion.span>
+                                </Tooltip>
                                 <Tooltip title="Notification" enterDelay={1000}>
-                                    <motion.span whileHover={{scale: 1.1}}  className="transition-all p-2 rounded-full bg-gray-100" onClick={(e) => {
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100" onClick={(e) => {
                                         setIsOpenNotification(!isOpenNotification); // Close the popup
                                         dispatch(clearNotifications())
                                     }}>
                                         <Badge size="sm" badgeContent={unseenCount < 0 ? 0 : unseenCount} max={9} showZero={false}>
                                             <span ref={iconNotificationRef}>
-                                                <MdOutlineNotificationsNone size='27px' className={`${isOpenNotification ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                                <MdOutlineNotificationsNone size='27px' className={`${isOpenNotification ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
                                             </span>
                                         </Badge>
                                     </motion.span>
                                 </Tooltip>
                                 <Tooltip title="Message">
-                                    <motion.span whileHover={{scale: 1.1}} className="transition-all p-2 rounded-full bg-gray-100">
+                                    <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100">
                                         <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
                                             <Link to='/messages'>
-                                                <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}/>
+                                                <BiMessageDetail size='25px' className={`${location.pathname.includes('/message') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
                                             </Link>
                                         </Badge>
                                     </motion.span>
@@ -99,7 +84,7 @@ const Header = () => {
                             </div>
 
                             {/*Notification popup*/}
-                            {isOpenNotification && <NotificationPopup setIsOpenNotification={setIsOpenNotification} iconNotificationRef={iconNotificationRef}/>}
+                            {isOpenNotification && <NotificationPopup setIsOpenNotification={setIsOpenNotification} iconNotificationRef={iconNotificationRef} />}
 
                             <button
                                 id="dropdownDefaultButton"
@@ -139,9 +124,8 @@ const Header = () => {
                             {/*<!-- Dropdown menu -->*/}
                             <div
                                 id="dropdown"
-                                className={`${
-                                    isDropdown ? "hidden" : "block"
-                                } absolute w-[180px] top-16 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
+                                className={`${isDropdown ? "hidden" : "block"
+                                    } absolute w-[180px] top-16 right-0 z-10 bg-white divide-gray-100 rounded-lg shadow `}
                             >
                                 <ul
                                     className="py-2 px-2 text-sm text-gray-700 font-semibold"
@@ -156,6 +140,28 @@ const Header = () => {
                                             Profile
                                         </Link>
                                     </li>
+                                    {auth?.role?.name === "Admin" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/admin/dashboard"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
+                                    {auth?.role?.name === "Censor" && (
+                                        <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
+                                            <LuLayoutDashboard className="mx-3 text-xl" />
+                                            <Link
+                                                to="/censor/all-product"
+                                                className="block pr-4 py-3"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        </li>
+                                    )}
                                     <li className="flex items-center hover:bg-[#007bff]  hover:text-white rounded">
                                         <MdLogout className="mx-3 text-xl" />
                                         <button
@@ -224,39 +230,35 @@ const Header = () => {
                     id="collapseMenu"
                     className="lg:!flex lg:space-x-5 max-lg:space-y-2 max-lg:hidden max-lg:py-4 max-lg:w-full"
                 >
-                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                    <li
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/">Home</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/product-auction"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/product-auction"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/product-auction">Product Auction</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/about"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/about"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/about">About</Link>
                     </li>
                     <li
-                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${
-                            location.pathname === "/contact"
-                                ? "text-[#007bff] border-[#007bff] "
-                                : "text-black"
-                        }`}
+                        className={`max-lg:border-b max-lg:py-2 px-4 max-lg:rounded text-[15px] font-semibold block  hover:text-[#007bff] ${location.pathname === "/contact"
+                            ? "text-[#007bff] border-[#007bff] "
+                            : "text-black"
+                            }`}
                     >
                         <Link to="/contact">Contact</Link>
                     </li>

@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import Reveal from '../../components/Animate/Reveal';
 function valuetext(value) {
     return `${value}`;
 }
@@ -109,22 +110,28 @@ const ProductAuction = () => {
         <div className='w-full h-full'>
             <div className='relative'>
                 <img src={Panner} alt="" />
-                <span className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md">
-                    Product Auction
-                    <div className=" flex mt-2 text-lg  ">
-                        <div className="text-black hover:text-blue-500">
-                            <Link to="/" className="">
-                                Home
-                            </Link>
-                        </div>
-                        <div className="text-black">
-                            <span className=" items-center">
-                                <span className="mx-2"> &gt; </span>
-                                <span className="">Product Auction</span>
-                            </span>
-                        </div>
+                <div className='absolute inset-0'>
+                    <div className="h-full max-w-[1200px] mx-auto translate-y-1/2 text-4xl text-blue-500 font-extrabold drop-shadow-md">
+                        <Reveal children={
+                            <div className='mb-8'>
+                                <h1 className='text-4xl text-blue-500 font-extrabold drop-shadow-md'> Product Auction</h1>
+                                <div className=" flex mt-2 text-lg  ">
+                                    <div className="text-black hover:text-blue-500">
+                                        <Link to="/" className="">
+                                            Home
+                                        </Link>
+                                    </div>
+                                    <div className="text-black">
+                                        <span className=" items-center">
+                                            <span className="mx-2"> &gt; </span>
+                                            <span className="">Product Auction</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        } />
                     </div>
-                </span>
+                </div>
             </div>
             <div className='max-w-[1230px] px-[30px] mt-8 mx-auto'>
                 <div className='grid grid-cols-12 gap-4'>

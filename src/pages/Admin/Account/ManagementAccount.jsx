@@ -6,6 +6,11 @@ import { LiaUserCheckSolid } from "react-icons/lia";
 import noDataSvg from "../../../assets/vectors/no data.svg";
 import Swal from "sweetalert2";
 import ViewEditUser from './ViewEditUser';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import HeaderAdmin from "../../../components/Header/HeaderAdmin";
 const ManagementAccount = () => {
     const accessToken = localStorage.getItem('access-token');
@@ -18,7 +23,11 @@ const ManagementAccount = () => {
     const [change, setChange] = useState(false)
     const [userViewEdit, setUserViewEdit] = useState(false)
     const [modalOpen, setModalOpen] = useState(false);
+    const [status, setStatus] = useState('');
 
+    const handleChange = (event) => {
+        setStatus(event.target.value);
+    };
 
     const handlePageChange = (event, page) => {
         setPageNumber(page);
@@ -48,6 +57,10 @@ const ManagementAccount = () => {
                 params.email = search
                 setPageNumber(1)
             }
+            if (status !== '') {
+                params.status = status
+                setPageNumber(1)
+            }
             const fetchDataProduct = async () => {
                 const dataUsser = await getAllUsers(accessToken, params)
                 setAccounts(dataUsser?.data?.users)
@@ -60,7 +73,7 @@ const ManagementAccount = () => {
             console.log(error);
         }
 
-    }, [accessToken, pageNumber, search, change])
+    }, [accessToken, pageNumber, search, change, status])
 
     const handleModalEdit = (user) => {
         setUserViewEdit(user)
@@ -92,12 +105,12 @@ const ManagementAccount = () => {
     };
 
     return (
-        <div className='w-[1230px] px-[30px] mx-auto h-screen relative'>
-            <HeaderAdmin pageName={"Account"}/>
+        <div className='w-[1230px] px-1.5 mx-auto h-screen relative'>
+            <HeaderAdmin pageName={"Account"} />
             <div className='grid grid-cols-12 gap-2 mb-2'>
                 <div className='col-span-7'>
                     <div className='grid grid-cols-3 gap-4'>
-                        <div className='col-span-1'>
+                        <div className='col-span-1 mt-4 '>
                             <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <AiOutlineUsergroupAdd className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
@@ -106,7 +119,7 @@ const ManagementAccount = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-span-1'>
+                        <div className='col-span-1 mt-4'>
                             <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <LiaUserCheckSolid className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
@@ -117,9 +130,9 @@ const ManagementAccount = () => {
                         </div>
                     </div>
                 </div>
-                <div className='col-span-5'>
-                    <form className="grid place-items-end">
-                        <div className="flex w-[90%] bg-white rounded-lg border-[0.5px] border-gray-400">
+                <div className='col-span-5 '>
+                    <form className="flex items-center justify-between mt-4 ">
+                        <div className="flex w-[65%] bg-white rounded-lg border-[0.5px] border-gray-400">
                             <input
                                 type="search"
                                 className="w-full border-none bg-transparent px-4 py-1 text-gray-900 focus:outline-none rounded-lg"
@@ -135,10 +148,28 @@ const ManagementAccount = () => {
                                 Search
                             </button>
                         </div>
+                        <div className='w-[30%] bg-white '>
+                            <Box sx={{ minWidth: 120 }} >
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={status}
+                                        label="Status"
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={'Pre-Active'}>Pre-Active</MenuItem>
+                                        <MenuItem value={'Active'}>Active</MenuItem>
+                                        <MenuItem value={'Suspended'}>Suspended</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </div>
                     </form>
                 </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto border rounded-md">
                 <table className="min-w-full bg-white font-[sans-serif]">
                     <thead className="whitespace-nowrap">
                         <tr>
@@ -151,8 +182,9 @@ const ManagementAccount = () => {
                             <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                                 Role
                             </th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-black">
-                                Active
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-black flex items-center justify-center">
+                                Status
+
                             </th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                                 Action

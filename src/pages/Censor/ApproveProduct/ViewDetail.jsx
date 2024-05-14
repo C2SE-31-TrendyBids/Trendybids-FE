@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, { useContext, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import * as censorAPI from "../../../services/censor"
 import { toast } from "sonner";
@@ -12,7 +12,11 @@ import { MdOutlineEmail } from "react-icons/md";
 import { BsCalendarDate } from "react-icons/bs";
 import SummaryUserModal from "../../../components/SummaryUserModal/SummaryUserModal";
 import SocketContext from "../../../context/socketProvider";
-import {Button, Textarea} from "@mui/joy";
+import { Button, Textarea } from "@mui/joy";
+import logo from "../../../assets/images/logo.jpg";
+import { Spinner } from "@material-tailwind/react";
+import { FaCheckCircle } from "react-icons/fa";
+import ModalPay from '../../Payment/ModalPay';
 
 const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index }) => {
     const socket = useContext(SocketContext)
@@ -24,6 +28,9 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         isOpen: false,
         value: "",
     })
+    const [loadingReject, setLoadingReject] = useState(false)
+    const [statusPayment, setStatusPayment] = useState(false)
+    const [openPayment, setOpenPayment] = useState(false)
 
     const back = () => {
         if (currentIndex > 1) {
@@ -64,13 +71,14 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
         e.preventDefault()
         if (isReject) {
             if (reasonReject.value === "") return
+            setLoadingReject(true)
 
             // Call API to send reason reject
             const reject = await censorAPI.rejectProduct(id, accessToken, reasonReject.value)
             if (reject?.status === 200) {
                 socket.emit('product.updateStatus', {
                     title: `Censor - ${product?.censor?.name}: Reject product`,
-                    content: `${product?.productName} has been rejected by censor`,
+                    content: `${product?.productName} has been rejected by censor: ${reasonReject.value}`,
                     linkAttach: "/profile/management-post",
                     recipientId: product?.owner?.id,
                     thumbnail: product?.prdImages[0]?.prdImageURL,
@@ -78,13 +86,16 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 toast.success(reject?.data?.message)
                 setChange(!change)
                 modalOpen(false)
+                setLoadingReject(false)
             } else {
                 toast(reject?.data?.message)
             }
         } else {
             setReasonReject({ value: "", isOpen: false })
+            setLoadingReject(false)
         }
     }
+
     return (
         <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full backdrop-blur-[2px] backdrop-opacity-95 backdrop-brightness-75 overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear ">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
@@ -105,7 +116,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
 
                                 {images.map((image, index) => (
                                     <div key={index} className={` h-64 ${currentIndex === index + 1 ? '' : 'hidden'}`} style={{ transition: 'opacity 0.3s' }}>
-                                        <img src={image.prdImageURL} alt="Imaget" className="absolute inset-0 z-10 h-full w-full object-cover" />
+                                        <img src={image?.prdImageURL || ""} onError={(e) => { e.target.onerror = null; e.target.src = logo; }} alt="Imaget" className="absolute inset-0 z-10 h-full w-full object-cover" />
                                     </div>
                                 ))}
                                 <button onClick={back} className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex justify-center items-center rounded-full shadow-md z-10 bg-gray-100 hover:bg-gray-200">
@@ -145,11 +156,11 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                 <div className='col-span-3'>
                                     <div className=' text-red-500 my-1'> $ {product?.startingPrice}</div>
                                     <div className='my-1'>{product?.category.name}</div>
-                                        <div className='my-1 cursor-pointer hover:underline'>
-                                            <SummaryUserModal owner={owner}>
-                                                <span>{product?.owner.fullName}</span>
-                                            </SummaryUserModal>
-                                        </div>
+                                    <div className='my-1 cursor-pointer hover:underline'>
+                                        <SummaryUserModal owner={owner}>
+                                            <span>{product?.owner.fullName}</span>
+                                        </SummaryUserModal>
+                                    </div>
                                     <div className='my-1 whitespace-nowrap'>{product?.owner.email}</div>
                                     <div className='my-1'>{moment(product?.createdAt).format('DD - MM - YYYY')}</div>
                                 </div>
@@ -162,18 +173,18 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 {index === 0 ? (
                     <div className="border-t flex justify-end pt-6 space-x-4">
                         <button type="button"
-                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                                onClick={() => handleAction(false)}>Reject</button>
+                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                            onClick={() => handleAction(false)}>Reject</button>
                         <button type="button"
-                                className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
-                                onClick={() => handleAction(true)}
+                            className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
+                            onClick={() => handleAction(true)}
                         >Accept</button>
                     </div>
                 ) : (
                     <div className='flex justify-end pt-6 space-x-4'>
                         <button type="button"
-                                className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
-                                onClick={() => modalOpen(false)}>Cancel</button>
+                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                            onClick={() => modalOpen(false)}>Cancel</button>
                     </div>
                 )}
             </div>
@@ -188,9 +199,38 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                             value={reasonReject.value}
                             onChange={(e) => setReasonReject({ ...reasonReject, value: e.target.value })}
                         />
+                        <div className="flex items-center justify-between my-2">
+                            <div className="flex items-center">
+                                {statusPayment ? (
+                                    <FaCheckCircle className="w-5 text-green-500 mx-2 " />
+                                ) : (
+                                    <span className="w-4 h-4 rounded-full border mx-2 border-solid border-gray-800"></span>
+                                )}
+                                <span>Return money for subscriber 2000.00 USD</span>
+                            </div>
+                            {statusPayment === true ? (
+                                <span className="border border-solid border-green-600 text-blue-600 text-sm ml-2 px-4 py-1 rounded-lg " disabled >Payment</span>
+
+                            ) : (
+                                <span className="border border-solid border-green-600 text-sm text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-1 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            )}
+                            {
+                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={20} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={2} receiverId={product?.owner?.id} auctionId={null} />
+                            }
+
+                        </div>
                         <div className="flex justify-end items-center gap-x-3 mt-4">
                             <Button variant="outlined" onClick={(e) => handleSendReasonReject(e, false)} color="danger">Cancel</Button>
-                            <Button sx={{paddingX: "35px"}} onClick={(e) => handleSendReasonReject(e, true)} color="primary">Send</Button>
+                            <Button sx={{ paddingX: "35px" }} onClick={(e) => handleSendReasonReject(e, true)} color="primary">
+                                {loadingReject ? (
+                                    <div className="flex gap-2 flex-wrap justify-center items-center">
+                                        <Spinner className="w-4 h-4"></Spinner>
+                                        Loading...
+                                    </div>
+                                ) : (
+                                    <span>Send</span>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </div>
