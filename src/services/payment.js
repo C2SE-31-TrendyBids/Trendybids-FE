@@ -150,6 +150,23 @@ const verifyOtp = async (accessToken, otp) => {
         };
     }
 }
+const isReturnMoney = async (accessToken, body) => {
+    try {
+        console.log(body);
+        const response = await request.post(`/payment/is-return-money`, body,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        return response
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+}
 export {
     createPaymentPaypal,
     paypalSuccess,
@@ -159,5 +176,6 @@ export {
     qrSuccess,
     otpTranferMoney,
     verifyOtp,
-    getWalletById
+    getWalletById,
+    isReturnMoney
 };

@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Map from "../../components/Map/Map";
 import { motion } from 'framer-motion'
-import Otp from "../../components/Payment/Otp";
-
+import { MdOutlineNavigateNext } from "react-icons/md";
 const Contact = () => {
     const submitForm = () => {
         console.log("Submit Success!");
@@ -11,7 +10,6 @@ const Contact = () => {
 
     return (
         <div className=" mx-auto">
-            <Otp />
             <div className="relative w-full ">
                 <img
                     src="https://cdn.pixabay.com/photo/2021/04/15/11/52/office-desk-6180921_1280.jpg"
@@ -26,8 +24,8 @@ const Contact = () => {
                             </Link>
                         </div>
                         <div className="text-black">
-                            <span className=" items-center">
-                                <span className="mx-2">&gt</span>
+                            <span className=" flex items-center">
+                                <span className="mx-2"><MdOutlineNavigateNext /> </span>
                                 <span className="">Contact Us</span>
                             </span>
                         </div>

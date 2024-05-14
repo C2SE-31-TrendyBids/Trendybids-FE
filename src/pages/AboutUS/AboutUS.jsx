@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { MdOutlineNavigateNext } from "react-icons/md";
 const AboutUS = () => {
   return (
     <div className="mb-20">
@@ -18,8 +19,8 @@ const AboutUS = () => {
               </Link>
             </div>
             <div className="text-black">
-              <span class=" items-center">
-                <span class="mx-2">></span>
+              <span class="flex items-center">
+                <span class="mx-2"><MdOutlineNavigateNext /></span>
                 <span class="">About Us</span>
               </span>
             </div>
@@ -75,7 +76,7 @@ const AboutUS = () => {
             </h3>
             <p class="text-base font-bold mt-3">Total Users</p>
             <p class="text-sm text-gray-500 mt-2">
-            Number of registrations
+              Number of registrations
             </p>
           </div>
           <div class="text-center">
@@ -93,7 +94,7 @@ const AboutUS = () => {
             </h3>
             <p class="text-base font-bold mt-3">Engagement</p>
             <p class="text-sm text-gray-500 mt-2">
-            User engagement level content and
+              User engagement level content and
               features.
             </p>
           </div>
@@ -103,7 +104,7 @@ const AboutUS = () => {
             </h3>
             <p class="text-base font-bold mt-3">Server Uptime</p>
             <p class="text-sm text-gray-500 mt-2">
-            Time the server has been operational 
+              Time the server has been operational
             </p>
           </div>
         </div>

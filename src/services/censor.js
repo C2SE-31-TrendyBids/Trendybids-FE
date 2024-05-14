@@ -236,6 +236,22 @@ const deleteAuctionSession = async ({ accessToken, id }) => {
     };
   }
 };
+const getUserParticipating = async (accessToken, page, limit, auctionSessionId) => {
+
+  try {
+    return await request.get(`/censor/get-user-participating?productAuctionId=${auctionSessionId}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
 
 export {
   registerCensor,
@@ -247,5 +263,6 @@ export {
   rejectProduct,
   getAuctionSessionByCensor,
   updateAuctionSession,
-  deleteAuctionSession
+  deleteAuctionSession,
+  getUserParticipating
 };

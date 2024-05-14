@@ -28,7 +28,6 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index, re
     const [change, setChange] = useState(false);
     const [loading, setLoading] = useState(false);
 
-
     useEffect(() => {
         if (status) {
             modalOpen(false)
@@ -76,7 +75,7 @@ const ModalPay = ({ modalOpen, amount, accessToken, status, setStatus, index, re
     };
 
     return (
-        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear">
+        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-gray-100 overflow-auto font-[sans-serif] animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
                 {loading && (
                     <div className='fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[1100]'>
