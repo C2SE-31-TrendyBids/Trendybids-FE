@@ -68,6 +68,11 @@ export const MethodProvider = ({children}) => {
         return emailRegex.test(email);
     };
 
+    const validatePhone = (phone) => {
+        const phoneRegex = /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/;
+        return phoneRegex.test(phone);
+    };
+
 
     const calculateTimeLeft = (targetDate) => {
         const difference = +new Date(targetDate) - +new Date();
@@ -140,7 +145,8 @@ export const MethodProvider = ({children}) => {
         validateEmail,
         calculateTimeLeft,
         anonymizeFullName,
-        handleLogout
+        handleLogout,
+        validatePhone
     }}>{children}</MethodContext.Provider>;
 
 };
