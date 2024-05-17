@@ -1,12 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import Map from "../../components/Map/Map";
-import { motion } from 'framer-motion'
-import { MdOutlineNavigateNext } from "react-icons/md";
+import {motion} from 'framer-motion'
+import {MdOutlineNavigateNext} from "react-icons/md";
+import MethodContext from "../../context/methodProvider";
+import {toast} from "sonner";
+import {BsSendFill} from "react-icons/bs";
+import {Spinner} from "@material-tailwind/react";
+import * as userServices from "../../services/user";
+
 const Contact = () => {
-    const submitForm = () => {
-        console.log("Submit Success!");
+    const {validateEmail, validatePhone} = useContext(MethodContext);
+    const [contact, setContact] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+    });
+    const [loading, setLoading] = useState(false);
+    const [submit, setSubmit] = useState(false);
+
+    const submitForm = (e) => {
+        e.preventDefault();
+        if (!validateEmail(contact.email)) {
+            toast.error("Format Email is invalid. Please try again!");
+            return;
+        }
+        if (!validatePhone(contact.phone)) {
+            toast.error("Format Phone number is invalid. Please try again!");
+            return;
+        }
+        setLoading(true);
+        setSubmit(true);
     };
+
+    useEffect(() => {
+        (async () => {
+            if (submit) {
+                const res = await userServices.sendContact({...contact});
+                if (res.statusCode === 200) {
+                    toast.success("Send contact success!");
+                } else {
+                    toast.error(res.error.message);
+                }
+                setLoading(false);
+                setSubmit(false);
+            }
+        })();
+    }, [submit]);
 
     return (
         <div className=" mx-auto">
@@ -16,7 +57,8 @@ const Contact = () => {
                     alt="About page"
                     className="w-full h-[350px] object-cover pixelated"
                 />
-                <span className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md"> Contact Us
+                <span
+                    className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md"> Contact Us
                     <div className="flex mt-2 text-lg">
                         <div className="text-black hover:text-blue-500">
                             <Link to="/" className="">
@@ -25,7 +67,7 @@ const Contact = () => {
                         </div>
                         <div className="text-black">
                             <span className=" flex items-center">
-                                <span className="mx-2"><MdOutlineNavigateNext /> </span>
+                                <span className="mx-2"><MdOutlineNavigateNext/> </span>
                                 <span className="">Contact Us</span>
                             </span>
                         </div>
@@ -120,7 +162,7 @@ const Contact = () => {
                     <h1 className="text-2xl font-extrabold text-center text-blue-500">
                         Contact Form
                     </h1>
-                    <form className="mt-8 space-y-6">
+                    <form onSubmit={(e) => submitForm(e)} className="mt-8 space-y-6">
                         <div>
                             <label className="text-sm font-semibold block mb-2">
                                 Your Name
@@ -130,6 +172,7 @@ const Contact = () => {
                                 type="text"
                                 placeholder="Name"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
+                                onChange={(e) => setContact({...contact, name: e.target.value})}
                             />
                         </div>
                         <div>
@@ -141,6 +184,7 @@ const Contact = () => {
                                 type="email"
                                 placeholder="Email"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
+                                onChange={(e) => setContact({...contact, email: e.target.value})}
                             />
                         </div>
                         <div>
@@ -152,6 +196,7 @@ const Contact = () => {
                                 type="number"
                                 placeholder="Phone"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
+                                onChange={(e) => setContact({...contact, phone: e.target.value})}
                             />
                         </div>
                         <div>
@@ -163,35 +208,31 @@ const Contact = () => {
                                 placeholder="Message"
                                 rows="6"
                                 className="w-full rounded-md px-4 border text-sm pt-2.5 outline-blue-500"
+                                onChange={(e) => setContact({...contact, message: e.target.value})}
                             ></textarea>
                         </div>
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            onClick={submitForm}
-                            type="button"
-                            className="text-white  bg-[#007bff] hover:bg-blue-600 font-semibold rounded text-sm px-6 py-3 w-full"
+                            whileHover={{scale: 1.05}}
+                            disabled={loading}
+                            className="text-white bg-[#007bff] hover:bg-blue-600 font-semibold rounded text-sm px-6 py-3 w-full"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16px"
-                                height="16px"
-                                fill="#fff"
-                                className="mr-2 inline"
-                                viewBox="0 0 548.244 548.244"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M392.19 156.054 211.268 281.667 22.032 218.58C8.823 214.168-.076 201.775 0 187.852c.077-13.923 9.078-26.24 22.338-30.498L506.15 1.549c11.5-3.697 24.123-.663 32.666 7.88 8.542 8.543 11.577 21.165 7.879 32.666L390.89 525.906c-4.258 13.26-16.575 22.261-30.498 22.338-13.923.076-26.316-8.823-30.728-22.032l-63.393-190.153z"
-                                    clipRule="evenodd"
-                                    data-original="#000000"
-                                />
-                            </svg>
-                            Send Message
+                            {loading ? (
+                                <div className="flex items-center justify-center gap-x-2">
+                                    <Spinner className="h-5 w-5"/>
+                                    Sending...
+                                </div>
+                            ) : (
+                                <span className="flex items-center justify-center gap-x-2">
+                                <BsSendFill size='16px'/>
+                                Send Message
+                            </span>
+                            )}
                         </motion.button>
                     </form>
                 </div>
             </div>
-            <div className="grid md:grid-cols-4 gap-8 my-20 mx-28 shadow-2xl border border-blue-100 rounded-2xl shadow-blue-50 p-6">
+            <div
+                className="grid md:grid-cols-4 gap-8 my-20 mx-28 shadow-2xl border border-blue-100 rounded-2xl shadow-blue-50 p-6">
                 <div className="flex flex-col items-center bg-white">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -266,7 +307,7 @@ const Contact = () => {
                 </div>
             </div>
             <div className="w-full h-[450px] mb-20 border border-blue-100">
-                <Map />
+                <Map/>
             </div>
         </div>
     );

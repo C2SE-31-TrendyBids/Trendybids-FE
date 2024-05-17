@@ -1,11 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Modal, ModalClose, ModalDialog, Typography} from "@mui/joy";
 import Skeleton from '@mui/material/Skeleton';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import * as userService from "../../services/user";
 import {useDebounce} from "@uidotdev/usehooks";
-import AuthContext from "../../context/authProvider";
 import {IoIosCloseCircle} from "react-icons/io";
 import {InputAdornment} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -13,7 +12,7 @@ import {useSelector} from "react-redux";
 import {motion} from "framer-motion";
 
 const CreateConversationModal = ({openModal, setOpenModal}) => {
-    const {auth} = useContext(AuthContext)
+    const accessToken = localStorage.getItem('access-token')
     const [selectedUser, setSelectedUser] = useState({})
     const [searchResult, setSearchResult] = useState([])
     const [searchValue, setSearchValue] = useState('')
@@ -25,7 +24,7 @@ const CreateConversationModal = ({openModal, setOpenModal}) => {
 
     useEffect(() => {
         (async () => {
-            const result = await userService.searchUser(searchDebounce)
+            const result = await userService.searchUser(accessToken, searchDebounce)
             setLoading(false)
             setSearchResult(result.response.users)
         })();
@@ -103,16 +102,19 @@ const CreateConversationModal = ({openModal, setOpenModal}) => {
                                     ))}
                                 </div>
                             ) : (
-                                searchResult.length > 0) && searchResult.map((item, index) => (
-                                    item.id !== auth.id && (
-                                        <li key={item.id} className="flex items-center gap-x-2 hover:bg-blue-100 transition-all p-2 rounded-md cursor-pointer" onClick={() => handleSelectUser(item)}>
-                                            <img src={item.avatarUrl || "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"} alt="avatar" className="h-10 w-10 rounded-full object-cover border"/>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm">{item.fullName}</span>
-                                                <span className="text-sm opacity-50">{item.email}</span>
-                                            </div>
-                                        </li>
-                                    )
+                                searchResult.length > 0) && searchResult.map((item) => (
+                                    <li key={item.id} className="flex items-center gap-x-2 hover:bg-blue-100 transition-all p-2 rounded-md cursor-pointer" onClick={() => handleSelectUser(item)}>
+                                        <img
+                                            src={item?.avatarUrl || ""}
+                                            onError={(e) => { e.target.onerror = null; e.target.src = "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"; }}
+                                            alt="avatar"
+                                            className="h-10 w-10 rounded-full object-cover border"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-sm">{item.fullName}</span>
+                                            <span className="text-sm opacity-50">{item.email}</span>
+                                        </div>
+                                    </li>
                                 )
                             )}
                         </ul>
