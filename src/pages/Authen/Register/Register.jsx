@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
@@ -10,6 +10,10 @@ import OtpInput from '../../../components/Payment/Otp';
 import { toast } from "sonner";
 import MethodContext from '../../../context/methodProvider';
 import { useNavigate } from "react-router-dom";
+import Checkbox from '@mui/material/Checkbox';
+import {fetchRulesThunk} from "../../../redux/slices/rule";
+import RuleModel from "../../../components/ModelAdmin/RuleModel";
+import {useDispatch, useSelector} from "react-redux";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -24,6 +28,10 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const { validateEmail } = useContext(MethodContext)
     const [openModalOtp, setOpenModalOtp] = useState(false);
+    const [openModalRule, setOpenModalRule] = useState(false);
+    const {rules} = useSelector((state) => state.rule)
+    const dispatch = useDispatch()
+    const [isChecked, setIsChecked] = useState(false);
     const handleOpenModalOtp = () => setOpenModalOtp(true);
     const handleCloseModalOtp = () => setOpenModalOtp(false);
 
@@ -35,7 +43,10 @@ const Register = () => {
     };
     const handleRegister = async (e) => {
         e.preventDefault();
-        setLoading(true)
+        if(!isChecked){
+            toast.error("Please checked terms & conditions")
+            return;
+        }
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
             setLoading(false)
@@ -46,6 +57,8 @@ const Register = () => {
             setLoading(false)
             return
         }
+
+        setLoading(true)
         const registerReq = await authApi.register(email, password, fullName)
 
         if (registerReq?.statusCode === 201) {
@@ -59,6 +72,16 @@ const Register = () => {
         else toast.error(registerReq?.response?.message);
         setLoading(false)
     }
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            dispatch(fetchRulesThunk({}));
+        }
+        fetchRules()
+    }, []);
+
+
+
     const style = {
         position: 'absolute',
         borderRadius: 5,
@@ -172,16 +195,28 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div className='flex items-center justify-center mt-6 pb-4'>
+                        <div className="w-full mt-3 flex items-center justify-center">
+                            <Checkbox size={"small"}  checked={isChecked} onChange={(e) => {setIsChecked(e.target.checked)}} />
+                            <p className="text-sm font-medium">
+                                I agree to the
+                                <span className="text-blue-500 hover:cursor-pointer hover:underline hover:text-blue-600 transition-all"
+                                onClick={() => setOpenModalRule(true)}
+                                >
+                                    {' Terms & Conditions'}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div className='flex items-center justify-center mt-3 pb-4'>
                             {loading ? (
                                 <CircularProgress />
 
                             ) : (
                                 <button
-                                    className="w-[80%] font-semibold p-3 rounded-lg bg-[#3B82F6] hover:opacity-80 text-2xl text-white"
+                                    className="w-[80%] font-semibold p-2 rounded-lg bg-[#3B82F6] hover:opacity-80 text-xl text-white"
                                     onClick={(e) => { handleRegister(e) }}
                                 >
-                                    REGISTER
+                                    Register
                                 </button>
                             )}
                         </div>
@@ -210,6 +245,9 @@ const Register = () => {
                         onOtpSubmit={onOtpSubmit} />
                 </Box>
             </Modal>
+            {
+                openModalRule && <RuleModel open={openModalRule} setOpen={setOpenModalRule} rules={rules} />
+            }
         </div >
     )
 }

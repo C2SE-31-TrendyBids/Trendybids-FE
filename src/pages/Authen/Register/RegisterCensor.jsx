@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Link from "@mui/material/Link";
 import * as censorApi from "../../../services/censor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoCloudUploadSharp } from "react-icons/io5";
@@ -7,6 +6,9 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import ModalPay from "../../Payment/ModalPay";
 import { FaCheckCircle } from "react-icons/fa";
+import {fetchRulesThunk} from "../../../redux/slices/rule";
+import {useDispatch, useSelector} from "react-redux";
+import RuleModel from "../../../components/ModelAdmin/RuleModel";
 
 const RegisterCensor = () => {
     const [loading, setLoading] = useState(false);
@@ -28,6 +30,9 @@ const RegisterCensor = () => {
             placeTaxCode: "",
         },
     });
+    const [openModalRule, setOpenModalRule] = useState(false);
+    const {rules} = useSelector((state) => state.rule)
+    const dispatch = useDispatch()
     const handleFileChange = (e) => {
         const newImage = e.target.files[0];
         newImage["id"] = Math.random();
@@ -83,6 +88,15 @@ const RegisterCensor = () => {
     useEffect(() => {
         console.log(statusPayment);
     }, [statusPayment])
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            dispatch(fetchRulesThunk({}));
+        }
+        fetchRules()
+    }, []);
+
+
     return (
         <div className="w-full px-[30px] mx-auto mb-10">
             <div className="border shadow-lg rounded-lg bg-white h-auto ">
@@ -351,9 +365,11 @@ const RegisterCensor = () => {
                                 />
                                 <div className="max-sm:text-sm">
                                     <span>I commit to comply with </span>
-                                    <Link href="#" underline="always">
+                                    <span  className="text-blue-500 hover:cursor-pointer hover:underline hover:text-blue-600 transition-all"
+                                           onClick={() => setOpenModalRule(true)}
+                                    >
                                         {"the Rights and Responsibilities"}
-                                    </Link>
+                                    </span>
                                     <span>
                                         {" "}
                                         of Auction Participants (Regulations
@@ -389,6 +405,9 @@ const RegisterCensor = () => {
                             )}
                             {
                                 openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={6} />
+                            }
+                            {
+                                openModalRule && <RuleModel open={openModalRule} setOpen={setOpenModalRule} rules={rules} />
                             }
 
                         </div>

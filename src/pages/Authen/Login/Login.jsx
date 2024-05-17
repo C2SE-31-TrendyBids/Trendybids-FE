@@ -32,6 +32,7 @@ const Login = () => {
             setRememberMe(true);
         }
     }, []);
+
     const getCookie = (name) => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -57,12 +58,12 @@ const Login = () => {
     };
     const handleLogin = async (e) => {
         e.preventDefault()
-        setLoading(true);
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
             setLoading(false)
             return;
         }
+        setLoading(true);
         // fetch api login
         const loginResponse = await authApi.loginApi(email, password);
         if (loginResponse?.statusCode === 200) {
@@ -118,7 +119,7 @@ const Login = () => {
                                 </span>
                                 <Link
                                     to="/register"
-                                    className="text-blue-500 hover:opacity-70"
+                                    className="text-blue-500 hover:opacity-70 hover:cursor-pointer"
                                 >
                                     Sign Up
                                 </Link>

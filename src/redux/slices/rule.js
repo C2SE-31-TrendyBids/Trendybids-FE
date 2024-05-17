@@ -4,7 +4,7 @@ import * as adminServices from "../../services/admin";
 export const fetchRulesThunk = createAsyncThunk(
     'rules/fetch',
     async ({accessToken}, thunkApi) => {
-        return adminServices.getRules(accessToken, {})
+        return adminServices.getRules({})
     }
 )
 

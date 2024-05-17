@@ -145,12 +145,12 @@ const getTransactionHistory = async (accessToken, params) => {
     }
 };
 
-const getRules = async (accessToken, params) => {
+const getRules = async (params) => {
     try {
         return await request.get(`/admin/get-rules`, {
             params: params,
             headers: {
-                Authorization: `Bearer ${accessToken}`,
+                "content-type": "application/json",
             },
         });
     } catch (error) {

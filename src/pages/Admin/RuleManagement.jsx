@@ -9,9 +9,7 @@ import emptyRule from "../../assets/images/empty_products.svg";
 import UpdateRuleModel from "../../components/ModelAdmin/UpdateRuleModel";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchRulesThunk} from "../../redux/slices/rule";
-import DeleteModel from "../../components/ModelAdmin/DeleteModel";
 import CreateModel from "../../components/ModelAdmin/CreateModel";
-import {MdFormatListBulletedAdd} from "react-icons/md";
 const RuleManagement = () => {
 
     const [ruleDetail, setRuleDetail] = useState({})
