@@ -21,7 +21,7 @@ import {
     LoginGoogleSuccess, AuctionSession,
     Message,
     DashboardCensor,
-    NewMessage, RevenueManagement,RuleManagement
+    NewMessage, RevenueManagement, RuleManagement
     , PaymentCancel, PaymentSuccess, Checkout, EWallet,
 
 } from '../pages/index';
