@@ -53,11 +53,9 @@ const Header = () => {
                                 {/* wallet of account */}
                                 <Tooltip title="Wallet">
                                     <motion.span whileHover={{ scale: 1.1 }} className="transition-all p-2 rounded-full bg-gray-100">
-                                        <Badge size="sm" badgeContent={unseenConv < 0 ? 0 : unseenConv} max={9} showZero={false}>
-                                            <Link to='/e-wallet'>
-                                                <IoWalletOutline size='25px' className={`${location.pathname.includes('/e-wallet') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
-                                            </Link>
-                                        </Badge>
+                                        <Link to='/e-wallet'>
+                                            <IoWalletOutline size='27px' className={`${location.pathname.includes('/e-wallet') ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`} />
+                                        </Link>
                                     </motion.span>
                                 </Tooltip>
                                 <Tooltip title="Notification" enterDelay={1000}>

@@ -53,7 +53,7 @@ const Login = () => {
     const handleNavigate = (role) => {
         console.log(role);
         if (role === "Admin") window.location.href = "/admin/dashboard";
-        else if (role === "Censor") window.location.href = "/censor/all-product"
+        else if (role === "Censor" || role === 'Member') window.location.href = "/censor/all-product"
         else window.location.href = "/";
     };
     const handleLogin = async (e) => {

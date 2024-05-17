@@ -112,7 +112,7 @@ const TopUpWallet = ({ setOpenModal, wallet, change, setChange }) => {
                         <div className='w-full flex items-center justify-center mt-7'>
                             <img src={logoBank} alt="logo" className=' w-32' />
                         </div>
-                        <div className='mt-6 mb-6'>
+                        <div className='mt-7 mb-1'>
                             <button className='border rounded-lg w-[90%] font-semibold py-2 bg-blue-500 text-white hover:bg-blue-700' onClick={handleOpen}>PAYMENT</button>
                         </div>
                         <Modal

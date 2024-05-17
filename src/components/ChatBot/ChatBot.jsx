@@ -7,14 +7,15 @@ const ChatBot = () => {
     const [showChatbox, setShowChatbox] = useState(false);
     const [message, setMessage] = useState('');
     const [change, setChange] = useState(false);
-
     const [messages, setMessages] = useState([]);
-    const mesExample = ['How to register as an auction organization?',
+    const mesExample = [
+        'How to register as an auction organization?',
         'How can I post a product for auction?',
         'How many auction organizations are there currently?',
         'How many products are currently being auctioned?',
         'How many upcoming products will be auctioned?',
-        'Products currently being auctioned with a price above $100.']
+        'Products currently being auctioned with a price above $100.'
+    ]
     const toggleChatbox = () => {
         setShowChatbox(!showChatbox);
     }
