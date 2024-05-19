@@ -29,7 +29,7 @@ const ViewUserParticipant = ({ productAuctionId }) => {
         const fetchData = async () => {
             try {
                 const response = await getUserParticipating(accessToken, pageNumber, 6, productAuctionId);
-                console.log(response);
+
                 setUserParticipant(response?.data?.userParticipating);
                 setTotalUserParticipant(response.data?.userCount);
                 setTotalPages(response?.data?.totalPages);
@@ -43,7 +43,6 @@ const ViewUserParticipant = ({ productAuctionId }) => {
                     const result = await isReturnMoney(accessToken, body);
                     return result?.data?.success;
                 });
-
                 const paymentStatusResults = await Promise.all(paymentStatusPromises);
                 setPaymentStatusList(paymentStatusResults);
                 setStatusPayment(false)
