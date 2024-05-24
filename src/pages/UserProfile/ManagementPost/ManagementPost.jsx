@@ -276,6 +276,7 @@ const ManagementPost = () => {
         setImages([])
     };
     console.log(censorPaymentId);
+    console.log(values)
     return (
         <div className="">
             <div className="flex items-center justify-between my-10">
