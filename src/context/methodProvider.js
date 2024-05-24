@@ -116,26 +116,12 @@ export const MethodProvider = ({children}) => {
     }
 
     const handleLogout = async () => {
-        try {
-            const logout = await authServices.logOut(accessToken);
-            if (logout?.status === 200) {
-                localStorage.removeItem("auth");
-                localStorage.removeItem("refresh-token");
-                localStorage.removeItem("access-token");
-                navigate("/login", {
-                    state: {
-                        toastMessage: "Log Out Successfully!",
-                        statusMessage: "success",
-                    },
-                });
-            } else {
-                console.log(logout?.response);
-                toast.error("Sign Out Failed!");
-            }
-        } catch (error) {
-            console.error("Logout error:", error);
-            toast.error("Sign Out Failed!");
-        }
+        await authServices.logOut(accessToken);
+        localStorage.removeItem("auth");
+        localStorage.removeItem("refresh-token");
+        localStorage.removeItem("access-token");
+        toast.success('Log Out Successfully')
+        navigate("/login");
     };
 
 

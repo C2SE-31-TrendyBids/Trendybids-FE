@@ -11,11 +11,9 @@ import noDataSvg from "../../assets/vectors/no data.svg";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import logo from "../../assets/images/logo.jpg";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import ViewUserParticipant from "./ViewUserParticipant";
+import {Modal, ModalDialog} from "@mui/joy";
+
 const AuctionSession = () => {
     const accessToken = localStorage.getItem("access-token");
     const [openModal, setOpenModal] = React.useState(false);
@@ -120,17 +118,7 @@ const AuctionSession = () => {
         setAuctionSessionId(id)
         handleOpen()
     }
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 900,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
+
     return (
         <div className="h-screen max-w-[1230px] py-4 px-[30px] mx-auto ">
             <div className="flex justify-between items-center mb-4">
@@ -166,25 +154,25 @@ const AuctionSession = () => {
                 <table className="min-w-full bg-white">
                     <thead className="bg-blue-50 whitespace-nowrap">
                         <tr className="font-medium text-left">
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-4 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Title
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-4 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Product
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-4 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Start Time
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-4 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 End Time
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-2 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 User Participating
                             </th>
                             <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Status
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-2 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Action
                             </th>
                         </tr>
@@ -196,8 +184,12 @@ const AuctionSession = () => {
                                     className="hover:bg-gray-50 text-left odd:bg-gray-50 cursor-pointer"
                                     key={index}
                                 >
-                                    <td className="px-6 py-2 text-sm">{item?.title}</td>
-                                    <td className="px-6 py-2">
+                                    <td className="px-4 py-2">
+                                        <span className="block h-full w-[315px] truncate text-sm">
+                                            {item?.title}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 py-2">
                                         <img
                                             src={
                                                 item?.product?.prdImages[0]?.prdImageURL ||
@@ -208,24 +200,14 @@ const AuctionSession = () => {
                                             className="w-14 h-14 object-cover rounded-md"
                                         />
                                     </td>
-                                    <td className="px-6 py-2 text-sm truncate max-w-2xl">
+                                    <td className="px-4 py-2 text-sm truncate max-w-2xl">
                                         {format(new Date(item?.startTime), "HH:mm, MMMM d, yyyy")}
                                     </td>
-                                    <td className="px-6 py-2 text-sm truncate max-w-2xl">
+                                    <td className="px-4 py-2 text-sm truncate max-w-2xl">
                                         {format(new Date(item?.endTime), "HH:mm, MMMM d, yyyy")}
                                     </td>
                                     <td className="px-6 py-2 text-[12px] text-center truncate max-w-2xl">
                                         <button className="border px-4 py-1  bg-green-600 text-white rounded-lg hover:bg-green-800" onClick={(e) => { handleOpenUserParticipant(item?.id) }}>View User</button>
-                                        <Modal
-                                            open={open}
-                                            onClose={handleClose}
-                                            aria-labelledby="modal-modal-title"
-                                            aria-describedby="modal-modal-description"
-                                        >
-                                            <Box sx={style}>
-                                                <ViewUserParticipant productAuctionId={auctionSessionId} />
-                                            </Box>
-                                        </Modal>
                                     </td>
                                     <td className="px-6 py-2 text-sm">
                                         <span
@@ -247,7 +229,7 @@ const AuctionSession = () => {
                                                         : "Cancelled"}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-3">
+                                    <td className="px-2 py-3">
                                         <motion.button
                                             whileHover={{ scale: 1.5 }}
                                             className="mr-4"
@@ -327,6 +309,17 @@ const AuctionSession = () => {
                 sessionSelected={sessionSelected}
                 setSessionSelected={setSessionSelected}
             />
+
+            {/*View user participant*/}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                sx={{backdropFilter: "blur(2px)"}}
+            >
+                <ModalDialog >
+                    <ViewUserParticipant productAuctionId={auctionSessionId} />
+                </ModalDialog>
+            </Modal>
         </div>
     );
 };
