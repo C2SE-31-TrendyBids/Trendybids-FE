@@ -5,7 +5,6 @@ import { Button, CircularProgress, Link } from "@mui/material";
 const OtpInput = ({ length = 6, onOtpSubmit = () => { } }) => {
     const [otp, setOtp] = useState(new Array(length).fill(""));
     const [loading, setLoading] = useState(false);
-
     const inputRefs = useRef([]);
 
     useEffect(() => {
@@ -90,7 +89,6 @@ const OtpInput = ({ length = 6, onOtpSubmit = () => { } }) => {
                     </Button>
                 )}
                 <Button variant="outlined" color="error" sx={{ ml: 4 }}
-                // onClick={() => closeModal(false)}
                 >
                     Cance
                 </Button>
