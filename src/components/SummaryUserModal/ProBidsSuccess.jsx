@@ -36,6 +36,7 @@ const ProBidsSuccess = () => {
                         return result?.data?.success;
                     });
                     const paymentStatusResults = await Promise.all(paymentStatusPromises);
+
                     setPaymentStatusList(paymentStatusResults);
                 }
             } catch (error) {
@@ -88,13 +89,13 @@ const ProBidsSuccess = () => {
                             </tr>
                         )
                         )) : (
-                        <div className="w-full mx-[90%] mt-[30%] flex justify-center items-center flex-col">
+                        <div className="w-full mx-[45%] flex justify-center items-center flex-col">
                             <img
                                 src={noDataSvg}
                                 alt="anh"
                                 className="w-52 h-52 text-primaryColor mr-8"
                             ></img>
-                            <h2 className="text-xl font-medium mt-2 mb-2">
+                            <h2 className="text-sm font-medium mt-2 mb-2">
                                 You have not successfully bid on any products yet
                             </h2>
                         </div>

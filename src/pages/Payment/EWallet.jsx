@@ -186,12 +186,14 @@ const EWallet = () => {
 
                     <div className='col-span-4 flex items-center justify-center '>
                         <div className='w-4/5 border py-2 rounded-lg border-solid border-gray-900 cursor-pointer hover:scale-105 hover:border-green-500 shadow-lg transition-transform duration-300'>
-                            <div className='flex items-center justify-center'>
-                                <img src={PayProduct} alt="Pay product" className='w-64 h-40' />
-                            </div>
-                            <div className='text-center text-2xl font-semibold'>
-                                Payment Product
-                            </div>
+                            <Link to='/dashboard'>
+                                <div className='flex items-center justify-center'>
+                                    <img src={PayProduct} alt="Pay product" className='w-64 h-40' />
+                                </div>
+                                <div className='text-center text-2xl font-semibold'>
+                                    Payment Product
+                                </div>
+                            </Link>
                         </div>
                     </div>
                     <div className='col-span-4 flex items-center justify-center '>

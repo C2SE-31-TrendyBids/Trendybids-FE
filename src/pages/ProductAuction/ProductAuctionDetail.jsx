@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import ProductRelated from "../../components/Products/ProductRelated";
 import ModalPay from "../Payment/ModalPay";
 import { FaCheckCircle } from "react-icons/fa";
+import { isReturnMoney } from '../../services/payment';
 
 const ProductAuctionDetail = () => {
 
@@ -33,6 +34,16 @@ const ProductAuctionDetail = () => {
                 setAuctionSessionDetail(productAuction)
                 const categoryId = productAuction?.product?.category?.id
                 setCategoryId(categoryId)
+                const body = {
+                    receiverId: productAuction?.censor?.id,
+                    auctionId: productAuction?.id,
+                    index: 3
+                };
+                const result = await isReturnMoney(accessToken, body);
+                console.log(result);
+                if (result?.data?.success) {
+                    setStatusPayment(true)
+                }
             }
             setIsLoading(false)
         }
@@ -116,7 +127,7 @@ const ProductAuctionDetail = () => {
                                         <span>You must pay {auctionSessionDetail?.product?.startingPrice} USD to participate in the auction</span>
                                     </div>
                                     {statusPayment === true ? (
-                                        <span className="border border-solid border-green-600 text-blue-600 text-sm ml-2 px-4 py-1 rounded-lg " disabled >Payment</span>
+                                        <span className="border border-solid bg-gray-600  text-white text-sm ml-2 px-4 py-1 rounded-lg " disabled >Success</span>
 
                                     ) : (
                                         <span className="border border-solid border-green-600 text-sm text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-1 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
@@ -124,7 +135,6 @@ const ProductAuctionDetail = () => {
                                     {
                                         openPayment && <ModalPay modalOpen={setOpenPayment} amount={auctionSessionDetail?.product?.startingPrice} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={3} receiverId={auctionSessionDetail?.censor?.id} auctionId={auctionSessionDetail?.id} />
                                     }
-
                                 </div>
                                 <button
                                     className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mt-5 font-semibold "

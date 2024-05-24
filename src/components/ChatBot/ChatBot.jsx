@@ -8,6 +8,7 @@ const ChatBot = () => {
     const [message, setMessage] = useState('');
     const [change, setChange] = useState(false);
     const [messages, setMessages] = useState([]);
+
     const mesExample = [
         'How to register as an auction organization?',
         'How can I post a product for auction?',
@@ -72,22 +73,6 @@ const ChatBot = () => {
         e.preventDefault();
         setChange(!change)
     };
-    const handleReset = async () => {
-        try {
-            const response = await fetch('http://localhost:4000/restart', {
-                method: 'POST'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to restart the program');
-            }
-
-            const data = await response.json();
-            console.log(data.message); // In ra thông báo từ API
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
 
     return (
         <div className="fixed bottom-8 right-8 z-50">
@@ -151,7 +136,6 @@ const ChatBot = () => {
                 <img src={avatar1} alt="name" className="w-16 h-16 rounded-full" />
                 <div className="active bg-green-500 rounded-full w-4 h-4 absolute top-2 right-0 "></div>
             </button>
-            {/* <button className='w-24 h-24 bg-red-400' onClick={() => handleReset()}> </button> */}
         </div>
     );
 }

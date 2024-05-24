@@ -110,8 +110,8 @@ const ProductAuction = () => {
         <div className='w-full h-full'>
             <div className='relative'>
                 <img src={Panner} alt="" />
-                <div className='absolute inset-0'>
-                    <div className="h-full max-w-[1200px] mx-auto translate-y-1/2 text-4xl text-blue-500 font-extrabold drop-shadow-md">
+                <div className='absolute inset-0 top-30'>
+                    <div className="max-w-[1200px] mx-auto translate-y-1/2 text-4xl text-blue-500 font-extrabold drop-shadow-md">
                         <Reveal children={
                             <div className='mb-8'>
                                 <h1 className='text-4xl text-blue-500 font-extrabold drop-shadow-md'> Product Auction</h1>
@@ -136,11 +136,11 @@ const ProductAuction = () => {
             <div className='max-w-[1230px] px-[30px] mt-8 mx-auto'>
                 <div className='grid grid-cols-12 gap-4'>
                     <div className='hidden col-span-3 lg:block '>
-                        <div className=' bg-gray-200 rounded-lg'>
+                        <div className=' bg-gray-200 rounded-lg border border-gray-200 shadow-lg'>
                             <div className=' text-center pt-4'>
                                 <span className=' text-xl font-bold'>Product categories</span>
                             </div>
-                            <div className='ml-[10%]'>
+                            <div className='ml-[10%] '>
                                 {categories?.map((item) => {
                                     return (
                                         <>
@@ -150,7 +150,7 @@ const ProductAuction = () => {
                                 })}
                             </div>
                         </div>
-                        <div className=' mt-4 bg-gray-200 rounded-lg'>
+                        <div className=' mt-4 bg-gray-200 rounded-lg border border-gray-200 shadow-lg'>
                             <div className=' text-center pt-4'>
                                 <span className=' text-xl font-bold'>Filter By Price</span>
                             </div>
@@ -171,7 +171,7 @@ const ProductAuction = () => {
                                 <span className='mr-2 mb-3 font-semibold'> Price : $0  - $10000 </span>
                             </div>
                         </div>
-                        <div className='bg-gray-200 rounded-lg mt-4'>
+                        <div className='bg-gray-200 rounded-lg mt-4 border border-gray-200 shadow-lg'>
                             <div className=' text-center pt-4'>
                                 <span className=' text-xl font-bold'>Auction is coming soon</span>
                             </div>
@@ -195,7 +195,7 @@ const ProductAuction = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className=' bg-gray-200 rounded-lg mt-6'>
+                        <div className=' bg-gray-200 rounded-lg mt-6 border border-gray-200 shadow-lg'>
                             <div className=' text-center pt-4'>
                                 <span className=' text-xl font-bold'>Auction has ended</span>
                             </div>
@@ -223,8 +223,8 @@ const ProductAuction = () => {
                     </div>
                     <div className='col-span-12 lg:col-span-9 '>
                         <div className='flex justify-center sm:justify-between mb-4'>
-                            <div class="relative inline-flex text-gray-600 ">
-                                <input class="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
+                            <div class="relative inline-flex text-gray-600  ">
+                                <input class="border-2 border-blue-500 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
                                     type="search" name="search" placeholder="Search Product" value={nameProduct} onChange={(e) => { setNameProduct(e.target.value) }} />
                                 <button type="submit" class="absolute right-0 top-3 mr-4">
                                     <IoSearchSharp />
@@ -238,7 +238,7 @@ const ProductAuction = () => {
                                 <div className="relative w-[40%] mr-4">
                                     <RiArrowDropDownLine className='text-3xl absolute top-1 right-0' />
                                     <select
-                                        className="border-2 border-gray-300 rounded-lg text-gray-600 h-10 w-full mx-auto px-5 max-sm:px-5 max-md:px-8 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+                                        className="border-2 border-blue-500 rounded-lg text-gray-600 h-10 w-full mx-auto px-5 max-sm:px-5 max-md:px-8 bg-white hover:border-gray-400 focus:outline-none appearance-none"
                                         value={sortBy}
                                         onChange={handleSortByChange}
                                     >
@@ -251,7 +251,7 @@ const ProductAuction = () => {
                                 <div className="relative w-[20%]">
                                     <RiArrowDropDownLine className='text-3xl absolute top-1 right-0' />
                                     <select
-                                        className="border-2 border-gray-300 rounded-lg text-gray-600 h-10 w-full px-2 max-sm:px-5 max-md:px-8 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+                                        className="border-2 border-blue-500  rounded-lg text-gray-600 h-10 w-full px-2 max-sm:px-5 max-md:px-8 bg-white hover:border-gray-400 focus:outline-none appearance-none"
                                         value={type}
                                         onChange={handleTypeChange}
                                     >
@@ -271,7 +271,7 @@ const ProductAuction = () => {
                     </div>
                 </div>
             </div>
-            <div className='flex items-center justify-center'>
+            <div className='flex items-center justify-center m-5'>
                 <Pagination count={totalPage} color="primary" onChange={handlePageChange} />
             </div>
         </div >
