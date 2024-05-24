@@ -67,12 +67,28 @@ const forgotPassword = async (email) => {
     };
   }
 };
-const resetPassword = async (email, password, otp) => {
+const verifyFogot = async (email, otp) => {
+  try {
+    const verifyReq = await request.post("/auth/verify-fogot-pass", {
+      email: email,
+      otp: otp,
+    });
+    return {
+      response: verifyReq.data,
+      statusCode: verifyReq.status,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+const resetPassword = async (email, password) => {
   try {
     const resetPRe = await request.post("/auth/reset-password", {
       email: email,
-      password: password,
-      otp: otp,
+      password: password
     });
     return {
       response: resetPRe.data,
@@ -98,4 +114,4 @@ export const logOut = async (accessToken) => {
   }
 };
 
-export { loginApi, register, verifyEmail, forgotPassword, resetPassword };
+export { loginApi, register, verifyEmail, forgotPassword, resetPassword, verifyFogot };

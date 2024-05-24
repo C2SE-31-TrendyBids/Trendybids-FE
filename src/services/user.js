@@ -118,9 +118,11 @@ const changePass = async (accessToken, id, oldPassword, newPassword) => {
     }
 };
 
-const searchUser = async (keyword) => {
+const searchUser = async (accessToken, keyword) => {
     try {
-        const response = await request.get(`/user/search?keyword=${keyword}`);
+        const response = await request.get(`/user/search?keyword=${keyword}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
         return {
             response: response.data,
             statusCode: response.status,
@@ -202,5 +204,52 @@ const getSummaryAuctionSessionDetailUser = async (accessToken, productAuctionId)
     }
 };
 
-export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession, getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser };
+const sendContact = async (body) => {
+    try {
+        const response = await request.post("/user/send-contact", body);
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+};
+const getAuctionBidsSuccess = async (accessToken, page, limit) => {
+    try {
+        const response = await request.get(`/statistical/auction-bid-success?pageNumber=${page}&limit=${limit}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+}
+const getTransaction = async (accessToken, page, limit) => {
+    try {
+        const response = await request.get(`/user/get-transaction?pageNumber=${page}&limit=${limit}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+}
+
+export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession, getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser, sendContact, getAuctionBidsSuccess, getTransaction };
 

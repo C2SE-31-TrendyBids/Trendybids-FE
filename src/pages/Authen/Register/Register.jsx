@@ -1,17 +1,22 @@
-import React, { useContext, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import background from "../../../public/images/wave_background.png"
 import logo from "../../../public/images/logoTrendy1.jpg"
 import Link from '@mui/material/Link';
-import { TextField, Button, CircularProgress } from '@mui/material';
+import { TextField, CircularProgress, Modal, Box } from '@mui/material';
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import * as authApi from "../../../services/auth"
-import CodeOtp from '../InputOtp/CodeOtp';
+import OtpInput from '../../../components/Payment/Otp';
 import { toast } from "sonner";
 import MethodContext from '../../../context/methodProvider';
+import { useNavigate } from "react-router-dom";
+import Checkbox from '@mui/material/Checkbox';
+import {fetchRulesThunk} from "../../../redux/slices/rule";
+import RuleModel from "../../../components/ModelAdmin/RuleModel";
+import {useDispatch, useSelector} from "react-redux";
 
 const Register = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [email, setEmail] = useState('')
     const [fullName, setFullName] = useState('')
     const [password, setPassword] = useState('')
@@ -22,6 +27,13 @@ const Register = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(true)
     const [loading, setLoading] = useState(false);
     const { validateEmail } = useContext(MethodContext)
+    const [openModalOtp, setOpenModalOtp] = useState(false);
+    const [openModalRule, setOpenModalRule] = useState(false);
+    const {rules} = useSelector((state) => state.rule)
+    const dispatch = useDispatch()
+    const [isChecked, setIsChecked] = useState(false);
+    const handleOpenModalOtp = () => setOpenModalOtp(true);
+    const handleCloseModalOtp = () => setOpenModalOtp(false);
 
     const handleHiddenPassword = () => {
         showPassword ? setShowPassword(false) : setShowPassword(true);
@@ -31,7 +43,10 @@ const Register = () => {
     };
     const handleRegister = async (e) => {
         e.preventDefault();
-        setLoading(true)
+        if(!isChecked){
+            toast.error("Please checked terms & conditions")
+            return;
+        }
         if (!validateEmail(email)) {
             setEmailError('Please enter a valid email address');
             setLoading(false)
@@ -42,10 +57,12 @@ const Register = () => {
             setLoading(false)
             return
         }
+
+        setLoading(true)
         const registerReq = await authApi.register(email, password, fullName)
-        console.log(registerReq?.response);
+
         if (registerReq?.statusCode === 201) {
-            setModalOpen(true)
+            handleOpenModalOtp()
             setLoading(false)
             toast.success(registerReq?.response?.message)
         }
@@ -55,6 +72,45 @@ const Register = () => {
         else toast.error(registerReq?.response?.message);
         setLoading(false)
     }
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            dispatch(fetchRulesThunk({}));
+        }
+        fetchRules()
+    }, []);
+
+
+
+    const style = {
+        position: 'absolute',
+        borderRadius: 5,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+    const onOtpSubmit = async (otp) => {
+        try {
+            const verifyOtp = await authApi.verifyEmail(email, otp)
+            if (verifyOtp?.statusCode === 200) {
+                console.log('Đăng kí thành công');
+                toast.success('Register Successfully')
+                navigate('/login');
+                setLoading(false)
+            }
+            else {
+                toast.error("The OTP you entered is incorrect")
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div className=' max-w-screen h-screen' >
             <img src={background} alt="" className='w-full h-full object-cover' />
@@ -137,21 +193,30 @@ const Register = () => {
                                     )}
                                 </div>
                             </div>
-                            {
-                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={null} index={"register"} />
-                            }
                         </div>
 
-                        <div className='flex items-center justify-center mt-6 pb-4'>
+                        <div className="w-full mt-3 flex items-center justify-center">
+                            <Checkbox size={"small"}  checked={isChecked} onChange={(e) => {setIsChecked(e.target.checked)}} />
+                            <p className="text-sm font-medium">
+                                I agree to the
+                                <span className="text-blue-500 hover:cursor-pointer hover:underline hover:text-blue-600 transition-all"
+                                onClick={() => setOpenModalRule(true)}
+                                >
+                                    {' Terms & Conditions'}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div className='flex items-center justify-center mt-3 pb-4'>
                             {loading ? (
                                 <CircularProgress />
 
                             ) : (
                                 <button
-                                    className="w-[80%] font-semibold p-3 rounded-lg bg-[#3B82F6] hover:opacity-80 text-2xl text-white"
+                                    className="w-[80%] font-semibold p-2 rounded-lg bg-[#3B82F6] hover:opacity-80 text-xl text-white"
                                     onClick={(e) => { handleRegister(e) }}
                                 >
-                                    REGISTER
+                                    Register
                                 </button>
                             )}
                         </div>
@@ -169,6 +234,20 @@ const Register = () => {
 
                 </div>
             </div>
+            <Modal
+                open={openModalOtp}
+                onClose={handleCloseModalOtp}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <OtpInput length={6}
+                        onOtpSubmit={onOtpSubmit} />
+                </Box>
+            </Modal>
+            {
+                openModalRule && <RuleModel open={openModalRule} setOpen={setOpenModalRule} rules={rules} />
+            }
         </div >
     )
 }

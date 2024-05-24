@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import background from "../../../public/images/wave_background.png";
 import logo from "../../../public/images/logoTrendy1.jpg";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Link } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as authApi from "../../../services/auth";
 import * as userApi from "../../../services/user";
 import AuthContext from "../../../context/authProvider";
@@ -16,7 +16,6 @@ import { toast } from "sonner";
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
     const { validateEmail } = useContext(MethodContext)
-    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -33,6 +32,7 @@ const Login = () => {
             setRememberMe(true);
         }
     }, []);
+
     const getCookie = (name) => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -52,17 +52,18 @@ const Login = () => {
     };
     const handleNavigate = (role) => {
         console.log(role);
-        if (role === "Admin") navigate("/admin");
-        else if (role === "Censor") navigate("/all-product")
-        else navigate("/");
+        if (role === "Admin") window.location.href = "/admin/dashboard";
+        else if (role === "Censor" || role === 'Member') window.location.href = "/censor/all-product"
+        else window.location.href = "/";
     };
     const handleLogin = async (e) => {
-        setLoading(true);
+        e.preventDefault()
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
             setLoading(false)
             return;
         }
+        setLoading(true);
         // fetch api login
         const loginResponse = await authApi.loginApi(email, password);
         if (loginResponse?.statusCode === 200) {
@@ -81,9 +82,7 @@ const Login = () => {
                 localStorage.setItem("access-token", accessToken);
                 localStorage.setItem("refresh-token", refreshToken);
                 handleNavigate(role);
-                toast.success(loginResponse?.response?.message);
                 setLoading(false);
-                console.log(accessToken);
             }
         } else {
             console.log(loginResponse);
@@ -120,7 +119,7 @@ const Login = () => {
                                 </span>
                                 <Link
                                     to="/register"
-                                    className="text-blue-500 hover:opacity-70"
+                                    className="text-blue-500 hover:opacity-70 hover:cursor-pointer"
                                 >
                                     Sign Up
                                 </Link>
@@ -148,17 +147,16 @@ const Login = () => {
                         <form onSubmit={handleLogin}>
                             <div className="flex w-full items-center justify-center">
                                 <div className="w-[90%]">
+                                    <h1 className="font-semibold">Email</h1>
                                     <input
                                         onChange={(e) => setEmail(e.target.value)}
                                         type="email"
                                         value={email}
-                                        id="outlined-basic"
-                                        label="Your Email"
-                                        variant="outlined"
                                         error={Boolean(emailError)}
                                         helperText={emailError}
                                         className="w-full px-4 h-12 border my-2 text-black rounded-lg "
                                     />
+                                    <h1 className="font-semibold mt-2">Password</h1>
                                     <div className="relative">
                                         <input
                                             value={password}

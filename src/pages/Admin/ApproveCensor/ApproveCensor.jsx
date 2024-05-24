@@ -5,6 +5,12 @@ import noDataSvg from "../../../assets/vectors/no data.svg";
 import CensorDetail from './CensorDetail';
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { LiaUserCheckSolid } from "react-icons/lia";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import HeaderAdmin from "../../../components/Header/HeaderAdmin";
 const ApproveCensor = () => {
     const [censors, setCensors] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
@@ -16,6 +22,11 @@ const ApproveCensor = () => {
     const [change, setChange] = useState(true)
     const [search, setSearch] = useState("");
     const [totalActive, setTotalActive] = useState(0)
+    const [status, setStatus] = useState('');
+
+    const handleChange = (event) => {
+        setStatus(event.target.value);
+    };
 
     useEffect(() => {
         try {
@@ -39,6 +50,10 @@ const ApproveCensor = () => {
                 params.name = search
                 setPageNumber(1)
             }
+            if (status !== '') {
+                params.status = status
+                setPageNumber(1)
+            }
             const fetchData = async () => {
                 const response = await censorApi.getCensors(params)
                 setCensors(response?.data?.censors)
@@ -48,7 +63,7 @@ const ApproveCensor = () => {
         } catch (error) {
             console.log(error);
         }
-    }, [pageNumber, change, search])
+    }, [pageNumber, change, search, status])
 
     const handlePageChange = (event, page) => {
         setPageNumber(page);
@@ -58,12 +73,13 @@ const ApproveCensor = () => {
         setModalOpenView(true)
     }
     return (
-        <div className="h-screen max-w-[1230px] py-4 px-[30px] mx-auto relative ">
+        <div className="h-screen max-w-[1230px] px-1.5 mx-auto relative ">
+            <HeaderAdmin pageName={"Censor"} />
             <div className='grid grid-cols-12 gap-2 mb-2 '>
                 <div className='col-span-7'>
                     <div className='grid grid-cols-3 gap-4'>
                         <div className='col-span-1 mt-4'>
-                            <div className="p-2 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
+                            <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <AiOutlineUsergroupAdd className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
                                     <p className="text-xl font-bold">{totalItem}</p>
@@ -72,7 +88,7 @@ const ApproveCensor = () => {
                             </div>
                         </div>
                         <div className='col-span-1 mt-4'>
-                            <div className="p-2 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
+                            <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center mt-5 md:mt-0 ">
                                 <LiaUserCheckSolid className="text-5xl text-blue-400 mx-2" />
                                 <div className="">
                                     <p className="text-xl font-bold">{totalActive}</p>
@@ -83,8 +99,8 @@ const ApproveCensor = () => {
                     </div>
                 </div>
                 <div className='col-span-5 '>
-                    <form className="grid place-items-end mt-4 ">
-                        <div className="flex w-[90%] bg-white rounded-lg border-[0.5px] border-gray-400 p-1">
+                    <form className="flex items-center justify-between mt-4 ">
+                        <div className="flex w-[65%] bg-white rounded-lg border-[0.5px] border-gray-400">
                             <input
                                 type="search"
                                 className="w-full border-none bg-transparent px-4 py-1 text-gray-900 focus:outline-none rounded-lg "
@@ -100,6 +116,24 @@ const ApproveCensor = () => {
                                 Search
                             </button>
                         </div>
+                        <div className='w-[30%] bg-white '>
+                            <Box sx={{ minWidth: 120 }} >
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={status}
+                                        label="Status"
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={'Processing'}>Processing</MenuItem>
+                                        <MenuItem value={'Verified'}>Verified</MenuItem>
+                                        <MenuItem value={'Rejected'}>Rejected</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -107,22 +141,22 @@ const ApproveCensor = () => {
                 <table className="min-w-full bg-white">
                     <thead className="bg-blue-50 whitespace-nowrap">
                         <tr className="font-medium text-left">
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Organization Name
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Image Organization
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Company Tax Code
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Phone Number
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Status
                             </th>
-                            <th className="px-6 py-3 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
+                            <th className="px-6 py-2 text-md font-semibold hover:text-[#007bff] cursor-pointer text-gray-700">
                                 Action
                             </th>
                         </tr>
@@ -142,7 +176,7 @@ const ApproveCensor = () => {
                                                 "https://lh3.googleusercontent.com/proxy/isoli79kvQ3rAEkQZ0LdfZiqKvjkDl2-ZptWZypSU-ws3Y6UpnNrBlmxBAWukMwaJBuiecMlJuOMpMcXoc-h3DO4jFTHr_orhAOugIM3rQ"
                                             }
                                             alt={item?.name}
-                                            className="w-14 h-14"
+                                            className="w-14 h-14 rounded-lg"
                                         />
                                     </td>
                                     <td className="px-6 py-2 text-sm truncate max-w-2xl">
@@ -194,7 +228,7 @@ const ApproveCensor = () => {
                 </table>
             </div>
 
-            <div className={`absolute bottom-4 left-0 right-0 ${censors && censors.length > 0 ? "grid place-items-center" : "hidden"}`}>
+            <div className={`absolute bottom-2 left-0 right-0 ${censors && censors.length > 0 ? "grid place-items-center" : "hidden"}`}>
                 <Pagination count={totalPages} color="primary" onChange={handlePageChange} />
             </div>
         </div>

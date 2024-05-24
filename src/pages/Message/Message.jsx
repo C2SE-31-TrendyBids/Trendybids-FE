@@ -4,7 +4,12 @@ import MessageChannel from "../../components/Message/MessageChannel";
 import {useDispatch, useSelector} from "react-redux";
 import messageSvg from "../../assets/vectors/message.svg";
 import {useNavigate, useParams} from 'react-router-dom';
-import {fetchConversationsThunk, addConversation, updateConversation} from "../../redux/slices/conversation";
+import {
+    fetchConversationsThunk,
+    addConversation,
+    updateConversation,
+    fetchUnseenConversationsThunk
+} from "../../redux/slices/conversation";
 import {toast} from "sonner";
 import {addMessage, fetchMessagesThunk} from "../../redux/slices/message";
 import SocketContext from "../../context/socketProvider";
@@ -23,20 +28,20 @@ const Message = () => {
     useEffect(() => {
         socket.on('connected', (data) => console.log('Connected', data))
         socket.on('onMessage', (data) => {
-            const receiveConvId = data?.conversationId;
-            receiveConvId === conversationId ? dispatch(addMessage(data)) : toast.info(`New message from: ${data?.user?.fullName.split(' ')[0]}`)
+            dispatch(addMessage(data));
+            dispatch(fetchUnseenConversationsThunk(accessToken))
             dispatch(updateConversation({conversationId: data?.conversationId, message: data}))
         })
         socket.on('onConversation', (data) => {
             dispatch(addConversation(data));
-            toast.info(`New message from stranger: ${data?.latestMessage?.user?.fullName.split(' ')[0]}`)
+            dispatch(fetchUnseenConversationsThunk(accessToken))
         })
         return () => {
             socket.off('connected')
             socket.off('onMessage')
             socket.off('onConversation')
         }
-    }, [])
+    }, [conversationId])
 
     useEffect(() => {
         // Dispatch the fetchConversationsThunk action to fetch the conversations
@@ -76,8 +81,8 @@ const Message = () => {
             <MessageSidebar/>
             {(conversations.length > 0 && conversationId) ? <MessageChannel conversation={conversation}/> : (
                 <div className="h-full w-full lg:w-msg-channel-lg md:w-msg-channel-md flex flex-col items-center justify-center">
-                    <img src={messageSvg} alt="messageSvg" className="h-72 w-72"/>
-                    <h1 className="text-2xl text-gray-700">No chats selected</h1>
+                    <img src={messageSvg} alt="messageSvg" className="lg:h-96 lg:w-96 md:h-80 md:w-80 h-52 w-52"/>
+                    <h1 className="lg:text-2xl md:text-xl text-lg text-gray-700">No chats selected</h1>
                 </div>
             )}
         </div>

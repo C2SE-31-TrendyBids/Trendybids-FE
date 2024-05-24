@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import Link from "@mui/material/Link";
+import React, { useEffect, useState } from "react";
 import * as censorApi from "../../../services/censor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import ModalPay from "../../Payment/ModalPay";
+import { FaCheckCircle } from "react-icons/fa";
+import {fetchRulesThunk} from "../../../redux/slices/rule";
+import {useDispatch, useSelector} from "react-redux";
+import RuleModel from "../../../components/ModelAdmin/RuleModel";
 
 const RegisterCensor = () => {
     const [loading, setLoading] = useState(false);
+    const [statusPayment, setStatusPayment] = useState(false);
+    const [openPayment, setOpenPayment] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const accessToken = localStorage.getItem("access-token");
     const user = JSON.parse(localStorage.getItem("auth"));
@@ -24,12 +30,19 @@ const RegisterCensor = () => {
             placeTaxCode: "",
         },
     });
+    const [openModalRule, setOpenModalRule] = useState(false);
+    const {rules} = useSelector((state) => state.rule)
+    const dispatch = useDispatch()
     const handleFileChange = (e) => {
         const newImage = e.target.files[0];
         newImage["id"] = Math.random();
         setSelectedFile(newImage);
     };
     const onSubmit = async (data) => {
+        if (!statusPayment) {
+            toast.error("You have not paid the deposit")
+            return
+        }
         setLoading(true);
         try {
             const censorReq = await censorApi.registerCensor(
@@ -44,7 +57,6 @@ const RegisterCensor = () => {
                 data.placeTaxCode,
                 selectedFile
             );
-            console.log(censorReq.message);
             if (censorReq.statusCode === 201) {
                 toast.success(censorReq.message);
                 reset({
@@ -58,6 +70,7 @@ const RegisterCensor = () => {
                     position: "",
                     placeTaxCode: "",
                 });
+                setStatusPayment(false)
                 setSelectedFile(null);
             } else {
                 toast.error(censorReq?.message);
@@ -72,6 +85,18 @@ const RegisterCensor = () => {
         const value = e.target.value.replace(/\D/g, "");
         e.target.value = value;
     };
+    useEffect(() => {
+        console.log(statusPayment);
+    }, [statusPayment])
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            dispatch(fetchRulesThunk({}));
+        }
+        fetchRules()
+    }, []);
+
+
     return (
         <div className="w-full px-[30px] mx-auto mb-10">
             <div className="border shadow-lg rounded-lg bg-white h-auto ">
@@ -104,7 +129,7 @@ const RegisterCensor = () => {
                                     },
                                 })}
                                 type="text"
-                                className="w-full border p-2 rounded-md my-2 text-black "
+                                className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                             />
                             <span className="text-red-500 text-xs">
                                 {errors?.nameOrganization?.message}
@@ -122,7 +147,7 @@ const RegisterCensor = () => {
                                                 "Please enter the founding date.",
                                         })}
                                         type="date"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.founding?.message}
@@ -145,7 +170,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold"
+                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.taxCode?.message}
@@ -162,7 +187,7 @@ const RegisterCensor = () => {
                                                 "Please enter the Tax code issuance date.",
                                         })}
                                         type="date"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     <span className="text-red-500 text-xs">
                                         {errors?.dateTaxCode?.message}
@@ -174,7 +199,7 @@ const RegisterCensor = () => {
                                     </span>
                                     <input
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                         value={user?.fullName}
                                         disabled
                                     />
@@ -202,7 +227,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="tel"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                         onChange={handlePhoneNumberChange}
                                     />
                                     <span className="text-red-500 text-xs">
@@ -228,7 +253,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     {errors.placeTaxCode && (
                                         <span className="text-red-500 text-xs">
@@ -255,7 +280,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black "
+                                        className="w-full border p-2 rounded-md my-2 text-black outline-blue-500 transition-all"
                                     />
                                     {errors.address && (
                                         <span className="text-red-500 text-xs">
@@ -282,7 +307,7 @@ const RegisterCensor = () => {
                                             },
                                         })}
                                         type="text"
-                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold"
+                                        className="w-full border p-2 rounded-md my-2 text-black font-semibold outline-blue-500 transition-all"
                                     />
                                     {errors.position && (
                                         <span className="text-red-500 text-xs">
@@ -340,9 +365,11 @@ const RegisterCensor = () => {
                                 />
                                 <div className="max-sm:text-sm">
                                     <span>I commit to comply with </span>
-                                    <Link href="#" underline="always">
+                                    <span  className="text-blue-500 hover:cursor-pointer hover:underline hover:text-blue-600 transition-all"
+                                           onClick={() => setOpenModalRule(true)}
+                                    >
                                         {"the Rights and Responsibilities"}
-                                    </Link>
+                                    </span>
                                     <span>
                                         {" "}
                                         of Auction Participants (Regulations
@@ -360,8 +387,32 @@ const RegisterCensor = () => {
                                 </span>
                             )}
                         </div>
+                        {/* payment for register censor */}
+                        <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center">
+                                {statusPayment ? (
+                                    <FaCheckCircle className="w-5 text-green-500 mx-2 " />
+                                ) : (
+                                    <span className="w-4 h-4 rounded-full border mx-2 border-solid border-gray-800"></span>
+                                )}
+                                <span>You must pay a deposit for organizational registration of 2000.00 USD</span>
+                            </div>
+                            {statusPayment === true ? (
+                                <span className="border border-solid border-green-600 text-blue-600  ml-2 px-4 py-2 rounded-lg " disabled >Payment</span>
+
+                            ) : (
+                                <span className="border border-solid border-green-600 text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-2 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            )}
+                            {
+                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={6} />
+                            }
+                            {
+                                openModalRule && <RuleModel open={openModalRule} setOpen={setOpenModalRule} rules={rules} />
+                            }
+
+                        </div>
                         <div className="text-center my-4">
-                            <button className="border py-2 px-10 rounded-md bg-blue-500 hover:opacity-75 text-white font-semibold">
+                            <button className="border py-2 px-10 rounded-md bg-blue-500 hover:opacity-75 text-white font-semibold transition-all">
                                 {loading ? (
                                     <div>
                                         <CircularProgress color="secondary" />

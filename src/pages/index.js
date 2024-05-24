@@ -20,6 +20,8 @@ export { default as AboutUS } from "./AboutUS/AboutUS";
 export { default as Admin } from "./Admin/Admin";
 export { default as ApproveCensor } from "./Admin/ApproveCensor/ApproveCensor";
 export { default as ManagementAccount } from "./Admin/Account/ManagementAccount";
+export { default as RevenueManagement } from "./Admin/RevenueManagement";
+export { default as RuleManagement } from "./Admin/RuleManagement";
 
 
 export { default as Censor } from "./Censor/Censor";
@@ -35,8 +37,16 @@ export { default as PostAuction } from "./Censor/PostAuctionSession/PostAuction"
 export { default as ApproveProduct } from "./Censor/ApproveProduct/ApproveProduct"
 export { default as AuctionSession } from "./AuctionSession/AuctionSession"
 export { default as DashboardCensor } from "./Censor/DashboardCensor/DashboardCensor"
-
 // Message
 export { default as Message } from "./Message/Message"
 export { default as NewMessage } from "./Message/NewMessage"
+
+//payment
+export { default as PaymentSuccess } from "./Payment/PaymentSuccess"
+export { default as PaymentCancel } from "./Payment/PaymentCancel"
+export { default as Checkout } from "./Payment/Checkout"
+export { default as EWallet } from "./Payment/EWallet"
+
+
+
 

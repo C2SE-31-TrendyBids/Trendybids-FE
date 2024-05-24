@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import logo from "../../../assets/images/logo.jpg";
 import { getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser } from '../../../services/user'
 import { Bar } from 'react-chartjs-2';
 import { CategoryScale, Chart } from 'chart.js';
@@ -13,6 +14,9 @@ import Select from '@mui/material/Select';
 import { RiAuctionFill } from "react-icons/ri";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import UseTransaction from '../../../components/SummaryUserModal/UserTransaction';
+import ProBidsSuccess from '../../../components/SummaryUserModal/ProBidsSuccess';
+import ChartMoney from '../../../components/SummaryUserModal/ChartMoney';
 Chart.register(BarController, BarElement);
 Chart.register(LinearScale);
 Chart.register(CategoryScale);
@@ -28,29 +32,17 @@ const Dashboard = () => {
     const [totalAuctionSuccess, setTotalAuctionSuccess] = useState('')
     const [bidsPrice, setbidsPrice] = useState([])
     const [bidsDate, setbidsDate] = useState([])
-    const [hightPrice, setHightPrice] = useState([])
-    const [name, setName] = useState([])
+    const [productBids, setProductBids] = useState([])
     const accessToken = localStorage.getItem("access-token");
+
     useEffect(() => {
         try {
             const fetchApi = async () => {
-                const prices = [];
-                const name = [];
                 const productAuctionData = await getSummaryAuctionSessionUser(accessToken);
+                console.log(productAuctionData);
                 if (productAuctionData && productAuctionData?.response && productAuctionData?.response?.productAuction) {
                     const productAuctions = productAuctionData?.response?.productAuction;
-                    productAuctions.forEach(productAuction => {
-                        const price = parseFloat(productAuction?.productAuction?.highestPrice) === 0.00 ?
-                            productAuction?.productAuction?.product?.startingPrice :
-                            productAuction?.productAuction?.highestPrice;
-                        prices.push(price);
-                        const name1 = (productAuction?.productAuction?.product?.productName).length > 10 ?
-                            (productAuction?.productAuction?.product?.productName).substring(0, 10) + '...' :
-                            (productAuction?.productAuction?.product?.productName)
-                        name.push(name1)
-                    });
-                    setHightPrice(prices)
-                    setName(name)
+                    setProductBids(productAuctions)
                     setSumaryAuction(productAuctionData?.response?.productAuction);
                     setTotalAuctionPar(productAuctionData?.response?.numberOfParticipatAuctions)
                     setTotalQuote(productAuctionData?.response?.auctionQuote)
@@ -92,55 +84,21 @@ const Dashboard = () => {
         }
     }, [productAuctionId])
 
-    const data = {
-        labels: name,
-        datasets: [
-            {
-                label: 'My First Dataset',
-                data: hightPrice,
-                backgroundColor: '#0033CC',
-                borderColor: '#003399',
-                borderWidth: 1,
-            },
-        ],
-    };
     const dataDetailAuction = {
         labels: bidsDate,
         datasets: [
             {
-                label: 'My First Dataset',
+                label: 'The amount you bid',
                 data: bidsPrice,
                 backgroundColor: '#0033CC',
                 borderColor: '#003399',
                 borderWidth: 1,
+                barThickness: 20, // Fixed bar thickness
+                maxBarThickness: 20, // Maximum bar thickness
             },
         ],
     };
-    const options = {
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: "Hight Price",
-                    font: {
-                        size: 14,
-                        weight: 'bold'
-                    }
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: 'Name Product',
-                    font: {
-                        size: 14,
-                        weight: 'bold'
-                    }
-                }
-            }
-        },
-    };
+
     const optionsDetail = {
         scales: {
             y: {
@@ -162,10 +120,16 @@ const Dashboard = () => {
                         size: 16,
                         weight: 'bold'
                     }
+                },
+                ticks: {
+                    maxRotation: 0,
+                    minRotation: 0
                 }
             }
         },
+        maintainAspectRatio: true,
     };
+
     return (
         <div className='w-full mx-[30px] mt-20'>
             <div className='grid grid-cols-3 gap-4'>
@@ -205,20 +169,35 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-
-
             </div>
-            <div className='flex items-center justify-center mt-10'>
-                <div className='w-[800px]'>
-                    <h2 className='text-center text-xl font-bold text-blue-600'>You have participated in the auction</h2>
-                    <Bar data={data} options={options} />
+            <div className='grid grid-cols-8 gap-2 mt-10'>
+                <div className='col-span-3 border shadow-sm rounded-lg bg-gray-50 text-center border-[#0033CC]'>
+                    <h1 className='text-base text-blue-600 font-bold py-4'>The product you bid on</h1>
+                    <div className=' h-[300px] overflow-y-auto no-scrollbar pb-2'>
+                        {productBids?.map((item, index) => (
+                            <div key={index} className='flex items-center justify-center bg-white'>
+                                <div className='w-4/5 flex items-center justify-start border shadow-lg rounded-lg mt-4'>
+                                    <div className='w-12 my-2 ml-4'>
+                                        <img src={item?.productAuction?.product?.prdImages[0]?.prdImageURL || logo} alt="avatar" />
+                                    </div>
+                                    <div className='ml-2'>
+                                        <h1 className='text-sm'>{item?.productAuction?.product?.productName}</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='col-span-5 shadow-sm border rounded-lg border-[#0033CC] text-center bg-gray-50'>
+                    <h1 className='text-base text-blue-600 font-bold py-3'>The product you have successfully auctioned</h1>
+                    <ProBidsSuccess />
                 </div>
             </div>
-            <div className='flex items-center justify-center mt-10'>
-                <div className='w-[800px]'>
+            <div className='grid grid-cols-8 gap-2 mt-4' >
+                <div className='col-span-5 shadow-sm p-2 border rounded-lg border-[#0033CC]'>
                     <div className='flex items-center justify-center'>
-                        <h2 className='text-xl mr-2 font-bold text-blue-600'>You have given a price for the product : </h2>
-                        <Box sx={{ minWidth: 300 }}>
+                        <h2 className='text-base mr-2 font-bold text-blue-600'>You have given a price for the product : </h2>
+                        <Box sx={{ minWidth: 200 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Name Product</InputLabel>
                                 <Select
@@ -238,7 +217,16 @@ const Dashboard = () => {
                     </div>
                     <Bar data={dataDetailAuction} options={optionsDetail} />
                 </div>
+                <div className='col-span-3 border border-blue-600 rounded-lg'>
+                    <ChartMoney />
+                </div>
             </div>
+            <div className='grid grid-cols-8 gap-2 mt-4' >
+                <div className="col-span-5 bg-white p-2 rounded-lg border border-blue-600 my-2">
+                    <UseTransaction />
+                </div>
+            </div>
+
         </div>
     )
 }

@@ -46,7 +46,7 @@ const Category = () => {
     }
 
     return (
-        <div className="px-10 mx-auto mt-8 h-56">
+        <div className="px-10 mx-auto mt-8 min-h-56">
             <h2 className="text-[#0B1133] text-2xl font-bold">Explore Popular Categories</h2>
             <div
                 className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-14 lg:gap-4 justify-items-center mt-5">

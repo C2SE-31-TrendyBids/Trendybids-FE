@@ -6,12 +6,14 @@ import { Button, CircularProgress, TextField } from '@mui/material';
 import { CiLock } from "react-icons/ci";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
-import CodeOtp from '../InputOtp/CodeOtp';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import * as authApi from '../../../services/auth'
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
     const [password, setPassword] = useState('')
     const { email } = useParams();
     const [passError, setPassError] = useState('')
@@ -27,15 +29,26 @@ const ResetPassword = () => {
     };
 
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         setLoading(true)
         if (password !== conFirmPassword) {
             setPassError("Passwords do not match");
             setLoading(false)
             return
         }
+        const resetPasRe = await authApi.resetPassword(email, password)
+        if (resetPasRe?.statusCode === 200) {
+            toast.success(resetPasRe?.response?.message)
+            console.log('Đặt lại mật khẩu thành công');
+            navigate('/login');
+            setLoading(false)
+
+        }
+        else {
+            console.log('otp sai ....');
+            setLoading(false)
+        }
         setLoading(false)
-        setModalOpen(true)
     };
 
     return (
@@ -126,9 +139,6 @@ const ResetPassword = () => {
                                     SEND
                                 </Button>
                             )}
-                            {
-                                modalOpen && <CodeOtp closeModal={setModalOpen} email={email} password={password} index={"reset"} />
-                            }
                         </div>
                         <div className='lg:hidden block '>
                             <span className='flex items-center justify-center m-4'>

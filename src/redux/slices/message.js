@@ -28,7 +28,8 @@ const messageSlice = createSlice({
     reducers: {
         addMessage: (state, action) => {
             console.log('setMessage')
-            state.messages.unshift(action.payload);
+            const firstMessage = state.messages[0]
+            firstMessage.conversationId === action.payload.conversationId && state.messages.unshift(action.payload);
         },
         setMoreMessage: (state, action) => {
             state.messages = [...state.messages, ...action.payload];
@@ -43,7 +44,7 @@ const messageSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchMessagesThunk.fulfilled, (state, action) => {
-                state.messages = action.payload.response.data;
+                state.messages = action.payload?.response?.data;
                 state.loading = false;
             })
             .addCase(fetchMessagesThunk.rejected, (state) => {

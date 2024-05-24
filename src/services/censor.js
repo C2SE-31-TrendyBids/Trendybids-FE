@@ -1,3 +1,4 @@
+
 import * as request from "../ultils/request";
 import { toast } from "sonner";
 
@@ -155,12 +156,13 @@ const verifyProduct = async (productId, accessToken) => {
     return error;
   }
 };
-const rejectProduct = async (productId, accessToken) => {
+const rejectProduct = async (productId, accessToken, note) => {
   try {
     const reqReject = await request.post(
       "/censor/reject-auction-product",
       {
         productId: productId,
+        note: note
       },
       {
         headers: {
@@ -235,7 +237,86 @@ const deleteAuctionSession = async ({ accessToken, id }) => {
     };
   }
 };
+const getUserParticipating = async (accessToken, page, limit, auctionSessionId) => {
 
+  try {
+    return await request.get(`/censor/get-user-participating?productAuctionId=${auctionSessionId}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+const getAllMemberOrganization = async (accessToken, page, limit) => {
+  try {
+    return await request.get(`/censor/get-all-member?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
+const addMemberByEmail = async (accessToken, email) => {
+  try {
+    return await request.post(`/censor/add-member`, { email },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+}
+const getUserByEmail = async (accessToken, email) => {
+  try {
+    return await request.get(`/censor/get-user?email=${email}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  } catch (error) {
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+}
+const deleteMember = async ({ accessToken, id }) => {
+  try {
+    const response = await request.deleteRe(
+      `/censor/delete-member/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response
+  } catch (error) {
+    toast.error(error?.response?.data?.message ?? error?.message);
+    return {
+      error,
+      statusCode: error.status,
+    };
+  }
+};
 export {
   registerCensor,
   getProductAuction,
@@ -246,5 +327,10 @@ export {
   rejectProduct,
   getAuctionSessionByCensor,
   updateAuctionSession,
-  deleteAuctionSession
+  deleteAuctionSession,
+  getUserParticipating,
+  getAllMemberOrganization,
+  addMemberByEmail,
+  getUserByEmail,
+  deleteMember
 };

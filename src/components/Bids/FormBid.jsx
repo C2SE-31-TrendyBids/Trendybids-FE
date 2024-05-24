@@ -5,8 +5,10 @@ import {useDispatch, useSelector} from "react-redux";
 import SocketContext from "../../context/socketProvider";
 import {toast} from "sonner";
 import {addBidPrice} from "../../redux/slices/bidPrice";
+import MethodContext from "../../context/methodProvider";
 
-const FormBid = ({sessionId}) => {
+const FormBid = ({sessionId, startingPrice}) => {
+    const {anonymizeFullName} = useContext(MethodContext);
     const [bidPrice, setBidPrice] = useState('');
     const initialSuggestBidPrice = [
         {id: 1, label: "Background", text: "+10% cool gray", type: "percent", value: 0.1, active: false},
@@ -70,10 +72,8 @@ const FormBid = ({sessionId}) => {
                 // handle bid
                 if (data?.status === "success") {
                     userId === data.bidPrice.user.id && toast.success(data.message)
-                    dispatch(addBidPrice(data));
-                    // Start countdown with 5 seconds when button is clicked
-                    startCountdown(5);
-                    setBidPrice("")
+                    dispatch(addBidPrice({data, anonymizeFullName}));
+                    setSuggestBis(initialSuggestBidPrice);
                 } else {
                     userId === data.userId && toast.error(data.message)
                 }
@@ -88,10 +88,21 @@ const FormBid = ({sessionId}) => {
 
     const handleBidPrice = async (e) => {
         e.preventDefault();
-        if (bidPrice)
+        const priceCondition = highestPrice || startingPrice
+        if (bidPrice > priceCondition) {
+            if (bidPrice > priceCondition * 2) {
+                toast.error("Bid price must be less than twice the highest price!");
+                return;
+            }
             if (countdownCompleted) {
+                // Start countdown with 5 seconds when button is clicked
+                startCountdown(5);
+                setBidPrice("")
                 socket.emit('bidPrice.create', {sessionId: sessionId, bidPrice: bidPrice});
             }
+        } else {
+            toast.error("Bid price must be greater than the current highest price!");
+        }
     }
 
     return (

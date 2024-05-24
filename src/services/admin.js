@@ -82,11 +82,133 @@ const getAllRoles = async (accessToken) => {
     }
 };
 
+const getSummary = async (accessToken) => {
+    try {
+        return await request.get(`/admin/get-summary`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getChartProduct = async (accessToken, params) => {
+    try {
+        return await request.get(`/admin/get-summary-product-auction`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getProfit = async (accessToken,params) => {
+    try {
+        return await request.get(`/admin/get-profit`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getTransactionHistory = async (accessToken, params) => {
+    try {
+        return await request.get(`/admin/get-transaction-history`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return {
+            error,
+            statusCode: error.status,
+        };
+    }
+};
+
+const getRules = async (params) => {
+    try {
+        return await request.get(`/admin/get-rules`, {
+            params: params,
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const updateRule = async (accessToken, id, body) => {
+    try {
+        return await request.put(`/admin/update-rule`, body,{
+            params: {id},
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const deleteRule = async (accessToken, id) => {
+    try {
+        return await request.deleteRe(`/admin/delete-rule`, {
+            params: {id},
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+const createRule = async (accessToken, body) => {
+    try {
+        return await request.post(`/admin/create-rule`, body,{
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+    } catch (error) {
+        return error;
+    }
+};
+
+
 export {
     getAllUsers,
     acceptAndRejectCensor,
     deleteUser,
     editUser,
-    getAllRoles
-
+    getAllRoles,
+    getSummary,
+    getChartProduct,
+    getProfit,
+    getTransactionHistory,
+    getRules,
+    updateRule,
+    deleteRule,
+    createRule
 };

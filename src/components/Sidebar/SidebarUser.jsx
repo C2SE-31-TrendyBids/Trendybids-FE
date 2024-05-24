@@ -111,7 +111,7 @@ export default function SidebarUser() {
                                     Edit Profile
                                 </ListItem>
                             </Link>
-                            <Link to="/changepassword">
+                            <Link to="/change-password">
                                 <ListItem>
                                     <ListItemPrefix>
                                         <FaLock
@@ -137,23 +137,6 @@ export default function SidebarUser() {
                                     className="mr-auto font-normal"
                                 >
                                     Register Censor
-                                </Typography>
-                            </AccordionHeader>
-                        </ListItem>
-                    </Link>
-                </Accordion>
-                <Accordion>
-                    <Link to="">
-                        <ListItem className="p-0">
-                            <AccordionHeader className="border-b-0 p-3">
-                                <ListItemPrefix>
-                                    <IoChatboxEllipses className="h-5 w-5" />
-                                </ListItemPrefix>
-                                <Typography
-                                    color="blue-gray"
-                                    className="mr-auto font-normal"
-                                >
-                                    Chat
                                 </Typography>
                             </AccordionHeader>
                         </ListItem>

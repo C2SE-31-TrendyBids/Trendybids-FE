@@ -49,8 +49,8 @@ const EditSessionModal = ({openModal, setOpenModal, sessionSelected, setSessionS
         setOpenModal(false)
     }
     return (
-        <Modal open={openModal} onClose={() => setOpenModal(false)}>
-            <ModalDialog>
+        <Modal open={openModal} onClose={() => setOpenModal(false)} sx={{backdropFilter: "blur(2px)"}}>
+            <ModalDialog >
                 <ModalClose />
                 <Typography
                     component="h2"

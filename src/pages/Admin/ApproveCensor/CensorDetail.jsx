@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { acceptAndRejectCensor } from "../../../services/admin"
 import { toast } from "sonner";
@@ -7,11 +7,24 @@ import { BsCalendarDate } from "react-icons/bs";
 import { TbDeviceLandlinePhone } from "react-icons/tb";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaQrcode } from "react-icons/fa";
+import SocketContext from "../../../context/socketProvider";
+import { Button, Textarea } from "@mui/joy";
+import { Spinner } from "@material-tailwind/react";
+import { FaCheckCircle } from "react-icons/fa";
+import ModalPay from '../../Payment/ModalPay';
 
 const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => {
+    const socket = useContext(SocketContext)
     const id = censor?.id
     const [loadingReject, setLoadingReject] = useState(false)
     const [loadingAccept, setLoadingAccept] = useState(false)
+    const [reasonReject, setReasonReject] = useState({
+        isOpen: false,
+        value: "",
+    })
+    const [statusPayment, setStatusPayment] = useState(false)
+    const [openPayment, setOpenPayment] = useState(false)
+
     console.log(censor);
 
     const handleAccept = async (type) => {
@@ -19,29 +32,51 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
         const accept = await acceptAndRejectCensor(accessToken, id, type)
         if (accept?.status === 200) {
             toast.success(accept?.data?.message)
+            socket.emit('censor.updateStatus', {
+                title: "Approve censor",
+                content: "The organization you registered has been accepted by the administrator",
+                linkAttach: "/censor/all-product",
+                thumbnail: censor?.avatarUrl,
+                recipientId: censor?.userId
+            })
         } else {
-            toast(accept?.data?.message)
+            toast(accept?.error?.response?.data?.message)
         }
         setChange(!change)
         setLoadingAccept(false)
         modalOpen(false)
     }
 
-    const handleReject = async (type) => {
-        setLoadingReject(true)
-        const reject = await acceptAndRejectCensor(accessToken, id, type)
-        if (reject?.status === 200) {
-            toast.success(reject?.data?.message)
+    const handleSendRejectAndNote = async (e, isReject) => {
+        if (isReject) {
+            if (reasonReject.value === "") return
+            if (!statusPayment) return toast.error("You have not returned the money")
+            setLoadingReject(true)
+            const reject = await acceptAndRejectCensor(accessToken, id, "2")
+            if (reject?.status === 200) {
+                toast.success(reject?.data?.message)
+                socket.emit('censor.updateStatus', {
+                    title: "Reject censor",
+                    content: "The organization you registered has been rejected by the administrator: " + reasonReject.value,
+                    linkAttach: null,
+                    thumbnail: censor?.avatarUrl,
+                    recipientId: censor?.userId
+                })
+            } else {
+                toast(reject?.error?.response?.data?.message)
+            }
+            console.log(reject)
+            setLoadingReject(true)
+            setChange(!change)
+            modalOpen(false)
         } else {
-            toast(reject?.data?.message)
+            setReasonReject({ ...reasonReject, isOpen: false })
+            setLoadingReject(false)
         }
-        setChange(!change)
-        setLoadingReject(false)
-        modalOpen(false)
     }
     return (
-        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(56,56,56,0.5)] overflow-auto font-[sans-serif]">
-            <div className="w-full max-w-4xl bg-white shadow-lg rounded-md p-6 relative">
+        <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full bg-black bg-opacity-5 overflow-auto font-[sans-serif]">
+            <div className="w-full max-w-4xl bg-white rounded-md p-6 relative border z-100 animate-fade-up animate-duration-200 animate-delay-[6ms] animate-ease-linear">
                 <div className="flex items-center pb-3 border-b text-[#007bff]">
                     <h3 className="text-xl font-bold flex-1">CENSOR DETAIL</h3>
                     <button onClick={() => modalOpen(false)}>
@@ -94,27 +129,15 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
                 </div>
 
                 <div className="border-t flex justify-end pt-6 space-x-4">
-                    {loadingReject ? (
-                        <div className="flex gap-2 flex-wrap justify-center p-4 ">
-                            <button disabled type="button" className="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center">
-                                <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="#1C64F2" />
-                                </svg>
-                                Loading...
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex gap-2 flex-wrap justify-center p-4 ">
-                            <button type="button"
-                                className={`py-2.5 px-5 me-2 text-sm font-medium text-white bg-red-600 rounded-lg border border-gray-200 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center ${censor?.status === 'Rejected' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
-                                onClick={(e) => handleReject("2")}
-                                disabled={censor?.status === 'Rejected'}
-                            >
-                                Reject
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex gap-2 flex-wrap justify-center p-4 ">
+                        <button type="button"
+                            className={`py-2.5 px-5 me-2 text-sm font-medium text-white bg-red-600 rounded-lg border border-gray-200 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center ${censor?.status === 'Rejected' ? 'bg-gray-500 text-black cursor-not-allowed hover:bg-slate-500' : ''}`}
+                            onClick={(e) => setReasonReject({ ...reasonReject, isOpen: true })}
+                            disabled={censor?.status === 'Rejected'}
+                        >
+                            Reject
+                        </button>
+                    </div>
                     {loadingAccept ? (
                         <div className="flex gap-2 flex-wrap justify-center p-4 ">
                             <button disabled type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  inline-flex items-center">
@@ -141,11 +164,57 @@ const CensorDetail = ({ modalOpen, censor, accessToken, change, setChange }) => 
                     <div className="flex gap-2 flex-wrap justify-center p-4 ">
                         <button type="button"
                             className="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 inline-flex items-center"
-                            onClick={(e) => modalOpen(false)}>Cance</button>
+                            onClick={(e) => modalOpen(false)}>Cancel</button>
                     </div>
                 </div>
-
             </div>
+            {reasonReject.isOpen && (
+                <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
+                    <div className="w-full max-w-xl bg-white shadow-lg rounded-md p-4 relative">
+                        <label className="block mb-2 text-xl font-bold text-blue-600 text-center">Reason for reject</label>
+                        <Textarea
+                            placeholder="Type something..."
+                            minRows={6}
+                            variant="soft"
+                            value={reasonReject.value}
+                            onChange={(e) => setReasonReject({ ...reasonReject, value: e.target.value })}
+                        />
+                        <div className="flex items-center justify-between my-2">
+                            <div className="flex items-center">
+                                {statusPayment ? (
+                                    <FaCheckCircle className="w-5 text-green-500 mx-2 " />
+                                ) : (
+                                    <span className="w-4 h-4 rounded-full border mx-2 border-solid border-gray-800"></span>
+                                )}
+                                <span>Return money for subscriber 2000.00 USD</span>
+                            </div>
+                            {statusPayment === true ? (
+                                <span className="border border-solid border-green-600 text-blue-600 text-sm ml-2 px-4 py-1 rounded-lg " disabled >Payment</span>
+
+                            ) : (
+                                <span className="border border-solid border-green-600 text-sm text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-1 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
+                            )}
+                            {
+                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={2000} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={7} receiverId={censor.userId} auctionId={null} />
+                            }
+
+                        </div>
+                        <div className="flex justify-end items-center gap-x-3 mt-4">
+                            <Button variant="outlined" onClick={(e) => handleSendRejectAndNote(e, false)} color="danger">Cancel</Button>
+                            <Button sx={{ paddingX: "35px" }} onClick={(e) => handleSendRejectAndNote(e, true)} color="primary">{
+                                loadingReject ? (
+                                    <div className="flex gap-2 flex-wrap justify-center items-center">
+                                        <Spinner className="w-4 h-4"></Spinner>
+                                        Loading...
+                                    </div>
+                                ) : (
+                                    <span>Send</span>
+                                )
+                            }</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

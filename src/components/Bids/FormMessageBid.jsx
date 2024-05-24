@@ -1,7 +1,7 @@
 import {IoArrowDown, IoReload} from "react-icons/io5";
 import ItemAuction from "../Products/ItemAuction";
 import React, {useEffect, useRef, useState} from "react";
-import {fetchBidPricesThunk} from "../../redux/slices/bidPrice";
+import {fetchPreviousBidPricesThunk} from "../../redux/slices/bidPrice";
 import {useDispatch, useSelector} from "react-redux";
 
 const FormMessageBid = ({sessionId}) => {
@@ -21,7 +21,7 @@ const FormMessageBid = ({sessionId}) => {
 
     const handleFetchPreviousBids = () => {
         // Call action fetchPreviousBidPricesThunk và dispatch it
-        (accessToken && sessionId) && dispatch(fetchBidPricesThunk({
+        (accessToken && sessionId) && dispatch(fetchPreviousBidPricesThunk({
             accessToken,
             sessionId: sessionId,
             page: currentPage + 1,
@@ -94,6 +94,7 @@ const FormMessageBid = ({sessionId}) => {
                 {bidPrices?.map((bidPrice, index) => {
                     return <ItemAuction key={index} infoBid={bidPrice} isOwner={userId === bidPrice?.user?.id}/>
                 })}
+
                 {showScrollDownArrow && (
                     <div className="absolute left-0 right-0 bottom-4 flex items-center justify-center mt-2">
                         <p

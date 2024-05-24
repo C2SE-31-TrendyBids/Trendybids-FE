@@ -3,10 +3,18 @@ import * as userServices from "../../services/user";
 
 export const fetchBidPricesThunk = createAsyncThunk(
     'bidPrices/fetch',
-    async ({accessToken, sessionId, page = 1, limit = 6}, thunkApi) => {
+    async ({accessToken, sessionId, page = 1, limit = 8}, thunkApi) => {
         return userServices.getBidPrices(accessToken, sessionId, {page, limit})
     }
 )
+
+export const fetchPreviousBidPricesThunk = createAsyncThunk(
+    'previousBidPrices/fetch',
+    async ({accessToken, sessionId, page = 1, limit = 8}, thunkApi) => {
+        return userServices.getBidPrices(accessToken, sessionId, {page, limit})
+    }
+)
+
 
 const bidPricesSlice = createSlice({
     name: 'bidPrice',
@@ -33,14 +41,23 @@ const bidPricesSlice = createSlice({
     },
     reducers: {
         addBidPrice: (state, action) => {
-            const bidPrice = action.payload?.bidPrice;
-            const highestPrice = action.payload?.highestPrice;
+            const  anonymizeFullName  = action.payload.anonymizeFullName;
+            const bidPrice = action.payload?.data?.bidPrice;
+            const highestPrice = action.payload?.data?.highestPrice;
+            // Modify fullName before adding bidPrice
+            bidPrice.user.fullName = anonymizeFullName(bidPrice.user.fullName);
+            // Add bidPrice to the bidPrices array
             state.bidPrices.push(bidPrice);
+            // Update highestPrice and countBids
             state.highestPrice = highestPrice;
             state.countBids = state.countBids + 1;
         },
         updateUserJoin: (state, action) => {
             state.currentUserJoin = action.payload.numberOfUsers;
+        },
+        addPriceFrom: (state, action) => {
+            const priceFrom = action.payload.priceFrom;
+            state.highestPrice = priceFrom;
         },
     },
     extraReducers: (builder) => {
@@ -49,14 +66,8 @@ const bidPricesSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchBidPricesThunk.fulfilled, (state, action) => {
-                const newBidPrices = action.payload?.response?.auctionPrices.reverse();
                 // If currentPage === 0, it means fetching data for the first time
-                if (state.currentPage === 0) {
-                    state.bidPrices = newBidPrices;
-                } else {
-                    // Otherwise, add new messages to the beginning of bidPrices array
-                    state.bidPrices = [...newBidPrices, ...state.bidPrices];
-                }
+                state.bidPrices = action.payload?.response?.auctionPrices.reverse();
                 state.totalPages = action.payload?.response?.totalPages;
                 state.currentPage = action.payload?.response?.currentPage;
                 state.highestPrice = action.payload?.response?.highestPrice;
@@ -69,9 +80,29 @@ const bidPricesSlice = createSlice({
                 state.loading = false;
                 state.totalPages = 0;
             })
+            .addCase(fetchPreviousBidPricesThunk.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchPreviousBidPricesThunk.fulfilled, (state, action) => {
+                const newBidPrices = action.payload?.response?.auctionPrices.reverse();
+                // If currentPage === 0, it means fetching data for the first time
+                if (state.currentPage === 0) {
+                    state.bidPrices = newBidPrices;
+                } else {
+                    // Otherwise, add new messages to the beginning of bidPrices array
+                    state.bidPrices = [...newBidPrices, ...state.bidPrices];
+                }
+                state.currentPage = action.payload?.response?.currentPage;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchPreviousBidPricesThunk.rejected, (state, action) => {
+                state.loading = false;
+                state.totalPages = 0;
+            })
     }
 });
 
-export const {addBidPrice, updateUserJoin} = bidPricesSlice.actions
+export const {addBidPrice, updateUserJoin,addPriceFrom} = bidPricesSlice.actions
 
 export default bidPricesSlice;
