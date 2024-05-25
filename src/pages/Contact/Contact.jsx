@@ -1,16 +1,15 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Map from "../../components/Map/Map";
-import {motion} from 'framer-motion'
-import {MdOutlineNavigateNext} from "react-icons/md";
+import { motion } from 'framer-motion'
+import { MdOutlineNavigateNext } from "react-icons/md";
 import MethodContext from "../../context/methodProvider";
-import {toast} from "sonner";
-import {BsSendFill} from "react-icons/bs";
-import {Spinner} from "@material-tailwind/react";
+import { toast } from "sonner";
+import { BsSendFill } from "react-icons/bs";
+import { Spinner } from "@material-tailwind/react";
 import * as userServices from "../../services/user";
-
 const Contact = () => {
-    const {validateEmail, validatePhone} = useContext(MethodContext);
+    const { validateEmail, validatePhone } = useContext(MethodContext);
     const [contact, setContact] = useState({
         name: "",
         email: "",
@@ -37,7 +36,7 @@ const Contact = () => {
     useEffect(() => {
         (async () => {
             if (submit) {
-                const res = await userServices.sendContact({...contact});
+                const res = await userServices.sendContact({ ...contact });
                 if (res.statusCode === 200) {
                     toast.success("Send contact success!");
                 } else {
@@ -50,7 +49,7 @@ const Contact = () => {
     }, [submit]);
 
     return (
-        <div className=" mx-auto">
+        <div className=" mx-auto ">
             <div className="relative w-full ">
                 <img
                     src="https://cdn.pixabay.com/photo/2021/04/15/11/52/office-desk-6180921_1280.jpg"
@@ -67,7 +66,7 @@ const Contact = () => {
                         </div>
                         <div className="text-black">
                             <span className=" flex items-center">
-                                <span className="mx-2"><MdOutlineNavigateNext/> </span>
+                                <span className="mx-2"><MdOutlineNavigateNext /> </span>
                                 <span className="">Contact Us</span>
                             </span>
                         </div>
@@ -172,7 +171,7 @@ const Contact = () => {
                                 type="text"
                                 placeholder="Name"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
-                                onChange={(e) => setContact({...contact, name: e.target.value})}
+                                onChange={(e) => setContact({ ...contact, name: e.target.value })}
                             />
                         </div>
                         <div>
@@ -184,7 +183,7 @@ const Contact = () => {
                                 type="email"
                                 placeholder="Email"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
-                                onChange={(e) => setContact({...contact, email: e.target.value})}
+                                onChange={(e) => setContact({ ...contact, email: e.target.value })}
                             />
                         </div>
                         <div>
@@ -196,7 +195,7 @@ const Contact = () => {
                                 type="number"
                                 placeholder="Phone"
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-blue-500"
-                                onChange={(e) => setContact({...contact, phone: e.target.value})}
+                                onChange={(e) => setContact({ ...contact, phone: e.target.value })}
                             />
                         </div>
                         <div>
@@ -208,24 +207,24 @@ const Contact = () => {
                                 placeholder="Message"
                                 rows="6"
                                 className="w-full rounded-md px-4 border text-sm pt-2.5 outline-blue-500"
-                                onChange={(e) => setContact({...contact, message: e.target.value})}
+                                onChange={(e) => setContact({ ...contact, message: e.target.value })}
                             ></textarea>
                         </div>
                         <motion.button
-                            whileHover={{scale: 1.05}}
+                            whileHover={{ scale: 1.05 }}
                             disabled={loading}
                             className="text-white bg-[#007bff] hover:bg-blue-600 font-semibold rounded text-sm px-6 py-3 w-full"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-x-2">
-                                    <Spinner className="h-5 w-5"/>
+                                    <Spinner className="h-5 w-5" />
                                     Sending...
                                 </div>
                             ) : (
                                 <span className="flex items-center justify-center gap-x-2">
-                                <BsSendFill size='16px'/>
-                                Send Message
-                            </span>
+                                    <BsSendFill size='16px' />
+                                    Send Message
+                                </span>
                             )}
                         </motion.button>
                     </form>
@@ -307,7 +306,7 @@ const Contact = () => {
                 </div>
             </div>
             <div className="w-full h-[450px] mb-20 border border-blue-100">
-                <Map/>
+                <Map />
             </div>
         </div>
     );

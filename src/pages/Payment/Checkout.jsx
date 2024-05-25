@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import ModalPay from './ModalPay'
 import { MdOutlineShoppingCartCheckout } from "react-icons/md";
 import Box from '@mui/material/Box';
@@ -6,9 +7,13 @@ import Modal from '@mui/material/Modal';
 import * as userApi from "../../services/user";
 import AuthContext from "../../context/authProvider";
 import { toast } from "sonner";
+import moment from "moment";
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = ({ productAuction }) => {
     const accessToken = localStorage.getItem('access-token');
+    const location = useLocation();
+    const item = location.state?.item;
     const user = JSON.parse(localStorage.getItem("auth"));
     const [name, setName] = useState(user?.fullName || 'No Information')
     const [address, setAddress] = useState(user?.address || 'No Information')
@@ -16,13 +21,13 @@ const Checkout = ({ productAuction }) => {
     const [openPayment, setOpenPayment] = useState(false);
     const [statusPayment, setStatusPayment] = useState(false);
     const [totalPrice, setTotalPrice] = useState('');
-
     const shippingPrice = 2
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const { auth, setAuth } = useContext(AuthContext);
-
+    const navigate = useNavigate();
+    console.log(item);
     const handleSaveUserInformation = async () => {
         const formData = {
             fullName: name,
@@ -42,21 +47,20 @@ const Checkout = ({ productAuction }) => {
             toast.error("Error updating user data", error);
         }
     }
-
-    productAuction = {
-        ProductAuctionId: 'f2c5dbc3-45c4-44b0-8971-57222f705532',
-        productName: 'Phạm hữu sáng',
-        startPrice: 120,
-        hightPrice: 1234,
-        startTime: "12/05/2024 10:30",
-        endTime: "16/05/2024 10:30",
-        owner: "Lieu Thien Quang",
-        orageAuction: "THIENQUANGCOMPANI",
-        orageId: '820e1e15-a2be-4497-83df-97829e208491'
-    }
     useEffect(() => {
-        setTotalPrice(productAuction?.hightPrice + shippingPrice + ((productAuction?.hightPrice) * 0.5 / 100) - productAuction?.startPrice)
-    }, [])
+        const calculatedPrice = parseFloat(
+            parseFloat(item?.highestPrice) +
+            shippingPrice +
+            (parseFloat(item?.highestPrice) * 0.5 / 100) -
+            parseFloat(item?.product?.startingPrice)
+        ).toFixed(2);
+        setTotalPrice(parseFloat(calculatedPrice));
+    }, [item, shippingPrice]);
+    useEffect(() => {
+        if (statusPayment) {
+            navigate('/dashboard')
+        }
+    }, [statusPayment])
     const handleOpenPayment = () => {
         if (name !== 'No Information' && phoneNumber !== 'No Information' && address !== 'No Information') {
             setOpenPayment(true)
@@ -128,8 +132,8 @@ const Checkout = ({ productAuction }) => {
                         <div className="text-lg ml-2 font-semibold mt-2 text-blue-600">PRODUCT AUCTION INFORMATION </div>
                         <div className="grid grid-cols-3 gap-4 my-2 ">
                             <div className="col-span-1 flex items-center justify-center">
-                                <div className=" w-56 h-64 border">
-
+                                <div className=" w-56 h-64 flex items-center">
+                                    <img src={item?.product?.prdImages[0]?.prdImageURL} alt="product" />
                                 </div>
                             </div>
                             <div className="col-span-1 text-lg font-semibold mt-4">
@@ -141,12 +145,12 @@ const Checkout = ({ productAuction }) => {
                                 <div className="mb-4 ">Organize auctions :</div>
                             </div>
                             <div className="col-span-1 text-lg font-semibold mt-4">
-                                <div className="mb-4 ">{productAuction?.productName}</div>
-                                <div className="mb-4 ">$ {productAuction?.hightPrice}</div>
-                                <div className="mb-4 ">{productAuction?.startTime}</div>
-                                <div className="mb-4 ">{productAuction?.endTime}</div>
-                                <div className="mb-4 ">{productAuction?.owner}</div>
-                                <div className="mb-4 ">{productAuction?.orageAuction}</div>
+                                <div className="mb-4 ">{item?.product?.productName}</div>
+                                <div className="mb-4 ">$ {item?.highestPrice}</div>
+                                <div className="mb-4 ">{moment(item?.startTime).format('DD/MM/YYYY hh:mm ')}</div>
+                                <div className="mb-4 ">{moment(item?.endTime).format('DD/MM/YYYY hh:mm ') || "Null"}</div>
+                                <div className="mb-4 ">{item?.product?.owner?.fullName}</div>
+                                <div className="mb-4 ">{item?.censor?.name}</div>
                             </div>
                         </div>
                     </div>
@@ -165,10 +169,10 @@ const Checkout = ({ productAuction }) => {
                                 <div className="mt-2 ml-10 text-base">Risk : </div>
                             </div>
                             <div className="col-span-1 text-base">
-                                <div className="mt-2 ml-10">${productAuction?.hightPrice}</div>
+                                <div className="mt-2 ml-10">${item?.highestPrice}</div>
                                 <div className="mt-2 ml-10">${shippingPrice}</div>
-                                <div className="mt-2 ml-10">${(productAuction?.hightPrice) * 0.5 / 100}</div>
-                                <div className="mt-2 ml-10">${productAuction?.startPrice}</div>
+                                <div className="mt-2 ml-10">${(item?.highestPrice) * 0.5 / 100}</div>
+                                <div className="mt-2 ml-10">${item?.product?.startingPrice}</div>
                             </div>
                         </div>
                         <div className="flex items-center justify-between mx-4 my-2 font-bold text-xl">
@@ -183,7 +187,7 @@ const Checkout = ({ productAuction }) => {
                         <div className="flex items-center justify-center mt-10">
                             <button className="mx-4 py-3 w-full border-2 rounded-lg font-bold text-white text-2xl bg-[#FF3366] hover:bg-[#FF3399] " onClick={(e) => { handleOpenPayment() }}>PAYMENT</button>
                             {
-                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={totalPrice} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={4} receiverId={productAuction?.orageId} auctionId={productAuction?.ProductAuctionId} />
+                                openPayment && <ModalPay modalOpen={setOpenPayment} amount={totalPrice} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={4} receiverId={item?.censor?.id} auctionId={item?.id} />
                             }
                         </div>
                     </div>

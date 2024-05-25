@@ -218,6 +218,38 @@ const sendContact = async (body) => {
         };
     }
 };
+const getAuctionBidsSuccess = async (accessToken, page, limit) => {
+    try {
+        const response = await request.get(`/statistical/auction-bid-success?pageNumber=${page}&limit=${limit}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+}
+const getTransaction = async (accessToken, page, limit) => {
+    try {
+        const response = await request.get(`/user/get-transaction?pageNumber=${page}&limit=${limit}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        return {
+            response: response.data,
+            statusCode: response.status,
+        };
+    } catch (error) {
+        return {
+            error: error.response.data,
+            statusCode: error.response.status,
+        };
+    }
+}
 
-export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession, getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser, sendContact };
+export { getCurrentUser, joinSession, editUser, changePass, uploadAvatar, searchUser, getBidPrices, getSummaryAuctionSession, getSummaryAuctionSessionUser, getSummaryAuctionSessionDetailUser, sendContact, getAuctionBidsSuccess, getTransaction };
 

@@ -29,7 +29,7 @@ const ViewUserParticipant = ({ productAuctionId }) => {
         const fetchData = async () => {
             try {
                 const response = await getUserParticipating(accessToken, pageNumber, 6, productAuctionId);
-                console.log(response);
+
                 setUserParticipant(response?.data?.userParticipating);
                 setTotalUserParticipant(response.data?.userCount);
                 setTotalPages(response?.data?.totalPages);
@@ -43,7 +43,6 @@ const ViewUserParticipant = ({ productAuctionId }) => {
                     const result = await isReturnMoney(accessToken, body);
                     return result?.data?.success;
                 });
-
                 const paymentStatusResults = await Promise.all(paymentStatusPromises);
                 setPaymentStatusList(paymentStatusResults);
                 setStatusPayment(false)
@@ -68,10 +67,10 @@ const ViewUserParticipant = ({ productAuctionId }) => {
     }
 
     return (
-        <div className="h-[620px] overflow-auto border bg-white py-2 px-2 rounded-md relative">
+        <div className="w-[800px] h-[620px] overflow-auto border bg-white py-2 px-2 rounded-md relative">
             <div className='grid grid-cols-2 gap-2'>
                 <div className='col-span-1 m-2'>
-                    <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center md:mt-0 ">
+                    <div className="p-1 border-[0.5px] border-gray-400 rounded-lg text-black bg-white flex items-center md:mt-0">
                         <AiOutlineUsergroupAdd className="text-5xl text-blue-400 mx-2" />
                         <div className="">
                             <p className="text-xl font-bold">{totalUserParticipant}</p>
@@ -133,14 +132,14 @@ const ViewUserParticipant = ({ productAuctionId }) => {
                             )
                         })
                     ) : (
-                        <div className="w-full mx-[35%] mt-[20%] flex justify-center items-center flex-col">
+                        <div className="w-full mx-[50%] mt-[20%] flex justify-center items-center flex-col">
                             <img
                                 src={noDataSvg}
                                 alt="anh"
                                 className="w-52 h-52 text-primaryColor mr-8"
                             ></img>
                             <h2 className="text-xl font-medium mt-2 mb-2">
-                                There are no user participanting
+                                There are no user participating
                             </h2>
                         </div>
                     )}
