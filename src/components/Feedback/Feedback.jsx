@@ -1,18 +1,162 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, TextField, Grid } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { FaStar } from "react-icons/fa6";
 import { BsThreeDotsVertical } from "react-icons/bs";
-const handleSubmit = () => {
-    console.log("Succcessfully submitted");
-};
-const Feedback = () => {
-    const [value, setValue] = React.useState(2);
-    const [showOptions, setShowOptions] = useState(false);
+import { useParams } from "react-router-dom";
+import * as feedbackService from "../../services/feedback";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFeedbackThunk } from "../../redux/slices/feedback";
+import moment from "moment";
 
-    const handleToggleOptions = () => {
-        setShowOptions(!showOptions);
+const Feedback = () => {
+    const accessToken = localStorage.getItem("access-token");
+    const auth = localStorage.getItem("auth");
+    const authObject = auth ? JSON.parse(auth) : null;
+    const userId = authObject ? authObject.id : null;
+    const userIdString = userId ? String(userId) : "";
+    const [change, setChange] = useState(true);
+    const dispatch = useDispatch();
+
+    const { productAuctionId } = useParams();
+    const [form, setForm] = useState({
+        rating: 1,
+        message: "",
+        userId: userIdString,
+        productAuctionId: productAuctionId,
+        createdAt: new Date(),
+    });
+
+    const { list } = useSelector((state) => state.feedback);
+
+    const [idFeedback, setIdFeedback] = useState("");
+
+    useEffect(() => {
+        dispatch(
+            fetchFeedbackThunk({ accessToken, productAuctionId, userIdString })
+        );
+    }, [productAuctionId]);
+
+    const handleToggleOptions = (item) => {
+        setIdFeedback(item?.id);
+        // setShowOptions(!showOptions);
     };
+
+    const handleChangeMessage = (e) => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            message: e.target.value,
+        }));
+    };
+
+    const handleChangeRating = (e) => {
+        console.log(e.target.value);
+        setForm((prevForm) => ({
+            ...prevForm,
+            rating: e.target.value,
+        }));
+    };
+    const handleSubmit = () => {
+        console.log(idFeedback, "idFeedback");
+        if (idFeedback !== "") {
+            const body = {
+                message: form.message,
+                rating: form.rating,
+            };
+            feedbackService
+                .updateFeedback(accessToken, idFeedback, body)
+                .then((res) => {
+                    dispatch(
+                        fetchFeedbackThunk({
+                            accessToken,
+                            productAuctionId,
+                            userIdString,
+                        })
+                    );
+                    toast.success(`${res.response.message}`);
+                    setForm((prevForm) => ({
+                        ...prevForm,
+                        message: "",
+                        rating: 1,
+                    }));
+                    setIdFeedback("");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            feedbackService
+                .createFeedback(accessToken, form)
+                .then((res) => {
+                    dispatch(
+                        fetchFeedbackThunk({
+                            accessToken,
+                            productAuctionId,
+                            userIdString,
+                        })
+                    );
+                    toast.success(`${res.response.message}`);
+                    setForm((prevForm) => ({
+                        ...prevForm,
+                        message: "",
+                        rating: 1,
+                    }));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+       
+    };
+
+    const handleCancel = () => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            message: "",
+            rating: 1,
+        }));
+    };
+
+    const RatingComponent = (rating) => {
+        const ratingArray = Array.from({ length: rating }, (v, k) => k + 1);
+        return (
+            <div className="flex space-x-1 mt-1">
+                {ratingArray.map((num) => (
+                    <FaStar key={num} className="w-4 fill-[#facc15]" />
+                ))}
+            </div>
+        );
+    };
+
+    const onClickDelete = (id) => {
+        feedbackService
+            .deleteFeedback(accessToken, id)
+            .then((res) => {
+                dispatch(
+                    fetchFeedbackThunk({
+                        accessToken,
+                        productAuctionId,
+                        userIdString,
+                    })
+                );
+                toast.success("Successfully Deleted Feedback");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+          
+    };
+
+    const onClickUpdate = (item) => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            message: item.message,
+            rating: item.rating,
+        }));
+     
+    };
+
     return (
         <div className="max-w-2xl mx-auto  p-6 text-[#333] font-[sans-serif] rounded-md border border-[#333]">
             <div className="flex flex-col items-center">
@@ -35,10 +179,8 @@ const Feedback = () => {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <Rating
                         name="simple-controlled"
-                        value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                        }}
+                        value={form.rating}
+                        onChange={handleChangeRating}
                         sx={{
                             display: "inline-flex",
                             alignItems: "center",
@@ -52,6 +194,8 @@ const Feedback = () => {
                     variant="outlined"
                     fullWidth
                     sx={{ mt: 2 }}
+                    onChange={handleChangeMessage}
+                    value={form.message}
                 />
                 <Grid
                     container
@@ -60,7 +204,7 @@ const Feedback = () => {
                 >
                     <Grid item xs={3}>
                         <button
-                            // onClick={handleCancel}
+                            onClick={handleCancel}
                             type="button"
                             className="px-6 py-2.5 text-sm font-semibold text-black border border-gray-400 rounded hover:bg-gray-200 mr-4 w-full"
                         >
@@ -79,136 +223,82 @@ const Feedback = () => {
                 </Grid>
             </Box>
             <div className="mt-2 ">
-                <h3 className="font-bold text-base">All Reviews(2)</h3>
+                <h3 className="font-bold text-base">
+                    All Reviews {`(${list.length || 0})`}
+                </h3>
                 <div className="mt-6 space-y-4 max-h-56 overflow-auto">
-                    <div className="flex items-start">
-                        <img
-                            alt=""
-                            src="https://readymadeui.com/team-2.webp"
-                            className="w-12 h-12 rounded-full border-2 border-white"
-                        />
-                        <div className="ml-3">
-                            <h4 className="text-sm font-bold">John Doe</h4>
-                            <div className="flex space-x-1 mt-1">
-                                <FaStar className="w-4 fill-[#facc15]" />
-                                <FaStar className="w-4 fill-[#facc15]" />
-                            </div>
-                            <p className="text-xs mt-2 font-semibold">
-                                2020-11-20 13:55
-                            </p>
-                            <p className="text-xs mt-2">
-                                The service was amazing. I never had to wait
-                                that long for my food. The staff was friendly
-                                and attentive, and the delivery was impressively
-                                prompt.
-                            </p>
-                        </div>
-                        <div className="flex  mt-1 relative">
-                            <button
-                                type="button"
-                                onClick={handleToggleOptions}
-                                className="text-gray-400 hover:text-gray-600 focus:outline-none"
-                            >
-                                <BsThreeDotsVertical />
-                            </button>
-                            {showOptions && (
-                                <div className="absolute top-0 mt-6 b ">
-                                    <div className="ml-[-30px]">
-                                        <button className="text-sm font-medium text-gray-500 hover:text-gray-800 focus:outline-none ">
-                                            Edit
-                                        </button>
-                                        <button className="text-sm font-medium text-gray-500 hover:text-gray-800 focus:outline-none ">
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex items-start">
-                        <img
-                            alt=""
-                            src="https://readymadeui.com/team-1.webp"
-                            className="w-12 h-12 rounded-full border-2 border-white"
-                        />
-                        <div className="ml-3">
-                            <h4 className="text-sm font-bold">Mark Adair</h4>
-                            <div className="flex space-x-1 mt-1">
-                                <svg
-                                    className="w-4 fill-[#facc15]"
-                                    viewBox="0 0 14 13"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                </svg>
-                                <svg
-                                    className="w-4 fill-[#facc15]"
-                                    viewBox="0 0 14 13"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                </svg>
-                                <svg
-                                    className="w-4 fill-[#facc15]"
-                                    viewBox="0 0 14 13"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                </svg>
-                                <svg
-                                    className="w-4 fill-[#CED5D8]"
-                                    viewBox="0 0 14 13"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                </svg>
-                                <svg
-                                    className="w-4 fill-[#CED5D8]"
-                                    viewBox="0 0 14 13"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                </svg>
-                            </div>
-                            <p className="text-xs mt-2 font-semibold">
-                                2020-11-20 13:55
-                            </p>
-                            <p className="text-xs mt-2">
-                                The service was amazing. I never had to wait
-                                that long for my food. The staff was friendly
-                                and attentive, and the delivery was impressively
-                                prompt.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-start">
-                        <img
-                            alt=""
-                            src="https://readymadeui.com/team-2.webp"
-                            className="w-12 h-12 rounded-full border-2 border-white"
-                        />
-                        <div className="ml-3">
-                            <h4 className="text-sm font-bold">John Doe</h4>
-                            <div className="flex space-x-1 mt-1">
-                                <FaStar className="w-4 fill-[#facc15]" />
-                                <FaStar className="w-4 fill-[#facc15]" />
-                            </div>
-                            <p className="text-xs mt-2 font-semibold">
-                                2020-11-20 13:55
-                            </p>
-                            <p className="text-xs mt-2">
-                                The service was amazing. I never had to wait
-                                that long for my food. The staff was friendly
-                                and attentive, and the delivery was impressively
-                                prompt.
-                            </p>
-                        </div>
-                    </div>
+                    {list.length > 0
+                        ? list.map((item, index) => {
+                              return (
+                                  <div className="flex items-start justify-between">
+                                      <div className="flex">
+                                          <img
+                                              alt=""
+                                              src={
+                                                  item?.user?.avatar_url ||
+                                                  "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
+                                              }
+                                              className="w-12 h-12 rounded-full border-2 border-white"
+                                          />
+                                          <div className="ml-3">
+                                              <h4 className="text-sm font-bold">
+                                                  {item?.user?.full_name}
+                                              </h4>
+                                              {RatingComponent(item.rating)}
+                                              <p className="text-xs mt-2 font-semibold">
+                                                  {moment(
+                                                      item.createdAt
+                                                  ).format("YYYY-MM-DD HH:mm")}
+                                              </p>
+                                              <p className="text-xs mt-2">
+                                                  {item?.message}
+                                              </p>
+                                          </div>
+                                      </div>
+                                      <div className="flex  mt-1 relative">
+                                          {userIdString === item.userId && (
+                                              <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                      handleToggleOptions(item)
+                                                  }
+                                                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                              >
+                                                  <BsThreeDotsVertical />
+                                              </button>
+                                          )}
+
+                                          {item.id === idFeedback && (
+                                              <div className="absolute top-0 mt-6">
+                                                  <div className="ml-[-30px]">
+                                                      <button
+                                                          onClick={() =>
+                                                              onClickUpdate(
+                                                                  item
+                                                              )
+                                                          }
+                                                          className="text-sm font-medium text-gray-500 hover:text-gray-800 focus:outline-none "
+                                                      >
+                                                          Edit
+                                                      </button>
+                                                      <button
+                                                          onClick={() =>
+                                                              onClickDelete(
+                                                                  item.id
+                                                              )
+                                                          }
+                                                          className="text-sm font-medium text-gray-500 hover:text-gray-800 focus:outline-none "
+                                                      >
+                                                          Delete
+                                                      </button>
+                                                  </div>
+                                              </div>
+                                          )}
+                                      </div>
+                                  </div>
+                              );
+                          })
+                        : ""}
                 </div>
             </div>
         </div>

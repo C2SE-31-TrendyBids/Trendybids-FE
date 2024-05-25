@@ -41,6 +41,7 @@ const ProductAuctionDetail = () => {
                     auctionId: productAuction?.id,
                     index: 3
                 };
+                console.log(body);
                 const result = await isReturnMoney(accessToken, body);
                 console.log(result);
                 if (result?.data?.success) {
