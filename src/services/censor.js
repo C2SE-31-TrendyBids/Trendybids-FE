@@ -316,7 +316,17 @@ const deleteMember = async ({ accessToken, id }) => {
       statusCode: error.status,
     };
   }
+
 };
+
+const updateStatus = async (sessionId) => {
+  try {
+    return await request.put("/censor/update-status", {}, {params: {sessionId}});
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   registerCensor,
   getProductAuction,
@@ -332,5 +342,6 @@ export {
   getAllMemberOrganization,
   addMemberByEmail,
   getUserByEmail,
-  deleteMember
+  deleteMember,
+  updateStatus
 };
