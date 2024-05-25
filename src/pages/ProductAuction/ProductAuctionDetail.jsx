@@ -2,13 +2,14 @@ import ImagesComp from "../../components/Images/ImagesComp";
 import { useNavigate, useParams } from "react-router-dom";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer";
 import React, { useEffect, useState } from "react";
-import ProductItem from "../../components/Products/ProductItem";
 import * as productAuctionService from "../../services/censor";
 import * as userServices from "../../services/user";
 import { toast } from "sonner";
 import ProductRelated from "../../components/Products/ProductRelated";
 import ModalPay from "../Payment/ModalPay";
 import { FaCheckCircle } from "react-icons/fa";
+import moment from "moment";
+import * as censorServices from "../../services/censor";
 import { isReturnMoney } from '../../services/payment';
 
 import Feedback from "../../components/Feedback/Feedback";
@@ -68,6 +69,35 @@ const ProductAuctionDetail = () => {
         };
         categoryId && fetchProductAuctionRelated();
     }, [categoryId]);
+
+    useEffect(() => {
+        // Check if the API has been called before
+        if (!sessionStorage.getItem(`hasCalledAPI_${auctionSessionDetail?.id}`)) {
+            const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            const startDate = moment(auctionSessionDetail?.startTime).format('YYYY-MM-DD HH:mm:ss');
+            const endDate = moment(auctionSessionDetail?.endTime).format('YYYY-MM-DD HH:mm:ss');
+            let timeoutId;
+            const delay = 1000 * Math.floor(Math.random() * 4);
+
+            if (currentDate >= startDate && currentDate < endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is up!');
+                    await censorServices.updateStatus(auctionSessionDetail?.id);
+                    setAuctionSessionDetail(prevState => ({...prevState, status: "ongoing"}));
+                    sessionStorage.setItem(`hasCalledAPI_${auctionSessionDetail?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            } else if (currentDate >= endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is Down!');
+                    await censorServices.updateStatus(auctionSessionDetail?.id);
+                    setAuctionSessionDetail(prevState => ({...prevState, status: "ended"}));
+                    sessionStorage.setItem(`hasCalledAPI_${auctionSessionDetail?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            }
+
+            return () => clearTimeout(timeoutId); // Clean up when the component is unmounted
+        }
+    }, [auctionSessionDetail]);
 
     const handleJoinAuction = async (sessionId) => {
         if (accessToken) {

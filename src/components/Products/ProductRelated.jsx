@@ -11,12 +11,12 @@ const ProductRelated = ({productAuctionsRelated = []}) => {
 
     const settings = {
         dots: false,
-        infinite: true,
+        infinite: productAuctionsRelated.length > 1,
         speed: 200,
         slidesToScroll: 1,
-        slidesToShow: 4,
+        slidesToShow: Math.min(productAuctionsRelated.length, 4),
         initialSlide: 0,
-        autoplay: true,
+        autoplay: productAuctionsRelated.length > 1,
         autoplaySpeed: 2000,
         arrows: false,
         cssEase: 'linear',
@@ -25,21 +25,21 @@ const ProductRelated = ({productAuctionsRelated = []}) => {
             {
                 breakpoint: 1400,
                 settings: {
-                    slidesToShow: productAuctionsRelated?.length < 4 ? productAuctionsRelated?.length : 4,
+                    slidesToShow: Math.min(productAuctionsRelated.length, 4),
                     slidesToScroll: 2
                 },
             },
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: productAuctionsRelated?.length < 3 ? productAuctionsRelated?.length : 3,
+                    slidesToShow: Math.min(productAuctionsRelated.length, 3),
                     slidesToScroll: 1
                 },
             },
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: productAuctionsRelated?.length < 2 ? productAuctionsRelated?.length : 2,
+                    slidesToShow: Math.min(productAuctionsRelated.length, 2),
                     slidesToScroll: 1,
                 },
             },
@@ -60,11 +60,17 @@ const ProductRelated = ({productAuctionsRelated = []}) => {
             <div className="gap-5 mt-5">
                 <Slider {...settings}>
                     {
-                        productAuctionsRelated.map((item) => {
-                            return (
+                        productAuctionsRelated?.length > 1 ?
+                            productAuctionsRelated.map((item) => {
+                                return (
                                     <ProductItem key={item?.id} infoAuction={item} type={"itemSlider"}/>
-                            )
-                        })
+                                )
+                            })
+                            :
+                           <div className='w-[300px]'>
+                               <ProductItem key={productAuctionsRelated[0]?.id} infoAuction={productAuctionsRelated[0]}
+                                            type={"itemSlider"}/>
+                           </div>
                     }
                 </Slider>
             </div>
