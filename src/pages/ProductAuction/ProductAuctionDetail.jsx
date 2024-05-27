@@ -2,13 +2,16 @@ import ImagesComp from "../../components/Images/ImagesComp";
 import { useNavigate, useParams } from "react-router-dom";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer";
 import React, { useEffect, useState } from "react";
-import ProductItem from "../../components/Products/ProductItem";
 import * as productAuctionService from "../../services/censor";
 import * as userServices from "../../services/user";
 import { toast } from "sonner";
 import ProductRelated from "../../components/Products/ProductRelated";
 import ModalPay from "../Payment/ModalPay";
 import { FaCheckCircle } from "react-icons/fa";
+import moment from "moment";
+import * as censorServices from "../../services/censor";
+import { isReturnMoney } from '../../services/payment';
+
 import Feedback from "../../components/Feedback/Feedback";
 const ProductAuctionDetail = () => {
 
@@ -33,6 +36,17 @@ const ProductAuctionDetail = () => {
                 setAuctionSessionDetail(productAuction)
                 const categoryId = productAuction?.product?.category?.id
                 setCategoryId(categoryId)
+                const body = {
+                    receiverId: productAuction?.censor?.id,
+                    auctionId: productAuction?.id,
+                    index: 3
+                };
+                console.log(body);
+                const result = await isReturnMoney(accessToken, body);
+                console.log(result);
+                if (result?.data?.success) {
+                    setStatusPayment(true)
+                }
             }
             setIsLoading(false);
         };
@@ -55,6 +69,35 @@ const ProductAuctionDetail = () => {
         };
         categoryId && fetchProductAuctionRelated();
     }, [categoryId]);
+
+    useEffect(() => {
+        // Check if the API has been called before
+        if (!sessionStorage.getItem(`hasCalledAPI_${auctionSessionDetail?.id}`)) {
+            const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            const startDate = moment(auctionSessionDetail?.startTime).format('YYYY-MM-DD HH:mm:ss');
+            const endDate = moment(auctionSessionDetail?.endTime).format('YYYY-MM-DD HH:mm:ss');
+            let timeoutId;
+            const delay = 1000 * Math.floor(Math.random() * 4);
+
+            if (currentDate >= startDate && currentDate < endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is up!');
+                    await censorServices.updateStatus(auctionSessionDetail?.id);
+                    setAuctionSessionDetail(prevState => ({...prevState, status: "ongoing"}));
+                    sessionStorage.setItem(`hasCalledAPI_${auctionSessionDetail?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            } else if (currentDate >= endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is Down!');
+                    await censorServices.updateStatus(auctionSessionDetail?.id);
+                    setAuctionSessionDetail(prevState => ({...prevState, status: "ended"}));
+                    sessionStorage.setItem(`hasCalledAPI_${auctionSessionDetail?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            }
+
+            return () => clearTimeout(timeoutId); // Clean up when the component is unmounted
+        }
+    }, [auctionSessionDetail]);
 
     const handleJoinAuction = async (sessionId) => {
         if (accessToken) {
@@ -121,7 +164,7 @@ const ProductAuctionDetail = () => {
                                         <span>You must pay {auctionSessionDetail?.product?.startingPrice} USD to participate in the auction</span>
                                     </div>
                                     {statusPayment === true ? (
-                                        <span className="border border-solid border-green-600 text-blue-600 text-sm ml-2 px-4 py-1 rounded-lg " disabled >Payment</span>
+                                        <span className="border border-solid bg-gray-600  text-white text-sm ml-2 px-4 py-1 rounded-lg " disabled >Success</span>
 
                                     ) : (
                                         <span className="border border-solid border-green-600 text-sm text-blue-600 hover:bg-green-500 hover:text-white ml-2 px-4 py-1 rounded-lg cursor-pointer" onClick={(e) => { setOpenPayment(true) }}>Payment</span>
@@ -129,7 +172,6 @@ const ProductAuctionDetail = () => {
                                     {
                                         openPayment && <ModalPay modalOpen={setOpenPayment} amount={auctionSessionDetail?.product?.startingPrice} accessToken={accessToken} setStatus={setStatusPayment} status={statusPayment} index={3} receiverId={auctionSessionDetail?.censor?.id} auctionId={auctionSessionDetail?.id} />
                                     }
-
                                 </div>
                                 <button
                                     className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mt-5 font-semibold "

@@ -4,13 +4,16 @@ import { getWallet, paymentWallet, otpTranferMoney, verifyOtp } from '../../serv
 import { toast } from 'sonner';
 import OtpInput from './Otp';
 import { Box, Modal } from '@mui/material';
+import PageLoading from '../Loading/PageLoading'
 
 const PayEWallet = ({ amount, accessToken, setStatus, setOpen, index, receiverId, auctionId }) => {
     const [wallet, setWallet] = useState('');
     const [openModalOtp, setOpenModalOtp] = useState(false);
     const handleOpenModalOtp = () => setOpenModalOtp(true);
     const handleCloseModalOtp = () => setOpenModalOtp(false);
-
+    const [openModalLoading, setOpenModalLoading] = useState(false);
+    const handleOpenModalLoading = () => setOpenModalLoading(true);
+    const handleCloseModalLoading = () => setOpenModalLoading(false);
     const userData = JSON.parse(localStorage.getItem('auth'));
     useEffect(() => {
         try {
@@ -37,10 +40,24 @@ const PayEWallet = ({ amount, accessToken, setStatus, setOpen, index, receiverId
         boxShadow: 24,
         p: 4,
     };
+    const styleLoading = {
+        position: 'absolute',
+        borderRadius: 5,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 200,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
     const handlePayment = async () => {
+        handleOpenModalLoading()
         try {
             const otpData = await otpTranferMoney(accessToken)
             if (otpData.status === 200) {
+                handleCloseModalLoading()
                 handleOpenModalOtp()
             }
         } catch (error) {
@@ -110,6 +127,16 @@ const PayEWallet = ({ amount, accessToken, setStatus, setOpen, index, receiverId
                 <Box sx={style}>
                     <OtpInput length={6}
                         onOtpSubmit={onOtpSubmit} />
+                </Box>
+            </Modal>
+            <Modal
+                open={openModalLoading}
+                onClose={handleCloseModalLoading}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={styleLoading}>
+                    <PageLoading />
                 </Box>
             </Modal>
         </div>

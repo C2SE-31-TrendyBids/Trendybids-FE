@@ -26,7 +26,7 @@ export const MethodProvider = ({children}) => {
         } else {
             const auth = JSON.parse(localStorage.getItem('auth'))
             if (auth) {
-                const role = auth?.role?.name;
+                const role = auth?.role?.name;  
                 if (role !== roleName) {
                     toast.error('Deny access, your role cannot be accessed!');
                     navigate('/')

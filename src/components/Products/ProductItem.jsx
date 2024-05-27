@@ -2,21 +2,59 @@ import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import {FaPlus} from "react-icons/fa";
 import React, {useEffect, useRef, useState} from 'react';
 import * as userServices from '../../services/user'
+import * as censorServices from '../../services/censor'
 import {toast} from "sonner";
 import {Link, useNavigate} from "react-router-dom";
 import logo from "../../assets/images/logo.jpg";
+import moment from "moment/moment";
 
 const ProductItem = ({infoAuction = {}, type = "item"}) => {
+    console.log(">>>"+infoAuction?.product?.startingPrice);
     const divRef = useRef(null);
     const [width, setWidth] = useState()
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const navigator = useNavigate()
+    const [auction, setAuction] = useState(infoAuction || {});
 
     useEffect(() => {
         if (divRef.current) {
             setWidth(divRef.current.offsetWidth);
         }
     }, [windowWidth]);
+
+    useEffect(() => {
+        setAuction(auction);
+    },[infoAuction]);
+
+    useEffect(() => {
+        // Check if the API has been called before
+        if (!sessionStorage.getItem(`hasCalledAPI_${infoAuction?.id}`)) {
+            const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            const startDate = moment(infoAuction?.startTime).format('YYYY-MM-DD HH:mm:ss');
+            const endDate = moment(infoAuction?.endTime).format('YYYY-MM-DD HH:mm:ss');
+            let timeoutId;
+            const delay = 1000 * Math.floor(Math.random() * 4);
+
+            if (currentDate >= startDate && currentDate < endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is up!');
+                    await censorServices.updateStatus(infoAuction?.id);
+                    setAuction(prevState => ({...prevState, status: "ongoing"}));
+                    sessionStorage.setItem(`hasCalledAPI_${infoAuction?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            } else if (currentDate >= endDate) {
+                timeoutId = setTimeout(async () => {
+                    console.log('Time is Down!');
+                    await censorServices.updateStatus(infoAuction?.id);
+                    setAuction(prevState => ({...prevState, status: "ended"}));
+                    sessionStorage.setItem(`hasCalledAPI_${infoAuction?.id}`, 'true'); // Set the flag after calling the API
+                }, delay);
+            }
+
+            return () => clearTimeout(timeoutId); // Clean up when the component is unmounted
+        }
+    }, [infoAuction]);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -52,7 +90,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
     return (
         <Link
             className={type === "itemSlider" && "mx-3 block"}
-            to={`${infoAuction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
+            to={`${auction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
             relative={"route"}>
             <div ref={divRef} className="w-full max-h-[350px] grid grid-rows-6 shadow rounded-t-lg">
                 <div
@@ -61,21 +99,24 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                         className="w-full min-h-[200px] rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
                         src={infoAuction?.product?.prdImages[0]?.prdImageURL || ""}
                         alt={infoAuction?.product?.productName}
-                        onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = logo;
+                        }}
                     />
 
                     <div
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     {/*Countdown*/}
-                    {infoAuction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
+                    {auction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
                     {/*auction session starting*/}
-                    {infoAuction?.status === "ongoing" &&
+                    {auction?.status === "ongoing" &&
                         <p className="absolute left-2 top-2 bg-green-400 text-xm rounded px-4 py-1  text-white font-normal">ongoing</p>}
                     {/*auction session ended*/}
-                    {infoAuction?.status === "ended" &&
+                    {auction?.status === "ended" &&
                         <p className="absolute left-2 top-2 bg-red-500 text-xm rounded px-4 py-1 text-white font-normal">ended</p>}
                     {/*auction session not started*/}
-                    {infoAuction?.status === "not_started" &&
+                    {auction?.status === "not_started" &&
                         <div
                             className="absolute left-1/2 -translate-x-1/2 opacity-0 -bottom-10 bg-[#1972F5] rounded group-hover:opacity-100 group-hover:bottom-3 transition-all duration-300">
                             <button
