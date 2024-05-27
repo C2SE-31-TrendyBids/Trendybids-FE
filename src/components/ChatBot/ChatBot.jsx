@@ -98,9 +98,9 @@ const ChatBot = () => {
                             <div className='w-full' key={index}>
                                 {item?.name === 'TrendyBids' ? (
                                     <div className='flex items-start justify-start'>
-                                        <div className='max-w-[60%] text-start bg-gray-600 text-white m-4 p-2 rounded-t-2xl rounded-br-2xl '>
+                                        <div className='max-w-[60%] text-start bg-gray-200 text-black m-4 p-2 rounded-t-2xl rounded-br-2xl '>
                                             {item.messages.split('\n').map((line, index) => (
-                                                <p key={index} className='px-2 '>{line}</p>
+                                                <p key={index} className='px-2'>{line}</p>
                                             ))}
                                         </div>
                                     </div>
