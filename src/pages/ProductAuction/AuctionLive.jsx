@@ -42,8 +42,9 @@ const AuctionLive = () => {
     useEffect(() => {
         const fetchBidPrices = async () => {
             // Emit onSessionJoin event when productAuctionId change
-            socket.emit('onSessionJoin', {sessionId: productAuctionId});
-            dispatch(fetchBidPricesThunk({accessToken, sessionId: productAuctionId, page: 1, limit: 8}));
+            await socket.emit('onSessionJoin', {sessionId: productAuctionId});
+            console.log(1);
+            await dispatch(fetchBidPricesThunk({accessToken, sessionId: productAuctionId, page: 1, limit: 8}));
             socket.on('onUserParticipation', (data) => {
                 // handle update user join session
                 if (data.userId === userId)
@@ -64,7 +65,7 @@ const AuctionLive = () => {
         };
     }, [productAuctionId]);
 
-    console.log(auctionSessionDetail?.product?.prdImages)
+    console.log(isParticipation);
 
     return <div className="max-w-[1230px] px-[30px] mx-auto mb-10 mt-10">
         <div className="grid grid-cols-12 gap-5">

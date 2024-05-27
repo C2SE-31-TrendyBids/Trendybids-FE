@@ -35,33 +35,35 @@ const ProductAuction = () => {
 
     const handleSortByChange = (event) => {
         setSortBy(event.target.value);
+        setIsChangeFilter(!isChangeFilter);
     };
     const handleTypeChange = (event) => {
         setType(event.target.value);
+        setIsChangeFilter(!isChangeFilter);
     };
+    
     useEffect(() => {
         try {
             const fetchApi = async () => {
+                console.log("refresh");
                 let params = { page: pageNumber, limit: 12 };
                 if (categoryId !== '') {
                     params.categoryId = categoryId;
-                    setIsChangeFilter(true)
                 }
                 if (sortBy !== '' && type !== '') {
-                    params.order = [sortBy, type];
-                    setIsChangeFilter(true)
+                    let value
+                    if(type === 'ASC') value = 'price_ASC'
+                    else value = 'price_DESC'
+                    params.orderProduct = value;
                 }
                 if (nameProduct !== '') {
                     params.productName = nameProduct
-                    setIsChangeFilter(true)
                 }
                 if (priceTo !== 0 && priceFrom < priceTo) {
                     params.priceTo = priceTo;
                     params.priceFrom = priceFrom
-                    setIsChangeFilter(true)
                 }
                 const productAuctionData = await censorApi.getProductAuction(params);
-                console.log(productAuctionData);
                 setProductAuctions(productAuctionData?.data);
                 setTotalPage(productAuctionData?.totalPages);
             };
@@ -69,7 +71,7 @@ const ProductAuction = () => {
         } catch (error) {
             console.log(error);
         }
-    }, [pageNumber, categoryId, sortBy, type, nameProduct, priceFrom, priceTo]);
+    }, [pageNumber, categoryId, isChangeFilter, nameProduct, priceFrom, priceTo]);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -88,6 +90,7 @@ const ProductAuction = () => {
     const handlePageChange = (event, page) => {
         setPageNumber(page);
     };
+
     const clearFilters = () => {
         setCategoryId('');
         setSortBy('');
@@ -264,9 +267,10 @@ const ProductAuction = () => {
                             </div>
                         </div>
                         <div className='grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4  '>
-                            {(productAuctions).map((item, index) => (
-                                <ProductItem infoAuction={item} />
-                            ))}
+                            {productAuctions.map((item, index) => {
+                                console.log(item.product?.startingPrice);
+                                return <ProductItem infoAuction={item} />
+                            })}
                         </div>
                     </div>
                 </div>

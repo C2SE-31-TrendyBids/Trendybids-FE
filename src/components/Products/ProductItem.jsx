@@ -9,6 +9,7 @@ import logo from "../../assets/images/logo.jpg";
 import moment from "moment/moment";
 
 const ProductItem = ({infoAuction = {}, type = "item"}) => {
+    console.log(">>>"+infoAuction?.product?.startingPrice);
     const divRef = useRef(null);
     const [width, setWidth] = useState()
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -21,6 +22,9 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
         }
     }, [windowWidth]);
 
+    useEffect(() => {
+        setAuction(auction);
+    },[infoAuction]);
 
     useEffect(() => {
         // Check if the API has been called before
@@ -86,15 +90,15 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
     return (
         <Link
             className={type === "itemSlider" && "mx-3 block"}
-            to={`${auction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${auction?.id}`}
+            to={`${auction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
             relative={"route"}>
             <div ref={divRef} className="w-full max-h-[350px] grid grid-rows-6 shadow rounded-t-lg">
                 <div
                     className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
                     <img
                         className="w-full min-h-[200px] rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
-                        src={auction?.product?.prdImages[0]?.prdImageURL || ""}
-                        alt={auction?.product?.productName}
+                        src={infoAuction?.product?.prdImages[0]?.prdImageURL || ""}
+                        alt={infoAuction?.product?.productName}
                         onError={(e) => {
                             e.target.onerror = null;
                             e.target.src = logo;
@@ -104,7 +108,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                     <div
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     {/*Countdown*/}
-                    {auction?.status === "not_started" && <CountdownTimer targetDate={auction?.startTime}/>}
+                    {auction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
                     {/*auction session starting*/}
                     {auction?.status === "ongoing" &&
                         <p className="absolute left-2 top-2 bg-green-400 text-xm rounded px-4 py-1  text-white font-normal">ongoing</p>}
@@ -119,7 +123,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    handleJoinAuction(auction?.id);
+                                    handleJoinAuction(infoAuction?.id);
                                 }}
                                 className={`${width < 300 ? "gap-1 px-2 text-[12px]" : "gap-3 px-6 text-[10px] sm:text-[16px]"} py-2 flex items-center font-bold text-white`}>
                                 <FaPlus size={width < 300 ? 12 : 18}/>
@@ -129,12 +133,12 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                 </div>
                 <div className="row-span-2 h-full bg-gray-200 ">
                     <div className="text-left text-[#0B1133] px-2 pt-3">
-                        <p className="font-semibold text-xs">{auction?.product?.category?.name}</p>
-                        <h5 className="text-lg font-bold truncate">{auction?.product?.productName}</h5>
+                        <p className="font-semibold text-xs">{infoAuction?.product?.category?.name}</p>
+                        <h5 className="text-lg font-bold truncate">{infoAuction?.product?.productName}</h5>
                     </div>
                     <div className="text-right text-[#0B1133] px-2 pb-3">
                         <p className="font-semibold text-xs">Start Bid:</p>
-                        <h5 className="text-lg font-bold">${auction?.product?.startingPrice}</h5>
+                        <h5 className="text-lg font-bold">${infoAuction?.product?.startingPrice}</h5>
                     </div>
                 </div>
             </div>

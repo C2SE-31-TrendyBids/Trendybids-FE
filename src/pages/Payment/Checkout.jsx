@@ -120,7 +120,9 @@ const Checkout = ({ productAuction }) => {
                                         <input type="text" className="w-full border-2 border-gray-400 p-2 ml-2 mb-2 rounded-lg outline-none" value={address} onChange={(e) => setAddress(e.target.value)} />
                                         <div className="flex items-center justify-between mt-4">
                                             <button className="px-6 w-48 py-2 ml-2 border rounded-lg bg-blue-600 text-white mb-2 font-semibold hover:bg-blue-800" onClick={(e) => handleSaveUserInformation()}>SAVE</button>
-                                            <button className="px-6 w-48 py-2 border rounded-lg bg-red-600 text-white mb-2 font-semibold hover:bg-red-800" >CANCE</button>
+                                            <button className="px-6 w-48 py-2 border rounded-lg bg-red-600 text-white mb-2 font-semibold hover:bg-red-800"
+                                            onClick={handleClose}
+                                            >CANCEl</button>
 
                                         </div>
                                     </div>
