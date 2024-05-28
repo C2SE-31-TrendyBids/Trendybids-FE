@@ -17,7 +17,6 @@ const CensorLayout = ({children}) => {
 
     const sidebarItems = [
         {icon: <IoIosHome size={20}/>, text: "Home", to: '/', active: false},
-        {icon: <FaPeopleGroup size={20}/>, text: "Member", to: '/censor/all-member',active: false},
         {icon: <CgShutterstock size={20}/>, text: "All Product", to: '/censor/all-product', active: false, alert: false},
         {icon: <MdOutlineProductionQuantityLimits size={20}/>, text: "Product Approve", to: '/censor/product-approve',active: false},
         {icon: <RiAuctionLine size={20}/>, text: "Auction Session", to: '/censor/auction-session',active: false},

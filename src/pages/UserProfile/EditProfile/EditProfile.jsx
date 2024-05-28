@@ -132,14 +132,30 @@ const EditProfile = () => {
                                     <input
                                         type="phone"
                                         name="phoneNumber"
+                                        maxLength={12}
                                         className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                                         value={auth?.phoneNumber}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
+                                            // Filter out non-numeric characters
+                                            const filteredValue =
+                                                e.target.value.replace(
+                                                    /\D/g,
+                                                    ""
+                                                );
                                             setAuth({
                                                 ...auth,
-                                                phoneNumber: e.target.value,
-                                            })
-                                        }
+                                                phoneNumber: filteredValue,
+                                            });
+
+                                            // Display error toast if non-numeric characters are found
+                                            if (
+                                                filteredValue !== e.target.value
+                                            ) {
+                                                toast.warning(
+                                                    "Invalid phone number. Please enter only numbers."
+                                                );
+                                            }
+                                        }}
                                     />
                                     <MdPhoneIphone className="w-[18px] h-[18px] absolute right-4" />
                                 </div>

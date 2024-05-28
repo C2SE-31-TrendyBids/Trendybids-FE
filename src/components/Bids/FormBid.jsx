@@ -57,7 +57,7 @@ const FormBid = ({sessionId, startingPrice}) => {
             }))
         ));
         // handle set bid price
-        let numericHighestPrice = parseFloat(highestPrice);
+        let numericHighestPrice = parseFloat(highestPrice) || parseFloat(startingPrice);
         if (item?.type === "percent") {
             setBidPrice((numericHighestPrice * (1 + item.value)).toFixed(2));
         } else if (item?.type === "price") {
@@ -88,20 +88,21 @@ const FormBid = ({sessionId, startingPrice}) => {
 
     const handleBidPrice = async (e) => {
         e.preventDefault();
-        const priceCondition = highestPrice || startingPrice
-        if (bidPrice > priceCondition) {
+        const priceCondition = parseFloat(highestPrice) || startingPrice
+        console.log({priceCondition, bidPrice});
+        if (parseFloat(bidPrice) >parseFloat(priceCondition) ) {
             if (bidPrice > priceCondition * 2) {
-                toast.error("Bid price must be less than twice the highest price!");
+                toast.warning("Bid price must be less than twice the highest price!");
                 return;
             }
             if (countdownCompleted) {
-                // Start countdown with 5 seconds when button is clicked
-                startCountdown(5);
+                // Start countdown with 10 seconds when button is clicked
+                startCountdown(30);
                 setBidPrice("")
                 socket.emit('bidPrice.create', {sessionId: sessionId, bidPrice: bidPrice});
             }
         } else {
-            toast.error("Bid price must be greater than the current highest price!");
+            toast.warning("Bid price must be greater than the current highest price!");
         }
     }
 

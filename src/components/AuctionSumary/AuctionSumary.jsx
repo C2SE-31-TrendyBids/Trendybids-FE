@@ -35,7 +35,7 @@ const AuctionSumary = () => {
                                 Total Number Of Participants
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                150 people
+                                02 people
                             </h4>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ const AuctionSumary = () => {
                                 Total Auction Value
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                7500$
+                                5400$
                             </h4>
                         </div>
                     </div>

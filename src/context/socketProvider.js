@@ -9,7 +9,7 @@ export const SocketProvider = ({ children }) => {
         if (!accessToken) {
             return null;
         }
-        return io(process.env.REACT_APP_SERVER_URL, {
+        return io("http://localhost:5000", {
             extraHeaders: {
                 Authorization: `Bearer ${accessToken}`,
             },

@@ -16,8 +16,8 @@ import NotFound from "../../public/images/notFound.png";
 const CensorDetail = () => {
     let {censorId} = useParams();
     const initialState = {censorId: censorId, limit: 6}
-    const [sort, setSort] = React.useState('');
-    const [state, setState] = React.useState(initialState);
+    const [sort, setSort] = useState('');
+    const [state, setState] = useState(initialState);
     const [auctionSessions, setAuctionSession] = useState([]);
     const [censors, setCensors] = useState([])
     const [search, setSearch] = useState("")
@@ -28,9 +28,10 @@ const CensorDetail = () => {
     }
 
     const fetchAuctionSession = async () => {
-        const responseCensor = await censorServices.getAuctionSession(state)
+        const responseCensor = await censorServices.getAuctionSession(state);
         responseCensor?.status === 200 && setAuctionSession(responseCensor?.data?.productAuctions)
     }
+
     useEffect(() => {
         fetchCensors()
     }, [])
@@ -74,9 +75,7 @@ const CensorDetail = () => {
                                 </div>
                                 <p className="text-white flex items-center  lg:mr-6"><FaLocationDot
                                     className="text-white mr-2 mb-1" size={20}/>{censors?.address || "No Address"}</p>
-                                <p className="text-white flex items-center"><FaStar className="mr-2 mb-1 text-yellow-300"
-                                                                                    size={20}/>4.80
-                                    rating from 5 review</p>
+                                
                             </div>
                             <p className="md:ml-10 lg:ml-48 text-lg text-white font-medium">{censors?.name || "No Address"}</p>
                         </div>
@@ -130,7 +129,7 @@ const CensorDetail = () => {
                                         </Select>
                                     </FormControl>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 mb-10">
                                     {
                                         auctionSessions?.length > 0 ? (auctionSessions.map((item, index) => {
                                             return (
@@ -162,9 +161,6 @@ const CensorDetail = () => {
                                     <h3 className="text-xl font-semibold text-[#0F0000]">Store Product
                                         Category</h3>
                                     <ul className="mt-4">
-                                        <li className="text-xm font-normal text-[#444444] mb-1">
-                                            Gaming
-                                        </li>
                                         <li className="text-xm font-normal text-[#444444] mb-1">
                                             Electronics
                                         </li>

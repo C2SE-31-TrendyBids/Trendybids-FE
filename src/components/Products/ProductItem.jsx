@@ -9,7 +9,6 @@ import logo from "../../assets/images/logo.jpg";
 import moment from "moment/moment";
 
 const ProductItem = ({infoAuction = {}, type = "item"}) => {
-    console.log(">>>"+infoAuction?.product?.startingPrice);
     const divRef = useRef(null);
     const [width, setWidth] = useState()
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -88,15 +87,16 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
 
 
     return (
-        <Link
+        <a
             className={type === "itemSlider" && "mx-3 block"}
-            to={`${auction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
-            relative={"route"}>
+            href={`${auction?.status === "ongoing" ? "/auction-live/" : "/product-auction/"}${infoAuction?.id}`}
+            // relative={"route"}
+            >
             <div ref={divRef} className="w-full max-h-[350px] grid grid-rows-6 shadow rounded-t-lg">
                 <div
-                    className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden">
+                    className="relative row-span-6 rounded-t-lg group transition-all overflow-y-hidden overflow-x-hidden border-t-[1px] border-x-[1px] border-gray-300">
                     <img
-                        className="w-full min-h-[200px] rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
+                        className="w-full h-[200px] rounded-t-lg object-contain group-hover:scale-125 transition-all duration-500"
                         src={infoAuction?.product?.prdImages[0]?.prdImageURL || ""}
                         alt={infoAuction?.product?.productName}
                         onError={(e) => {
@@ -108,15 +108,15 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                     <div
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     {/*Countdown*/}
-                    {auction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
+                    {infoAuction?.status === "not_started" && <CountdownTimer targetDate={infoAuction?.startTime}/>}
                     {/*auction session starting*/}
-                    {auction?.status === "ongoing" &&
+                    {infoAuction?.status === "ongoing" &&
                         <p className="absolute left-2 top-2 bg-green-400 text-xm rounded px-4 py-1  text-white font-normal">ongoing</p>}
                     {/*auction session ended*/}
-                    {auction?.status === "ended" &&
+                    {infoAuction?.status === "ended" &&
                         <p className="absolute left-2 top-2 bg-red-500 text-xm rounded px-4 py-1 text-white font-normal">ended</p>}
                     {/*auction session not started*/}
-                    {auction?.status === "not_started" &&
+                    {infoAuction?.status === "not_started" &&
                         <div
                             className="absolute left-1/2 -translate-x-1/2 opacity-0 -bottom-10 bg-[#1972F5] rounded group-hover:opacity-100 group-hover:bottom-3 transition-all duration-300">
                             <button
@@ -134,7 +134,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                 <div className="row-span-2 h-full bg-gray-200 ">
                     <div className="text-left text-[#0B1133] px-2 pt-3">
                         <p className="font-semibold text-xs">{infoAuction?.product?.category?.name}</p>
-                        <h5 className="text-lg font-bold truncate">{infoAuction?.product?.productName}</h5>
+                        <h5 className="w-[250px] text-lg font-bold truncate">{infoAuction?.product?.productName}</h5>
                     </div>
                     <div className="text-right text-[#0B1133] px-2 pb-3">
                         <p className="font-semibold text-xs">Start Bid:</p>
@@ -142,7 +142,7 @@ const ProductItem = ({infoAuction = {}, type = "item"}) => {
                     </div>
                 </div>
             </div>
-        </Link>
+        </a>
     )
 }
 

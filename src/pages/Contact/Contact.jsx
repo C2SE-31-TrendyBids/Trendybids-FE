@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Map from "../../components/Map/Map";
 import { motion } from 'framer-motion'
-import { MdOutlineNavigateNext } from "react-icons/md";
+import Panner from "../../public/images/panner_product.jpg";
+import Reveal from "../../components/Animate/Reveal";
 import MethodContext from "../../context/methodProvider";
 import { toast } from "sonner";
 import { BsSendFill } from "react-icons/bs";
@@ -50,28 +51,40 @@ const Contact = () => {
 
     return (
         <div className=" mx-auto ">
-            <div className="relative w-full ">
-                <img
-                    src="https://cdn.pixabay.com/photo/2021/04/15/11/52/office-desk-6180921_1280.jpg"
-                    alt="About page"
-                    className="w-full h-[350px] object-cover pixelated"
-                />
-                <span
-                    className="absolute top-40 left-10 lg:top-36 lg:left-[130px] mb-4 text-4xl text-blue-500 font-extrabold drop-shadow-md"> Contact Us
-                    <div className="flex mt-2 text-lg">
-                        <div className="text-black hover:text-blue-500">
-                            <Link to="/" className="">
-                                Home
-                            </Link>
-                        </div>
-                        <div className="text-black">
-                            <span className=" flex items-center">
-                                <span className="mx-2"><MdOutlineNavigateNext /> </span>
-                                <span className="">Contact Us</span>
-                            </span>
-                        </div>
+             <div className="relative">
+                <img src={Panner} alt="" />
+                <div className="absolute inset-0 top-30">
+                    <div className="max-w-[1200px] mx-auto translate-y-1/2 text-4xl text-blue-500 font-extrabold drop-shadow-md">
+                        <Reveal
+                            children={
+                                <div className="mb-8">
+                                    <h1 className="text-4xl text-blue-500 font-extrabold drop-shadow-md">
+                                        {" "}
+                                        Contact US
+                                    </h1>
+                                    <div className=" flex mt-2 text-lg  ">
+                                        <div className="text-black hover:text-blue-500">
+                                            <Link to="/" className="">
+                                                Home
+                                            </Link>
+                                        </div>
+                                        <div className="text-black">
+                                            <span className=" items-center">
+                                                <span className="mx-2">
+                                                    {" "}
+                                                    &gt;{" "}
+                                                </span>
+                                                <span className="">
+                                                    Contact Us
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        />
                     </div>
-                </span>
+                </div>
             </div>
             <div
                 className="max-w-[1200px] grid sm:grid-cols-2 gap-16 my-20 mx-auto bg-white text-[#333] font-[sans-serif] px-8 sm:px-0">

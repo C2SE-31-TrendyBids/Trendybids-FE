@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../../../components/Navbar/Navbar";
 import AuctionSumary from "../../../components/AuctionSumary/AuctionSumary";
 import ChartBar from "../../../components/Chart/ChartBar/ChartBar";
 import ChartLine from "../../../components/Chart/ChartLine/ChartLine"; // Import ChartLine
@@ -9,11 +8,7 @@ import Member from "../AllMember/AllMember"
 const DashboardCensor = () => {
     return (
         <>
-            <Navbar />
             <div className="my-6 mx-10 ">
-                <h1 className="font-bold text-[22px] tracking-tighter leading-9 text-[#007bff]">
-                    👋 Hello Huu Sang, have a nice day!
-                </h1>
                 <AuctionSumary />
                 <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 grid grid-cols-2 gap-10">
                     <div className="col-span-1 border border-gray-300 rounded px-4 ">
@@ -70,7 +65,7 @@ const DashboardCensor = () => {
                 </div>
 
                 {/* Adjust height and width */}
-                <div>
+                <div className=" ">
                     <Member />
                 </div>
             </div>

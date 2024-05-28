@@ -18,7 +18,7 @@ const Admin = ({children}) => {
             <Header/>
             <div className="grid grid-cols-12 max-w-[1200px] mx-auto mt-8 gap-5">
                 <div className="col-span-3"><SidebarUser/></div>
-                <div className="col-span-9">{children}</div>
+                <div className="relative col-span-9">{children}</div>
             </div>
             <Footer/>
         </>

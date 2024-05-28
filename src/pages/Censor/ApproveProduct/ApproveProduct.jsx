@@ -66,7 +66,7 @@ const ApproveProduct = () => {
     };
 
     return (
-        <div className='max-w-[1230px] px-[30px] mx-auto '>
+        <div className='w-full px-[20px] mx-auto '>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mb-2'>
                 <div className="inline-flex text-gray-600 ">
                     <input className="border-2 border-gray-300 bg-white h-10 px-20 rounded-lg text-sm focus:outline-none"
@@ -111,10 +111,10 @@ const ApproveProduct = () => {
                 {products?.map((item, index) => (
                     <div key={index} className="bg-white shadow-[0_8px_12px_-6px_rgba(0,0,0,0.2)] border p-2 w-full max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 h-[260px]">
                         <div className='w-full flex items-center justify-center'>
-                            <img src={item?.prdImages[0]?.prdImageURL} alt={item?.productName} onError={(e) => { e.target.onerror = null; e.target.src = logo; }} className="w-3/4 h-32 rounded-lg" />
+                            <img src={item?.prdImages[0]?.prdImageURL} alt={item?.productName} onError={(e) => { e.target.onerror = null; e.target.src = logo; }} className="w-3/4 h-32 object-cover rounded-lg overflow-hidden" />
                         </div>
                         <div className="px-4 my-4 text-center">
-                            <h3 className="text-base font-semibold">{item?.productName}</h3>
+                            <h3 className="text-base font-semibold truncate">{item?.productName}</h3>
                             <p className='text-sm'>Starting Price : {item?.startingPrice}</p>
                             <div className='mt-2'>
                                 <button type="button"

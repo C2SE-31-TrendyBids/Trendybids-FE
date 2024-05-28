@@ -106,7 +106,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                     </button>
                 </div>
                 <div className="my-4">
-                    <div className='grid grid-cols-12 h-64 gap-2'>
+                    <div className='grid grid-cols-12 h-60 gap-2'>
                         <div className='col-span-5 '>
                             <article className="relative w-full flex flex-shrink-0 overflow-hidden shadow-2xl">
                                 <div className="rounded-full bg-gray-300 text-black absolute top-2 right-2 text-sm px-2 text-center z-50">
@@ -127,13 +127,13 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                 </button>
                             </article>
                         </div>
-                        <div className='col-span-7 text-black ml-2'>
+                        <div className='h-full overflow-y-scroll col-span-7 text-black ml-2'>
                             <div className='text-center text-2xl font-thin text-[#007bff]'>
                                 <span>{product?.productName}</span>
                             </div>
                             <div className='m-1'>
                                 <span className='text-base font-semibold'> Description :</span> <br />
-                                <span className='ml-2'>- {product?.description}</span>
+                                <span className='ml-2 break-words'>- {product?.description}adfkajsdfjkashfjkadhskadfsadfsadfsafsadfsdafsdfsadfsafsafdsafsadjdfaksdfjhasdjkfhsafjkhsdfsdhflasjfhlfhsajfhskjfhdsakjfhsadkfsadfkhsadlfsajdfhsjfhs</span>
                             </div>
                             <div className='grid grid-cols-5 gap-4 '>
                                 <div className='col-span-2 font-semibold'>
@@ -173,7 +173,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                 {index === 0 ? (
                     <div className="border-t flex justify-end pt-6 space-x-4">
                         <button type="button"
-                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-gray-200 hover:bg-gray-300 active:bg-gray-200"
+                            className="px-6 py-2 rounded-md text-black text-sm border-none outline-none bg-red-400 hover:bg-red-500 active:bg-red-500"
                             onClick={() => handleAction(false)}>Reject</button>
                         <button type="button"
                             className="px-6 py-2 rounded-md text-white text-sm border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600"
@@ -206,7 +206,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                                 ) : (
                                     <span className="w-4 h-4 rounded-full border mx-2 border-solid border-gray-800"></span>
                                 )}
-                                <span>Return money for subscriber 2000.00 USD</span>
+                                <span>Return money for subscriber 20.00 USD</span>
                             </div>
                             {statusPayment === true ? (
                                 <span className="border border-solid border-green-600 text-blue-600 text-sm ml-2 px-4 py-1 rounded-lg " disabled >Payment</span>
