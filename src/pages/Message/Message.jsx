@@ -41,7 +41,7 @@ const Message = () => {
             socket.off('onMessage')
             socket.off('onConversation')
         }
-    }, [conversationId])
+    }, [conversationId, socket])
 
     useEffect(() => {
         // Dispatch the fetchConversationsThunk action to fetch the conversations

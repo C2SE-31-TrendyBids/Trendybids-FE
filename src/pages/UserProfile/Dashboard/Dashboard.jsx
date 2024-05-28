@@ -172,7 +172,7 @@ const Dashboard = () => {
             </div>
             <div className='grid grid-cols-8 gap-2 mt-10'>
                 <div className='col-span-3 border shadow-sm rounded-lg bg-gray-50 text-center border-[#0033CC]'>
-                    <h1 className='text-base text-blue-600 font-bold py-4'>The product you bid on</h1>
+                    <h1 className='text-base text-blue-600 font-bold py-4'>The Auction Session has joined</h1>
                     <div className=' h-[300px] overflow-y-auto no-scrollbar pb-2'>
                         {productBids?.map((item, index) => (
                             <div key={index} className='flex items-center justify-center bg-white'>

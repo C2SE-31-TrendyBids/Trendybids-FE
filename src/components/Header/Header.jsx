@@ -31,7 +31,7 @@ const Header = () => {
 
     useEffect(() => {
         if (token) dispatch(fetchUnseenNotificationThunk(token))
-    }, [])
+    }, [token])
 
     return (
         <header className="shadow-md sm:px-10 py-1 bg-white font-[sans-serif]   min-h-[40px] sticky top-0 z-10 ">

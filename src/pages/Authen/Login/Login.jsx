@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import background from "../../../public/images/wave_background.png";
 import logo from "../../../public/images/logoTrendy1.jpg";
-import { CircularProgress, Link } from "@mui/material";
+import { CircularProgress} from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as authApi from "../../../services/auth";
 import * as userApi from "../../../services/user";
 import AuthContext from "../../../context/authProvider";
@@ -190,7 +190,7 @@ const Login = () => {
                                         </div>
                                         <div className="mr-2 font-medium text-blue-500 hover:opacity-80">
                                             <Link
-                                                href="/forgot-password"
+                                                to="/forgot-password"
                                                 underline="hover"
                                             >
                                                 {"Forgot password"}

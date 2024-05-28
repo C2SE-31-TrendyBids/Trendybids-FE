@@ -160,10 +160,6 @@ const RegisterCensor = () => {
                                                 console.log({parsedDate, today, oneYearAgo});
                                                 if (parsedDate > today) {
                                                     return "Future dates are not allowed.";
-                                                } else if (
-                                                    parsedDate < oneYearAgo
-                                                ) {
-                                                    return "Date cannot be older than one year ago.";
                                                 }
                                                 return true; // Valid date
                                             },
@@ -215,10 +211,6 @@ const RegisterCensor = () => {
                                                     console.log({parsedDate, today, oneYearAgo});
                                                     if (parsedDate > today) {
                                                         return "Future dates are not allowed.";
-                                                    } else if (
-                                                        parsedDate < oneYearAgo
-                                                    ) {
-                                                        return "Date cannot be older than one year ago.";
                                                     }
                                                     return true; // Valid date
                                                 },
