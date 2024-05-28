@@ -133,7 +133,7 @@ const ViewDetail = ({ modalOpen, product, accessToken, change, setChange, index 
                             </div>
                             <div className='m-1'>
                                 <span className='text-base font-semibold'> Description :</span> <br />
-                                <span className='ml-2 break-words'>- {product?.description}adfkajsdfjkashfjkadhskadfsadfsadfsafsadfsdafsdfsadfsafsafdsafsadjdfaksdfjhasdjkfhsafjkhsdfsdhflasjfhlfhsajfhskjfhdsakjfhsadkfsadfkhsadlfsajdfhsjfhs</span>
+                                <span className='ml-2 break-words'>- {product?.description}</span>
                             </div>
                             <div className='grid grid-cols-5 gap-4 '>
                                 <div className='col-span-2 font-semibold'>

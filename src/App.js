@@ -37,17 +37,18 @@ const App = () => {
             showNotification(content, `/messages/${data?.conversationId}`, "message", username);
         }
         dispatch(fetchUnseenConversationsThunk(accessToken));
-    }, [accessToken, location, dispatch, showNotification]);
+    }, [accessToken, location, dispatch, showNotification, location.pathname]);
 
     const handleOnConversation = useCallback((data) => {
         console.log(data)
         if (!location.pathname.includes('/messages')) {
+            console.log(location.pathname)
             showNotification(`New message from stranger: ${data?.latestMessage?.user?.fullName.split(' ')[0]}`, `/messages/${data?.id}`);
         } else {
             dispatch(addConversation(data));
         }
         dispatch(fetchUnseenConversationsThunk(accessToken));
-    }, [accessToken, dispatch, showNotification]);
+    }, [accessToken, dispatch, showNotification, location.pathname]);
 
     const handleOnNotification = useCallback((data) => {
         showNotification(data?.content, data?.linkAttach);
