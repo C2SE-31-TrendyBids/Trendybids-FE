@@ -38,7 +38,7 @@ const RuleManagement = () => {
     }
 
     return (
-        <div className="px-4 h-screen">
+        <div className="px-4 h-screen overflow-y-auto">
             <HeaderAdmin pageName={"Rules"}/>
             {/*    */}
             <div className="flex items-center justify-between my-2">

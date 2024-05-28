@@ -29,17 +29,11 @@ const Message = () => {
         socket.on('connected', (data) => console.log('Connected', data))
         socket.on('onMessage', (data) => {
             dispatch(addMessage(data));
-            dispatch(fetchUnseenConversationsThunk(accessToken))
             dispatch(updateConversation({conversationId: data?.conversationId, message: data}))
-        })
-        socket.on('onConversation', (data) => {
-            dispatch(addConversation(data));
-            dispatch(fetchUnseenConversationsThunk(accessToken))
         })
         return () => {
             socket.off('connected')
             socket.off('onMessage')
-            socket.off('onConversation')
         }
     }, [conversationId, socket])
 

@@ -7,7 +7,7 @@ import "./App.css"
 import {toast} from "sonner";
 import {useDispatch} from "react-redux";
 import SocketContext from "./context/socketProvider";
-import {fetchUnseenConversationsThunk} from "./redux/slices/conversation";
+import {addConversation, fetchUnseenConversationsThunk} from "./redux/slices/conversation";
 import {addNotifications} from "./redux/slices/notification";
 import PushNotification from "./components/NotificationPopup/PushNotification";
 
@@ -40,7 +40,12 @@ const App = () => {
     }, [accessToken, location, dispatch, showNotification]);
 
     const handleOnConversation = useCallback((data) => {
-        showNotification(`New message from stranger: ${data?.user?.fullName.split(' ')[0]}`, `/messages/${data?.id}`);
+        console.log(data)
+        if (!location.pathname.includes('/messages')) {
+            showNotification(`New message from stranger: ${data?.latestMessage?.user?.fullName.split(' ')[0]}`, `/messages/${data?.id}`);
+        } else {
+            dispatch(addConversation(data));
+        }
         dispatch(fetchUnseenConversationsThunk(accessToken));
     }, [accessToken, dispatch, showNotification]);
 
