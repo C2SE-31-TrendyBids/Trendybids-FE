@@ -33,20 +33,11 @@ const SummaryAdmin = () => {
             </div>
             <div className="w-full flex items-center gap-2 bg-white rounded-lg pl-2 pr-4 py-2">
                 <div className="p-3 rounded-full bg-[#F4F7FE]">
-                    <FaMoneyCheckDollar className="text-[#4318FF]" size={20} />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <p className="text-[12px] font-medium text-[#707EAE]">Spend This month</p>
-                    <p className="text-[16px] font-bold text-[#2B3674]">$300</p>
-                </div>
-            </div>
-            <div className="w-full flex items-center gap-2 bg-white rounded-lg pl-2 pr-4 py-2">
-                <div className="p-3 rounded-full bg-[#F4F7FE]">
                     <IoStatsChart className="text-[#4318FF]" size={20} />
                 </div>
                 <div className="flex flex-col gap-1">
                     <p className="text-[12px] font-medium text-[#707EAE]">Total Accounts</p>
-                    <p className="text-[16px] font-bold text-[#2B3674]">{summary?.totalAuctions || 0}</p>
+                    <p className="text-[16px] font-bold text-[#2B3674]">{summary?.totalAccounts || 0}</p>
                 </div>
             </div>
             <div className="w-full flex items-center gap-2 bg-white rounded-lg pl-2 pr-4 py-2">
@@ -54,7 +45,7 @@ const SummaryAdmin = () => {
                     <FaUserSecret className="text-[#4318FF]" size={20} />
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="text-[12px] font-medium text-[#707EAE]">Censor</p>
+                    <p className="text-[12px] font-medium text-[#707EAE]">Censors</p>
                     <p className="text-[16px] font-bold text-[#2B3674]">{summary?.totalCensors || 0}</p>
                 </div>
             </div>
@@ -63,8 +54,17 @@ const SummaryAdmin = () => {
                     <FaUser className="text-[#4318FF]" size={20} />
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="text-[12px] font-medium text-[#707EAE]">User</p>
+                    <p className="text-[12px] font-medium text-[#707EAE]">Users</p>
                     <p className="text-[16px] font-bold text-[#2B3674]">{summary?.totalUsers || 0}</p>
+                </div>
+            </div>
+            <div className="w-full flex items-center gap-2 bg-white rounded-lg pl-2 pr-4 py-2">
+                <div className="p-3 rounded-full bg-[#F4F7FE]">
+                    <FaUser className="text-[#4318FF]" size={20} />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <p className="text-[12px] font-medium text-[#707EAE]">Members</p>
+                    <p className="text-[16px] font-bold text-[#2B3674]">{summary?.totalMember || 0}</p>
                 </div>
             </div>
             <div className="w-full flex items-center gap-2 bg-white rounded-lg pl-2 pr-4 py-2">
