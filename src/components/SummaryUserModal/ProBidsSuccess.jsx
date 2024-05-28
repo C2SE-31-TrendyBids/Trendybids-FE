@@ -65,7 +65,7 @@ const ProBidsSuccess = () => {
                         </th>
                     </tr>
                 </thead>
-                <tbody className="whitespace-nowrap">
+                <tbody className="whitespace-nowrap ">
                     {productBidSuccess && productBidSuccess.length > 0 ? (
                         productBidSuccess?.map((item, index) => (
                             <tr className="odd:bg-blue-50">

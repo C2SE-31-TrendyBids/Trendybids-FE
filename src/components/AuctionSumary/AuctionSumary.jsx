@@ -20,7 +20,7 @@ const AuctionSumary = () => {
                                 Total Auction Sessions
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                10 auctions
+                                04 auctions
                             </h4>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ const AuctionSumary = () => {
                                 Total Auction Value
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                5400$
+                                3500$
                             </h4>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const AuctionSumary = () => {
                                 Not Started Auction Sessions
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                03 auctions
+                                2 auctions
                             </h4>
                         </div>
                     </div>
@@ -81,7 +81,7 @@ const AuctionSumary = () => {
                                 Ongoing Auction Sessions
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                03 auctions
+                                01 auctions
                             </h4>
                         </div>
                     </div>
@@ -96,7 +96,7 @@ const AuctionSumary = () => {
                                 Auction Session Ended
                             </span>
                             <h4 className="text-lg font-bold text-black mt-3 ">
-                                07 auctions
+                                01 auctions
                             </h4>
                         </div>
                     </div>
